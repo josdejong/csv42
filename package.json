@@ -1,0 +1,23 @@
+{
+  "name": "csv-parser",
+  "description": "Small and fast CSV parser to convert JSON to CSV and CSV to JSON",
+  "keywords": ["csv", "json", "csv2json", "json2csv"],
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "test": "vitest",
+    "test-ci": "vitest run",
+    "lint": "prettier --check src",
+    "format": "prettier --write src"
+  },
+  "devDependencies": {
+    "@types/json2csv": "5.0.3",
+    "csv-spectrum": "1.0.0",
+    "prettier": "2.8.4",
+    "typescript": "4.9.5",
+    "vite": "4.1.1",
+    "vitest": "0.28.4"
+  }
+}
