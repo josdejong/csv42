@@ -42,29 +42,31 @@ export function parseValue(value: string): unknown {
 }
 
 function parseUnescapedValue(value: string): unknown {
-  // TODO: parse numbers, booleans, array, object
   const number = Number(value)
   if (!isNaN(number) && !isNaN(parseFloat(value))) {
     return number
   }
 
-  if (
-    value[0] === '{' ||
-    value[0] === '[' ||
-    value === 'true' ||
-    value === 'false' ||
-    value === 'null'
-  ) {
-    return JSON.parse(value)
+  if (value === 'true') {
+    return true
   }
 
-  if (value === '') {
+  if (value === 'false') {
+    return false
+  }
+
+  if (value === 'null' || value === '') {
     return null
+  }
+
+  if (value[0] === '{' || value[0] === '[') {
+    return JSON.parse(value)
   }
 
   return value
 }
 
+// TODO: move this function back inside parseField?
 export function indexOfValueEnd(text: string, delimiter: string, start: number): number {
   let i = start
 
