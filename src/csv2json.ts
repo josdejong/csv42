@@ -1,5 +1,5 @@
 import { JsonField, JsonOptions, NestedObject } from './types.js'
-import { parseValue } from './value.js'
+import { indexOfValueEnd, isEol, parseValue } from './value.js'
 import { parseSimpleFieldName } from './fields'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
@@ -45,7 +45,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   function parseRecord(onField: (field: unknown, fieldIndex: number) => void) {
     let index = 0
 
-    while (i < csv.length && !isEol(i)) {
+    while (i < csv.length && !isEol(csv, i)) {
       onField(parseField(), index)
 
       index++
@@ -60,25 +60,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
 
   function parseField(): unknown {
     const start = i
-
-    if (csv[i] === '"') {
-      // parse a quoted value
-      do {
-        i++
-
-        if (csv[i] === '"' && csv[i + 1] === '"') {
-          // skip over escaped quote (two quotes)
-          i += 2
-        }
-      } while (i < csv.length && csv[i] !== '"')
-
-      eatEndQuote()
-    } else {
-      // parse an unquoted value
-      while (i < csv.length && csv[i] !== delimiter && !isEol(i)) {
-        i++
-      }
-    }
+    i = indexOfValueEnd(csv, delimiter, start)
 
     // console.log('parseField', csv.substring(start, i)) // FIXME: cleanup
 
@@ -87,32 +69,14 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   }
 
   function eatEol() {
-    if (isLF(i)) {
-      i++
-    } else if (isCRLF(i)) {
-      i += 2
-    } else {
+    if (!isEol(csv, i)) {
       throw new Error('End of line expected at pos ' + i)
     }
-  }
 
-  function eatEndQuote() {
-    if (csv[i] !== '"') {
-      throw new Error('End quote " expected at pos ' + i)
+    if (csv[i] === '\n') {
+      i++ // lf
+    } else {
+      i += 2 // crlf
     }
-
-    i++
-  }
-
-  function isEol(index: number): boolean {
-    return isLF(index) || isCRLF(index)
-  }
-
-  function isLF(index: number) {
-    return csv[index] === '\n'
-  }
-
-  function isCRLF(index: number) {
-    return csv[index] === '\r' && csv[index + 1] === '\n'
   }
 }

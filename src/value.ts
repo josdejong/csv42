@@ -64,3 +64,42 @@ function parseUnescapedValue(value: string): unknown {
 
   return value
 }
+
+export function indexOfValueEnd(text: string, delimiter: string, start: number): number {
+  let i = start
+
+  if (text[start] === '"') {
+    // parse a quoted value
+    do {
+      i++
+
+      if (text[i] === '"' && text[i + 1] === '"') {
+        // skip over escaped quote (two quotes)
+        i += 2
+      }
+    } while (i < text.length && text[i] !== '"')
+
+    // eat end quote
+    if (text[i] !== '"') {
+      throw new Error('Unexpected end: end quote " missing')
+    }
+    i++
+
+    return i
+  } else {
+    // parse an unquoted value
+
+    while (i < text.length && text[i] !== delimiter && !isEol(text, i)) {
+      i++
+    }
+  }
+
+  return i
+}
+
+export function isEol(text: string, index: number): boolean {
+  return (
+    text[index] === '\n' || // LF
+    (text[index] === '\r' && text[index + 1] === '\n') // CRLF
+  )
+}

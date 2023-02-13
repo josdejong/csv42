@@ -44,6 +44,8 @@ const nestedData = [
   }
 ]
 
+const nestedData2 = [{ nested: { 'field.name': 42 } }]
+
 const nestedDataParsed = [
   {
     name: 'Joe',
@@ -158,6 +160,17 @@ export const testCases: TestCase[] = [
       fields: getNestedFields(nestedData)
     },
     parsedJson: nestedDataParsed,
+    jsonOptions: {
+      parseFieldName: parseNestedFieldName
+    }
+  },
+  {
+    description: 'flatten nested fields with control characters',
+    json: nestedData2,
+    csv: '"nested.""field.name"""\r\n42\r\n',
+    csvOptions: {
+      fields: getNestedFields(nestedData2)
+    },
     jsonOptions: {
       parseFieldName: parseNestedFieldName
     }
