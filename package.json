@@ -15,14 +15,12 @@
     "test": "vitest",
     "test-ci": "vitest run",
     "lint": "prettier --check src",
-    "format": "prettier --write src",
-    "benchmark": "ts-node-esm benchmark/benchmark.ts"
+    "format": "prettier --write src"
   },
   "devDependencies": {
     "@types/json2csv": "5.0.3",
     "csv-spectrum": "1.0.0",
     "prettier": "2.8.4",
-    "ts-node": "10.9.1",
     "typescript": "4.9.5",
     "vite": "4.1.1",
     "vitest": "0.28.4"

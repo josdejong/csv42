@@ -1,5 +1,5 @@
-import { JsonField, JsonOptions, NestedObject } from './types'
-import { parseValue } from './value'
+import { JsonField, JsonOptions, NestedObject } from './types.js'
+import { parseValue } from './value.js'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   const header = options?.header !== false // true when not specified

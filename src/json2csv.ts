@@ -1,6 +1,6 @@
-import { getFields } from './fields'
-import { createFormatValue } from './value'
-import { CsvOptions, NestedObject } from './types'
+import { getFields } from './fields.js'
+import { createFormatValue } from './value.js'
+import { CsvOptions, NestedObject } from './types.js'
 
 export function json2csv(json: NestedObject[], options?: CsvOptions): string {
   const header = options?.header !== false // true when not specified

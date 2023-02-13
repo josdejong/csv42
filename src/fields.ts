@@ -1,5 +1,5 @@
-import { getIn } from './object'
-import { CsvField, Path, NestedObject, ValueGetter } from './types'
+import { getIn } from './object.js'
+import { CsvField, Path, NestedObject, ValueGetter } from './types.js'
 
 export function getFields(records: NestedObject[]): CsvField[] {
   return collectAllKeys(records).map((key) => ({
