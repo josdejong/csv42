@@ -1,5 +1,6 @@
 import { getIn } from './object.js'
-import { CsvField, Path, NestedObject, ValueGetter } from './types.js'
+import { CsvField, NestedObject, Path, ValueGetter } from './types.js'
+import { createFormatValue } from './value.js'
 
 export function getFields(records: NestedObject[]): CsvField[] {
   return collectAllKeys(records).map((key) => ({
@@ -9,9 +10,11 @@ export function getFields(records: NestedObject[]): CsvField[] {
 }
 
 export function getNestedFields(records: NestedObject[], keySeparator: string = '.'): CsvField[] {
+  const format = createFormatValue(keySeparator)
+
   return collectNestedPaths(records).map((path) => {
     return {
-      name: stringifyPath(path, keySeparator),
+      name: path.map(format).join(keySeparator),
       getValue: createGetValue(path)
     }
   })
@@ -69,14 +72,6 @@ function collectNestedPaths(records: NestedObject[]): Path[] {
 
 function isObjectOrArray(value: unknown): boolean {
   return typeof value === 'object' && value !== null
-}
-
-function stringifyPath(path: string[], keySeparator: string): string {
-  return (
-    path
-      // .map((key) => key.replaceAll(keySeparator, keySeparator + keySeparator)) // FIXME: how to escape keySeparators used in the path?
-      .join(keySeparator)
-  )
 }
 
 function createGetValue(path: Path): ValueGetter {

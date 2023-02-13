@@ -3,7 +3,10 @@ import { ValueFormatter } from './types'
 export function createFormatValue(delimiter: string): ValueFormatter {
   // match at least one occurrence of a control character in a string:
   // a delimiter (comma by default), double quote, return, or newline
-  const controlCharactersRegex = new RegExp(delimiter + '|"|\r|\n')
+  if (delimiter.length !== 1) {
+    throw new Error(`Delimiter must be a single character (got: ${delimiter})`)
+  }
+  const controlCharactersRegex = new RegExp('[' + delimiter + '"\r\n]')
 
   function formatString(value: string): string {
     const needToEscape = controlCharactersRegex.test(value) || value.length === 0
