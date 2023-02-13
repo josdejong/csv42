@@ -11,3 +11,24 @@ export function getIn(object: NestedObject, path: string[]): unknown {
 
   return value
 }
+
+export function setIn(object: NestedObject, path: string[], value: unknown): NestedObject {
+  let nested = object
+  const iLast = path.length - 1
+  let i = 0
+
+  while (i < iLast) {
+    const part = path[i]
+
+    if (nested[part] === undefined) {
+      nested[part] = {}
+    }
+
+    nested = nested[part] as NestedObject
+    i++
+  }
+
+  nested[path[iLast]] = value
+
+  return object
+}

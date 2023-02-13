@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getIn } from './object'
+import { getIn, setIn } from './object'
 
 describe('object', () => {
   describe('getIn', () => {
@@ -9,6 +9,15 @@ describe('object', () => {
       expect(getIn({ nested: { name: 'Joe' } }, ['nested', 'name'])).toEqual('Joe')
       expect(getIn({ nested: { array: ['a', 'b'] } }, ['nested', 'array', '1'])).toEqual('b')
       expect(getIn({ nested: { array: ['a', 'b'] } }, ['nested', 'foo', 'bar'])).toEqual(undefined)
+    })
+  })
+
+  describe('setInt', () => {
+    test('set a nested property', () => {
+      expect(setIn({}, ['name'], 'Joe')).toEqual({ name: 'Joe' })
+      expect(setIn({}, ['address', 'city'], 'Rotterdam')).toEqual({
+        address: { city: 'Rotterdam' }
+      })
     })
   })
 })
