@@ -3,10 +3,10 @@ Benchmark
 Usage:
 
 1. Install the dependencies once:
-    ```
-    npm run install
-    ```
+   ```
+   npm run install
+   ```
 2. Run the benchmark:
-    ```
-    npm run benchmark
-    ```
+   ```
+   npm run benchmark
+   ```
