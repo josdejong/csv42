@@ -2,75 +2,59 @@ import { JsonField, JsonOptions, NestedObject } from './types.js'
 import { parseValue } from './value.js'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
-  const header = options?.header !== false // true when not specified
+  const withHeader = options?.header !== false // true when not specified
   const delimiter = options?.delimiter || ','
   const parse = options?.parseValue || parseValue
 
   const json: NestedObject[] = []
   let i = 0
 
-  // FIXME: if there is no header, parse the records as an Array instead of an object
   const parsedHeader = parseHeader()
   const fields = options?.fields || parsedHeader
 
   while (i < csv.length) {
-    // FIXME: create a parseRecordInto which skips the step of first creating an array
-    const record = parseRecord()
     const object = {}
 
-    fields.forEach((field, index) => {
-      field.setValue(object, record[index])
-    })
+    parseRecord((value, index) => fields[index].setValue(object, value))
 
     json.push(object)
-
-    eatEol()
   }
 
   return json
 
   function parseHeader(): JsonField[] {
-    // TODO: rewrite this code, it is quite verbose and contains duplication
-    if (header) {
-      const record = parseRecord().map(String)
-      eatEol()
+    const fields: JsonField[] = []
 
-      return record.map((name) => {
-        return {
-          name,
-          setValue: (record: NestedObject, value: unknown) => {
-            record[name] = value
-          }
-        }
-      })
-    } else {
-      const record = parseRecord()
-      i = 0 // reset, the first line contains data, not a header
+    parseRecord((fieldName, index) => {
+      const name = withHeader ? String(fieldName) : `Field ${index}`
 
-      return record.map((_, index) => {
-        const name = `Field ${index}`
-        return {
-          name,
-          setValue: (record: NestedObject, value: unknown) => {
-            record[name] = value
-          }
-        }
+      fields.push({
+        name,
+        setValue: (record: NestedObject, value: unknown) => (record[name] = value)
       })
+    })
+
+    if (!withHeader) {
+      i = 0 // reset the pointer again: the first line contains data, not a header
     }
+
+    return fields
   }
 
-  function parseRecord(): unknown[] {
-    const record: unknown[] = []
+  function parseRecord(onField: (field: unknown, fieldIndex: number) => void) {
+    let fieldIndex = 0
 
     while (i < csv.length && !isEol(i)) {
-      record.push(parseField())
+      onField(parseField(), fieldIndex)
+
+      fieldIndex++
 
       if (csv[i] === delimiter) {
         i++
       }
     }
 
-    return record
+    eatEol()
   }
 
   function parseField(): unknown {
@@ -115,19 +99,19 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
     }
   }
 
-  function isLF(index: number) {
-    return csv[index] === '\n'
-  }
-
-  function isCRLF(index: number) {
-    return csv[index] === '\r' && csv[index + 1] === '\n'
-  }
-
   function eatEndQuote() {
     if (csv[i] !== '"') {
       throw new Error('End quote " expected at pos ' + i)
     }
 
     i++
+  }
+
+  function isLF(index: number) {
+    return csv[index] === '\n'
+  }
+
+  function isCRLF(index: number) {
+    return csv[index] === '\r' && csv[index + 1] === '\n'
   }
 }
