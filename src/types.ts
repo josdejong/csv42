@@ -12,6 +12,11 @@ export interface CsvField {
   getValue: ValueGetter
 }
 
+export interface JsonField {
+  name: string
+  setValue: ValueSetter
+}
+
 export interface CsvOptions {
   header?: boolean
   delimiter?: string
@@ -20,14 +25,10 @@ export interface CsvOptions {
   formatValue?: ValueFormatter
 }
 
-export interface JsonField {
-  name: string
-  setValue: ValueSetter
-}
-
 export interface JsonOptions {
   header?: boolean
   delimiter?: string
   parseValue?: ValueParser
+  parseFieldName?: (name: string) => JsonField
   fields?: JsonField[]
 }

@@ -1,5 +1,5 @@
 import { CsvOptions, JsonOptions, NestedObject } from '../types'
-import { getNestedFields } from '../fields'
+import { getNestedFields, parseNestedFieldName } from '../fields'
 
 interface TestCase {
   description: string
@@ -40,6 +40,16 @@ const nestedData = [
     details: {
       address: { city: 'Rotterdam' },
       location: [51.9280712, 4.4207888]
+    }
+  }
+]
+
+const nestedDataParsed = [
+  {
+    name: 'Joe',
+    details: {
+      address: { city: 'Rotterdam' },
+      location: { '0': 51.9280712, '1': 4.4207888 }
     }
   }
 ]
@@ -146,6 +156,10 @@ export const testCases: TestCase[] = [
       'Joe,Rotterdam,51.9280712,4.4207888\r\n',
     csvOptions: {
       fields: getNestedFields(nestedData)
+    },
+    parsedJson: nestedDataParsed,
+    jsonOptions: {
+      parseFieldName: parseNestedFieldName
     }
   }
 ]

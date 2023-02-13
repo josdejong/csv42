@@ -1,5 +1,5 @@
-import { getIn } from './object.js'
-import { CsvField, NestedObject, Path, ValueGetter } from './types.js'
+import { getIn, setIn } from './object.js'
+import { CsvField, JsonField, NestedObject, Path, ValueGetter } from './types.js'
 import { createFormatValue } from './value.js'
 
 export function getFields(records: NestedObject[]): CsvField[] {
@@ -18,6 +18,37 @@ export function getNestedFields(records: NestedObject[], keySeparator: string = 
       getValue: createGetValue(path)
     }
   })
+}
+
+export function parseSimpleFieldName(name: string): JsonField {
+  return {
+    name,
+    setValue: (record, value) => {
+      record[name] = value
+    }
+  }
+}
+
+export function parseNestedFieldName(name: string, keySeparator = '.'): JsonField {
+  const path: string[] = name.split(keySeparator) // FIXME: unescape escaped path parts
+
+  if (path.length === 1) {
+    const key = path[0]
+
+    return {
+      name,
+      setValue: (record, value) => {
+        record[key] = value
+      }
+    }
+  } else {
+    return {
+      name,
+      setValue: (record, value) => {
+        setIn(record, path, value)
+      }
+    }
+  }
 }
 
 function collectAllKeys(records: NestedObject[]): string[] {
