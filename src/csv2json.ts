@@ -102,20 +102,25 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   }
 
   function isEol(index: number): boolean {
-    return csv[index] === '\n' || (csv[index] === '\r' && csv[index + 1] === '\n')
+    return isLF(index) || isCRLF(index)
   }
 
   function eatEol() {
-    if (!isEol(i)) {
+    if (isLF(i)) {
+      i++
+    } else if (isCRLF(i)) {
+      i += 2
+    } else {
       throw new Error('End of line expected at pos ' + i)
     }
+  }
 
-    if (csv[i] === '\n') {
-      i++
-    } else {
-      // assuming \r\n
-      i += 2
-    }
+  function isLF(index: number) {
+    return csv[index] === '\n'
+  }
+
+  function isCRLF(index: number) {
+    return csv[index] === '\r' && csv[index + 1] === '\n'
   }
 
   function eatEndQuote() {
