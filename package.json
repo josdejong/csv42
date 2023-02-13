@@ -18,7 +18,6 @@
     "format": "prettier --write src benchmark"
   },
   "devDependencies": {
-    "@types/json2csv": "5.0.3",
     "csv-spectrum": "1.0.0",
     "prettier": "2.8.4",
     "typescript": "4.9.5",
