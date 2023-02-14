@@ -167,7 +167,7 @@ export const testCases: TestCase[] = [
   {
     description: 'flatten nested fields with control characters',
     json: nestedData2,
-    csv: '"nested.""field.name"""\r\n42\r\n',
+    csv: 'nested.field\\.name\r\n42\r\n',
     csvOptions: {
       fields: getNestedFields(nestedData2)
     },

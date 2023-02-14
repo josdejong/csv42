@@ -28,7 +28,7 @@ export interface CsvOptions {
 export interface JsonOptions {
   header?: boolean
   delimiter?: string
+  fields?: JsonField[]
   parseValue?: ValueParser
   parseFieldName?: (name: string) => JsonField
-  fields?: JsonField[]
 }

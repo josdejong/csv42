@@ -1,5 +1,5 @@
 import { JsonField, JsonOptions, NestedObject } from './types.js'
-import { indexOfValueEnd, isEol, parseValue } from './value.js'
+import { parseValue } from './value.js'
 import { parseSimpleFieldName } from './fields'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
@@ -45,7 +45,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   function parseRecord(onField: (field: unknown, fieldIndex: number) => void) {
     let index = 0
 
-    while (i < csv.length && !isEol(csv, i)) {
+    while (i < csv.length && !isEol(i)) {
       onField(parseField(), index)
 
       index++
@@ -60,7 +60,29 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
 
   function parseField(): unknown {
     const start = i
-    i = indexOfValueEnd(csv, delimiter, start)
+
+    if (csv[i] === '"') {
+      // parse a quoted value
+      do {
+        i++
+
+        if (csv[i] === '"' && csv[i + 1] === '"') {
+          // skip over escaped quote (two quotes)
+          i += 2
+        }
+      } while (i < csv.length && csv[i] !== '"')
+
+      // eat end quote
+      if (csv[i] !== '"') {
+        throw new Error('Unexpected end: end quote " missing')
+      }
+      i++
+    } else {
+      // parse an unquoted value
+      while (i < csv.length && csv[i] !== delimiter && !isEol(i)) {
+        i++
+      }
+    }
 
     // console.log('parseField', csv.substring(start, i)) // FIXME: cleanup
 
@@ -68,8 +90,15 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
     return parse(csv.substring(start, i))
   }
 
+  function isEol(index: number): boolean {
+    return (
+      csv[index] === '\n' || // LF
+      (csv[index] === '\r' && csv[index + 1] === '\n') // CRLF
+    )
+  }
+
   function eatEol() {
-    if (!isEol(csv, i)) {
+    if (!isEol(i)) {
       throw new Error('End of line expected at pos ' + i)
     }
 

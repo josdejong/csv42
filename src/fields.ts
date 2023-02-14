@@ -1,6 +1,5 @@
 import { getIn, setIn } from './object.js'
 import { CsvField, JsonField, NestedObject, Path, ValueGetter } from './types.js'
-import { createFormatValue, indexOfValueEnd, parseValue } from './value.js'
 
 export function getFields(records: NestedObject[]): CsvField[] {
   return collectAllKeys(records).map((key) => ({
@@ -10,11 +9,9 @@ export function getFields(records: NestedObject[]): CsvField[] {
 }
 
 export function getNestedFields(records: NestedObject[], keySeparator: string = '.'): CsvField[] {
-  const format = createFormatValue(keySeparator)
-
   return collectNestedPaths(records).map((path) => {
     return {
-      name: path.map(format).join(keySeparator),
+      name: stringifyPath(path, keySeparator),
       getValue: createGetValue(path)
     }
   })
@@ -30,14 +27,7 @@ export function parseSimpleFieldName(name: string): JsonField {
 }
 
 export function parseNestedFieldName(name: string, keySeparator = '.'): JsonField {
-  const path: string[] = []
-  let i = 0
-  do {
-    const start = i
-    i = indexOfValueEnd(name, keySeparator, start)
-    path.push(parseValue(name.substring(start, i)) as string)
-    i++
-  } while (i < name.length)
+  const path = parsePath(name, keySeparator)
 
   if (path.length === 1) {
     // this is no nested field
@@ -50,6 +40,19 @@ export function parseNestedFieldName(name: string, keySeparator = '.'): JsonFiel
       setIn(record, path, value)
     }
   }
+}
+
+// TODO: unit test
+// TODO: stringify array indices differently?
+export function stringifyPath(path: Path, keySeparator: string): string {
+  return path.map((text) => text.replaceAll(keySeparator, '\\' + keySeparator)).join(keySeparator)
+}
+
+// TODO: unit test
+export function parsePath(stringifiedPath: string, keySeparator: string): Path {
+  return stringifiedPath
+    .split(new RegExp('(?<!\\\\)[' + keySeparator + ']'))
+    .map((part) => part.replaceAll('\\' + keySeparator, keySeparator))
 }
 
 function collectAllKeys(records: NestedObject[]): string[] {
