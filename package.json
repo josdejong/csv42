@@ -14,10 +14,12 @@
   "scripts": {
     "test": "vitest",
     "test-ci": "vitest run",
+    "coverage": "vitest run --coverage",
     "lint": "prettier --check src benchmark",
     "format": "prettier --write src benchmark"
   },
   "devDependencies": {
+    "@vitest/coverage-c8": "0.28.5",
     "csv-spectrum": "1.0.0",
     "prettier": "2.8.4",
     "typescript": "4.9.5",
