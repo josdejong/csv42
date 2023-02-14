@@ -23,7 +23,7 @@ export type JsonFieldsParser = (fieldNames: string[]) => JsonField[]
 export interface CsvOptions {
   header?: boolean
   delimiter?: string
-  eol?: string
+  eol?: '\r\n' | '\n'
   fields?: CsvField[] | CsvFieldsParser
   formatValue?: ValueFormatter
 }
