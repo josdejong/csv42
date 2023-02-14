@@ -1,11 +1,12 @@
 import { getFieldsFromJson } from './fields.js'
-import { createFormatValue, validateDelimiter } from './value.js'
+import { createFormatValue } from './value.js'
 import { CsvOptions, NestedObject } from './types.js'
+import { validateDelimiter, validateEOL } from './validate.js'
 
 export function json2csv(json: NestedObject[], options?: CsvOptions): string {
   const header = options?.header !== false // true when not specified
   const delimiter = validateDelimiter(options?.delimiter || ',')
-  const eol = options?.eol || '\r\n'
+  const eol = validateEOL(options?.eol || '\r\n')
   const fields = options?.fields
     ? Array.isArray(options?.fields)
       ? options?.fields

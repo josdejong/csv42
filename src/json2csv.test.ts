@@ -14,7 +14,13 @@ describe('json2csv', () => {
   test('should throw an error when passing an invalid delimiter', () => {
     expect(() => {
       json2csv([], { delimiter: 'foo' })
-    }).toThrow('Delimiter must be a single character (got: foo)')
+    }).toThrow('Delimiter must be a single character but is "foo"')
+  })
+
+  test('should throw an error when passing an invalid EOL', () => {
+    expect(() => {
+      json2csv([], { eol: 'foo' })
+    }).toThrow('Invalid EOL character, choose "\\n" or "\\r\\n"')
   })
 })
 

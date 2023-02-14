@@ -1,6 +1,7 @@
 import { JsonField, JsonOptions, NestedObject } from './types.js'
-import { parseValue, validateDelimiter } from './value.js'
+import { parseValue } from './value.js'
 import { getFieldsFromCsv } from './fields'
+import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   const withHeader = options?.header !== false // true when not specified
@@ -47,7 +48,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   function parseRecord(onField: (field: unknown, fieldIndex: number) => void) {
     let index = 0
 
-    while (i < csv.length && !isEol(i)) {
+    while (i < csv.length && !isEol(csv, i)) {
       onField(parseField(), index)
 
       index++
@@ -81,7 +82,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
       i++
     } else {
       // parse an unquoted value
-      while (i < csv.length && csv[i] !== delimiter && !isEol(i)) {
+      while (i < csv.length && csv[i] !== delimiter && !isEol(csv, i)) {
         i++
       }
     }
@@ -90,18 +91,11 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
     return parse(csv.substring(start, i))
   }
 
-  function isEol(index: number): boolean {
-    return (
-      csv[index] === '\n' || // LF
-      (csv[index] === '\r' && csv[index + 1] === '\n') // CRLF
-    )
-  }
-
   function eatEol() {
-    if (csv[i] === '\n') {
-      i++ // lf
-    } else {
-      i += 2 // crlf
+    if (isLF(csv, i)) {
+      i++
+    } else if (isCRLF(csv, i)) {
+      i += 2
     }
   }
 }

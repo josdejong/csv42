@@ -1,13 +1,5 @@
 import { ValueFormatter } from './types'
 
-export function validateDelimiter(delimiter: string): string {
-  if (delimiter.length !== 1) {
-    throw new Error(`Delimiter must be a single character (got: ${delimiter})`)
-  }
-
-  return delimiter
-}
-
 export function createFormatValue(delimiter: string): ValueFormatter {
   // match at least one occurrence of a control character in a string:
   // a delimiter (comma by default), double quote, return, or newline

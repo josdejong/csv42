@@ -18,6 +18,6 @@ describe('csv2json', () => {
   test('should throw an error when passing an invalid delimiter', () => {
     expect(() => {
       csv2json('"text', { delimiter: 'foo' })
-    }).toThrow('Delimiter must be a single character (got: foo)')
+    }).toThrow('Delimiter must be a single character but is "foo"')
   })
 })
