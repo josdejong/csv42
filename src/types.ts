@@ -17,18 +17,20 @@ export interface JsonField {
   setValue: ValueSetter
 }
 
+export type CsvFieldsParser = (json: NestedObject[]) => CsvField[]
+export type JsonFieldsParser = (fieldNames: string[]) => JsonField[]
+
 export interface CsvOptions {
   header?: boolean
   delimiter?: string
   eol?: string
-  fields?: CsvField[]
+  fields?: CsvField[] | CsvFieldsParser
   formatValue?: ValueFormatter
 }
 
 export interface JsonOptions {
   header?: boolean
   delimiter?: string
-  fields?: JsonField[]
+  fields?: JsonField[] | JsonFieldsParser
   parseValue?: ValueParser
-  parseFieldName?: (name: string) => JsonField
 }

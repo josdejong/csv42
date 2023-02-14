@@ -1,18 +1,22 @@
 import { JsonField, JsonOptions, NestedObject } from './types.js'
-import { parseValue } from './value.js'
-import { parseSimpleFieldName } from './fields'
+import { parseValue, validateDelimiter } from './value.js'
+import { getFieldsFromCsv } from './fields'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   const withHeader = options?.header !== false // true when not specified
-  const delimiter = options?.delimiter || ','
+  const delimiter = validateDelimiter(options?.delimiter || ',')
   const parse = options?.parseValue || parseValue
-  const parseFieldName = options?.parseFieldName || parseSimpleFieldName
 
   const json: NestedObject[] = []
   let i = 0
 
-  const parsedHeader = parseHeader()
-  const fields = options?.fields || parsedHeader
+  const fieldNames = parseHeader()
+
+  const fields: JsonField[] = options?.fields
+    ? Array.isArray(options?.fields)
+      ? options?.fields
+      : options?.fields(fieldNames)
+    : getFieldsFromCsv(fieldNames)
 
   while (i < csv.length) {
     const object = {}
@@ -26,20 +30,18 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
 
   return json
 
-  function parseHeader(): JsonField[] {
-    const fields: JsonField[] = []
+  function parseHeader(): string[] {
+    const names: string[] = []
 
     parseRecord((fieldName, index) => {
-      const name = withHeader ? String(fieldName) : `Field ${index}`
-
-      fields.push(parseFieldName(name))
+      names.push(withHeader ? String(fieldName) : `Field ${index}`)
     })
 
     if (!withHeader) {
       i = 0 // reset the pointer again: the first line contains data, not a header
     }
 
-    return fields
+    return names
   }
 
   function parseRecord(onField: (field: unknown, fieldIndex: number) => void) {
@@ -84,8 +86,6 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
       }
     }
 
-    // console.log('parseField', csv.substring(start, i)) // FIXME: cleanup
-
     // note that it is possible that a field is empty
     return parse(csv.substring(start, i))
   }
@@ -98,10 +98,6 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   }
 
   function eatEol() {
-    if (!isEol(i)) {
-      throw new Error('End of line expected at pos ' + i)
-    }
-
     if (csv[i] === '\n') {
       i++ // lf
     } else {

@@ -10,6 +10,12 @@ describe('json2csv', () => {
       expect(json2csv(json, csvOptions)).toEqual(csv)
     })
   })
+
+  test('should throw an error when passing an invalid delimiter', () => {
+    expect(() => {
+      json2csv([], { delimiter: 'foo' })
+    }).toThrow('Delimiter must be a single character (got: foo)')
+  })
 })
 
 describe('spectrum-test-suite', () => {

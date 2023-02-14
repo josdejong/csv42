@@ -8,4 +8,16 @@ describe('csv2json', () => {
       expect(csv2json(csv, jsonOptions)).toEqual(parsedJson || json)
     })
   })
+
+  test('should throw an error when an end quote is missing', () => {
+    expect(() => {
+      csv2json('"text')
+    }).toThrow('Unexpected end: end quote " missing')
+  })
+
+  test('should throw an error when passing an invalid delimiter', () => {
+    expect(() => {
+      csv2json('"text', { delimiter: 'foo' })
+    }).toThrow('Delimiter must be a single character (got: foo)')
+  })
 })

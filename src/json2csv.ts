@@ -1,13 +1,17 @@
-import { getFields } from './fields.js'
-import { createFormatValue } from './value.js'
+import { getFieldsFromJson } from './fields.js'
+import { createFormatValue, validateDelimiter } from './value.js'
 import { CsvOptions, NestedObject } from './types.js'
 
 export function json2csv(json: NestedObject[], options?: CsvOptions): string {
   const header = options?.header !== false // true when not specified
-  const fields = options?.fields || getFields(json)
-  const delimiter = options?.delimiter || ','
+  const delimiter = validateDelimiter(options?.delimiter || ',')
   const eol = options?.eol || '\r\n'
-  const format = options?.formatValue || createFormatValue(delimiter)
+  const fields = options?.fields
+    ? Array.isArray(options?.fields)
+      ? options?.fields
+      : options?.fields(json)
+    : getFieldsFromJson(json)
+  const formatValue = options?.formatValue || createFormatValue(delimiter)
 
   let output = ''
 
@@ -24,14 +28,14 @@ export function json2csv(json: NestedObject[], options?: CsvOptions): string {
   function headerToCsv(): string {
     return fields
       .map((field) => field.name)
-      .map(format)
+      .map(formatValue)
       .join(delimiter)
   }
 
   function rowToCsv(item: NestedObject): string {
     return fields
       .map((field) => field.getValue(item))
-      .map(format)
+      .map(formatValue)
       .join(delimiter)
   }
 }

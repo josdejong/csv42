@@ -1,14 +1,15 @@
 import { getIn, setIn } from './object.js'
+import { parsePath, stringifyPath } from './path.js'
 import { CsvField, JsonField, NestedObject, Path, ValueGetter } from './types.js'
 
-export function getFields(records: NestedObject[]): CsvField[] {
+export function getFieldsFromJson(records: NestedObject[]): CsvField[] {
   return collectAllKeys(records).map((key) => ({
     name: key,
     getValue: (item) => item[key]
   }))
 }
 
-export function getNestedFields(records: NestedObject[], keySeparator: string = '.'): CsvField[] {
+export function getNestedFieldsFromJson(records: NestedObject[], keySeparator = '.'): CsvField[] {
   return collectNestedPaths(records).map((path) => {
     return {
       name: stringifyPath(path, keySeparator),
@@ -17,7 +18,15 @@ export function getNestedFields(records: NestedObject[], keySeparator: string = 
   })
 }
 
-export function parseSimpleFieldName(name: string): JsonField {
+export function getFieldsFromCsv(fieldNames: string[]): JsonField[] {
+  return fieldNames.map(parseSimpleFieldName)
+}
+
+export function getNestedFieldsFromCsv(names: string[], keySeparator = '.'): JsonField[] {
+  return names.map((name) => parseNestedFieldName(name, keySeparator))
+}
+
+function parseSimpleFieldName(name: string): JsonField {
   return {
     name,
     setValue: (record, value) => {
@@ -26,7 +35,7 @@ export function parseSimpleFieldName(name: string): JsonField {
   }
 }
 
-export function parseNestedFieldName(name: string, keySeparator = '.'): JsonField {
+function parseNestedFieldName(name: string, keySeparator = '.'): JsonField {
   const path = parsePath(name, keySeparator)
 
   if (path.length === 1) {
@@ -40,19 +49,6 @@ export function parseNestedFieldName(name: string, keySeparator = '.'): JsonFiel
       setIn(record, path, value)
     }
   }
-}
-
-// TODO: unit test
-// TODO: stringify array indices differently?
-export function stringifyPath(path: Path, keySeparator: string): string {
-  return path.map((text) => text.replaceAll(keySeparator, '\\' + keySeparator)).join(keySeparator)
-}
-
-// TODO: unit test
-export function parsePath(stringifiedPath: string, keySeparator: string): Path {
-  return stringifiedPath
-    .split(new RegExp('(?<!\\\\)[' + keySeparator + ']'))
-    .map((part) => part.replaceAll('\\' + keySeparator, keySeparator))
 }
 
 function collectAllKeys(records: NestedObject[]): string[] {

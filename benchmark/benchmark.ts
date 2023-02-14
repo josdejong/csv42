@@ -1,6 +1,6 @@
 import { Parser } from 'json2csv'
 import { json2csv } from '../src/json2csv.js'
-import { getNestedFields } from '../src/fields.js'
+import { getNestedFieldsFromJson } from '../src/fields.js'
 
 const count = 100_000
 const data = generateData(count)
@@ -15,7 +15,7 @@ console.timeEnd('parse with this library (flat)')
 
 console.time('parse with this library (nested)')
 const csv3 = json2csv(data, {
-  fields: getNestedFields(data)
+  fields: getNestedFieldsFromJson(data)
 })
 console.timeEnd('parse with this library (nested)')
 

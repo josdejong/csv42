@@ -1,5 +1,5 @@
 import { CsvOptions, JsonOptions, NestedObject } from '../types'
-import { getNestedFields, parseNestedFieldName } from '../fields'
+import { getNestedFieldsFromJson, getNestedFieldsFromCsv } from '../fields'
 
 interface TestCase {
   description: string
@@ -45,6 +45,8 @@ const nestedData = [
 ]
 
 const nestedData2 = [{ nested: { 'field.name': 42 } }]
+const nestedData3 = [{ nested: { 'field.,name': 42 } }]
+const nestedData4 = [{ nested: { 'field_,name': 42 } }]
 
 const nestedDataParsed = [
   {
@@ -157,22 +159,64 @@ export const testCases: TestCase[] = [
       'name,details.address.city,details.location.0,details.location.1\r\n' +
       'Joe,Rotterdam,51.9280712,4.4207888\r\n',
     csvOptions: {
-      fields: getNestedFields(nestedData)
+      fields: getNestedFieldsFromJson
     },
     parsedJson: nestedDataParsed,
     jsonOptions: {
-      parseFieldName: parseNestedFieldName
+      fields: getNestedFieldsFromCsv
     }
   },
   {
-    description: 'flatten nested fields with control characters',
+    description: 'flatten nested fields containing the keySeparator',
     json: nestedData2,
     csv: 'nested.field\\.name\r\n42\r\n',
     csvOptions: {
-      fields: getNestedFields(nestedData2)
+      fields: getNestedFieldsFromJson
     },
     jsonOptions: {
-      parseFieldName: parseNestedFieldName
+      fields: getNestedFieldsFromCsv
     }
+  },
+  {
+    description: 'flatten nested fields containing the keySeparator and control characters',
+    json: nestedData3,
+    csv: '"nested.field\\.,name"\r\n42\r\n',
+    csvOptions: {
+      fields: getNestedFieldsFromJson
+    },
+    jsonOptions: {
+      fields: getNestedFieldsFromCsv
+    }
+  },
+  {
+    description: 'flatten nested fields with custom keySeparator',
+    json: nestedData,
+    csv:
+      'name,details_address_city,details_location_0,details_location_1\r\n' +
+      'Joe,Rotterdam,51.9280712,4.4207888\r\n',
+    csvOptions: {
+      fields: (json) => getNestedFieldsFromJson(json, '_')
+    },
+    parsedJson: nestedDataParsed,
+    jsonOptions: {
+      fields: (names) => getNestedFieldsFromCsv(names, '_')
+    }
+  },
+  {
+    description:
+      'flatten nested fields with a custom keySeparator containing the keySeparator and control characters',
+    json: nestedData4,
+    csv: '"nested_field\\_,name"\r\n42\r\n',
+    csvOptions: {
+      fields: (json) => getNestedFieldsFromJson(json, '_')
+    },
+    jsonOptions: {
+      fields: (names) => getNestedFieldsFromCsv(names, '_')
+    }
+  },
+  {
+    description: 'no data',
+    json: [],
+    csv: '\r\n'
   }
 ]
