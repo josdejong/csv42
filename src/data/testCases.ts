@@ -1,5 +1,5 @@
 import { CsvOptions, JsonOptions, NestedObject } from '../types'
-import { getNestedFieldsFromJson, getNestedFieldsFromCsv } from '../fields'
+import { getNestedFieldsFromCsv, getNestedFieldsFromJson } from '../fields'
 
 interface TestCase {
   description: string
@@ -99,6 +99,19 @@ export const testCases: TestCase[] = [
     parsedJson: users.map((user) => ({ name: user.name })),
     csvOptions: { fields: [{ name: 'name', getValue: (item) => item.name }] },
     jsonOptions: { fields: [{ name: 'name', setValue: (item, value) => (item.name = value) }] }
+  },
+  {
+    description: 'with custom order of fields',
+    json: users,
+    csv: 'name,id\r\nJoe,1\r\nSarah,2\r\n',
+    parsedJson: users.map((user) => ({ id: user.id })),
+    csvOptions: {
+      fields: [
+        { name: 'name', getValue: (item) => item.name },
+        { name: 'id', getValue: (item) => item.id }
+      ]
+    },
+    jsonOptions: { fields: [{ name: 'id', setValue: (item, value) => (item.id = value) }] }
   },
   {
     description: 'escape control character "',

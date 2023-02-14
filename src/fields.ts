@@ -26,6 +26,25 @@ export function getNestedFieldsFromCsv(names: string[], keySeparator = '.'): Jso
   return names.map((name) => parseNestedFieldName(name, keySeparator))
 }
 
+export function mapFieldsByName(
+  fieldNames: string[],
+  fields: JsonField[]
+): (JsonField | undefined)[] {
+  const mappedFields: (JsonField | undefined)[] = []
+
+  for (let field of fields) {
+    // an indexOf inside a for loop is inefficient, but it's ok since we're not dealing with a large array
+    const index = fieldNames.indexOf(field.name)
+    if (index === -1) {
+      throw new Error(`Field "${field.name}" not found in the csv data`)
+    }
+
+    mappedFields[index] = field
+  }
+
+  return mappedFields
+}
+
 function parseSimpleFieldName(name: string): JsonField {
   return {
     name,

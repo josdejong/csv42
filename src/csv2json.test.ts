@@ -9,6 +9,14 @@ describe('csv2json', () => {
     })
   })
 
+  test('should throw an error when a field is not found', () => {
+    expect(() => {
+      csv2json('id,name\n42,Joe', {
+        fields: [{ name: 'foo', setValue: (record, value) => (record.foo = value) }]
+      })
+    }).toThrow('Field "foo" not found in the csv data')
+  })
+
   test('should throw an error when an end quote is missing', () => {
     expect(() => {
       csv2json('"text')
