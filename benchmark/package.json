@@ -1,5 +1,5 @@
 {
-  "name": "csv-parser-benchmark",
+  "name": "csv7-benchmark",
   "type": "module",
   "scripts": {
     "benchmark": "ts-node-esm --preferTsExts benchmark.ts"
