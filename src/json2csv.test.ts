@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { json2csv } from './json2csv'
-import { testCases } from './data/testCases'
+import { testCases } from './test/testCases'
 // @ts-ignore
 import spectrum from 'csv-spectrum'
 
@@ -14,13 +14,14 @@ describe('json2csv', () => {
   test('should throw an error when passing an invalid delimiter', () => {
     expect(() => {
       json2csv([], { delimiter: 'foo' })
-    }).toThrow('Delimiter must be a single character but is "foo"')
+    }).toThrow('Invalid delimiter: must be a single character but is "foo"')
   })
 
   test('should throw an error when passing an invalid EOL', () => {
     expect(() => {
+      // @ts-ignore
       json2csv([], { eol: 'foo' })
-    }).toThrow('Invalid EOL character, choose "\\n" or "\\r\\n"')
+    }).toThrow('Invalid EOL character: choose "\\n" or "\\r\\n"')
   })
 })
 

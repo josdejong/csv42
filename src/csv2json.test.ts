@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { csv2json } from './csv2json'
-import { testCases } from './data/testCases'
+import { testCases } from './test/testCases'
 
 describe('csv2json', () => {
   testCases.forEach(({ description, json, parsedJson, csv, jsonOptions }) => {
@@ -26,6 +26,6 @@ describe('csv2json', () => {
   test('should throw an error when passing an invalid delimiter', () => {
     expect(() => {
       csv2json('"text', { delimiter: 'foo' })
-    }).toThrow('Delimiter must be a single character but is "foo"')
+    }).toThrow('Invalid delimiter: must be a single character but is "foo"')
   })
 })

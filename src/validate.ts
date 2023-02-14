@@ -1,6 +1,6 @@
 export function validateDelimiter(delimiter: string): string {
   if (delimiter.length !== 1) {
-    throw new Error(`Delimiter must be a single character but is "${delimiter}"`)
+    throw new Error(`Invalid delimiter: must be a single character but is "${delimiter}"`)
   }
 
   return delimiter
@@ -8,7 +8,7 @@ export function validateDelimiter(delimiter: string): string {
 
 export function validateEOL(eol: string): string {
   if (!isEol(eol, 0)) {
-    throw new Error(`Invalid EOL character, choose "\\n" or "\\r\\n"`)
+    throw new Error(`Invalid EOL character: choose "\\n" or "\\r\\n"`)
   }
 
   return eol

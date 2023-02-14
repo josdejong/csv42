@@ -10,20 +10,48 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "main": "lib/esm/index.js",
+  "module": "lib/esm/index.js",
+  "browser": "lib/umd/csvParser.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js",
+      "browser": "./lib/umd/csvParser.js",
+      "types": "./lib/types/index.d.ts"
+    }
+  },
   "sideEffects": false,
   "scripts": {
     "test": "vitest",
     "test-ci": "vitest run",
     "coverage": "vitest run --coverage",
     "lint": "prettier --check src benchmark",
-    "format": "prettier --write src benchmark"
+    "format": "prettier --write src benchmark",
+    "build": "npm-run-all build:**",
+    "build:clean": "del-cli lib",
+    "build:esm": "babel src --out-dir lib/esm --extensions \".ts\" --source-maps --config-file ./babel.config.json",
+    "build:cjs": "babel src --out-dir lib/cjs --extensions \".ts\" --source-maps --config-file ./babel-cjs.config.json && cpy tools/cjs/package.json lib/cjs --flat",
+    "build:umd": "rollup lib/esm/index.js --format umd --name 'csvParser' --sourcemap --output.file lib/umd/csvParser.js && cpy tools/cjs/package.json lib/umd --flat",
+    "build:umd:min": "uglifyjs --compress --mangle --source-map --comments --output lib/umd/csvParser.min.js -- lib/umd/csvParser.js",
+    "build:types": "tsc --project tsconfig-types.json"
   },
   "devDependencies": {
+    "@babel/cli": "7.20.7",
+    "@babel/core": "7.20.12",
+    "@babel/plugin-transform-typescript": "7.20.13",
+    "@babel/preset-env": "7.20.2",
+    "@babel/preset-typescript": "7.18.6",
     "@vitest/coverage-c8": "0.28.5",
+    "cpy-cli": "4.2.0",
     "csv-spectrum": "1.0.0",
+    "del-cli": "5.0.0",
+    "npm-run-all": "4.1.5",
     "prettier": "2.8.4",
     "typescript": "4.9.5",
+    "uglify-js": "3.17.4",
     "vite": "4.1.1",
-    "vitest": "0.28.4"
+    "vitest": "0.28.5"
   }
 }
