@@ -14,9 +14,10 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   const fieldNames = parseHeader()
 
   const fields: (JsonField | undefined)[] = options?.fields
-    ? Array.isArray(options?.fields)
-      ? mapFieldsByName(fieldNames, options?.fields)
-      : options?.fields(fieldNames)
+    ? mapFieldsByName(
+        fieldNames,
+        Array.isArray(options?.fields) ? options?.fields : options?.fields(fieldNames)
+      )
     : getFieldsFromCsv(fieldNames)
 
   while (i < csv.length) {

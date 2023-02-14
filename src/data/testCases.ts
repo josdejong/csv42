@@ -114,6 +114,19 @@ export const testCases: TestCase[] = [
     jsonOptions: { fields: [{ name: 'id', setValue: (item, value) => (item.id = value) }] }
   },
   {
+    description: 'with custom order of fields, fields being a function',
+    json: users,
+    csv: 'name,id\r\nJoe,1\r\nSarah,2\r\n',
+    parsedJson: users.map((user) => ({ id: user.id })),
+    csvOptions: {
+      fields: [
+        { name: 'name', getValue: (item) => item.name },
+        { name: 'id', getValue: (item) => item.id }
+      ]
+    },
+    jsonOptions: { fields: () => [{ name: 'id', setValue: (item, value) => (item.id = value) }] }
+  },
+  {
     description: 'escape control character "',
     json: [{ name: '"Big" Joe' }],
     csv: '"""Big"" Joe"\r\n',
