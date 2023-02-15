@@ -1,6 +1,6 @@
-import { NestedObject } from './types'
+import { NestedObject, Path } from './types'
 
-export function getIn(object: NestedObject, path: string[]): unknown {
+export function getIn(object: NestedObject, path: Path): unknown {
   let value: NestedObject | undefined = object
   let i = 0
 
@@ -12,7 +12,7 @@ export function getIn(object: NestedObject, path: string[]): unknown {
   return value
 }
 
-export function setIn(object: NestedObject, path: string[], value: unknown): NestedObject {
+export function setIn(object: NestedObject, path: Path, value: unknown): NestedObject {
   let nested = object
   const iLast = path.length - 1
   let i = 0
@@ -21,7 +21,11 @@ export function setIn(object: NestedObject, path: string[], value: unknown): Nes
     const part = path[i]
 
     if (nested[part] === undefined) {
-      nested[part] = {}
+      if (typeof path[i + 1] === 'number') {
+        nested[part] = []
+      } else {
+        nested[part] = {}
+      }
     }
 
     nested = nested[part] as NestedObject

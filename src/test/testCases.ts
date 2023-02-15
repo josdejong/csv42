@@ -15,53 +15,22 @@ const users = [
   { id: 2, name: 'Sarah' }
 ]
 
-const parsedUsers = [
-  { 'Field 0': 1, 'Field 1': 'Joe' },
-  { 'Field 0': 2, 'Field 1': 'Sarah' }
-]
-
-const allDataTypes = [
-  {
-    string: 'hi',
-    empty: '',
-    number: 42,
-    true: true,
-    false: false,
-    object: { key: 'value' },
-    array: ['item1'],
-    null: null,
-    undefined: undefined
-  }
-]
-
-const nestedData = [
-  {
-    name: 'Joe',
-    details: {
-      address: { city: 'Rotterdam' },
-      location: [51.9280712, 4.4207888]
-    }
-  }
-]
-
-const nestedData2 = [{ nested: { 'field.name': 42 } }]
-const nestedData3 = [{ nested: { 'field.,name': 42 } }]
-const nestedData4 = [{ nested: { 'field_,name': 42 } }]
-
-const nestedDataParsed = [
-  {
-    name: 'Joe',
-    details: {
-      address: { city: 'Rotterdam' },
-      location: { '0': 51.9280712, '1': 4.4207888 }
-    }
-  }
-]
-
 export const testCases: TestCase[] = [
   {
     description: 'all data types',
-    json: allDataTypes,
+    json: [
+      {
+        string: 'hi',
+        empty: '',
+        number: 42,
+        true: true,
+        false: false,
+        object: { key: 'value' },
+        array: ['item1'],
+        null: null,
+        undefined: undefined
+      }
+    ],
     csv:
       'string,empty,number,true,false,object,array,null,undefined\r\n' +
       'hi,"",42,true,false,"{""key"":""value""}","[""item1""]",,\r\n'
@@ -75,7 +44,10 @@ export const testCases: TestCase[] = [
     description: 'without header',
     json: users,
     csv: '1,Joe\r\n2,Sarah\r\n',
-    parsedJson: parsedUsers,
+    parsedJson: [
+      { 'Field 0': 1, 'Field 1': 'Joe' },
+      { 'Field 0': 2, 'Field 1': 'Sarah' }
+    ],
     csvOptions: { header: false },
     jsonOptions: { header: false }
   },
@@ -180,22 +152,29 @@ export const testCases: TestCase[] = [
   },
   {
     description: 'flatten nested fields',
-    json: nestedData,
+    json: [
+      {
+        name: 'Joe',
+        details: {
+          address: { city: 'Rotterdam' },
+          location: [51.9280712, 4.4207888]
+        }
+      }
+    ],
     csv:
-      'name,details.address.city,details.location.0,details.location.1\r\n' +
+      'name,details.address.city,details.location[0],details.location[1]\r\n' +
       'Joe,Rotterdam,51.9280712,4.4207888\r\n',
     csvOptions: {
       fields: getNestedFieldsFromJson
     },
-    parsedJson: nestedDataParsed,
     jsonOptions: {
       fields: getNestedFieldsFromCsv
     }
   },
   {
-    description: 'flatten nested fields containing the keySeparator',
-    json: nestedData2,
-    csv: 'nested.field\\.name\r\n42\r\n',
+    description: 'flatten nested fields containing the key separator',
+    json: [{ nested: { 'field.name': 42 } }],
+    csv: '"nested[""field.name""]"\r\n42\r\n',
     csvOptions: {
       fields: getNestedFieldsFromJson
     },
@@ -204,40 +183,14 @@ export const testCases: TestCase[] = [
     }
   },
   {
-    description: 'flatten nested fields containing the keySeparator and control characters',
-    json: nestedData3,
-    csv: '"nested.field\\.,name"\r\n42\r\n',
+    description: 'flatten nested fields containing the key separator and control characters',
+    json: [{ nested: { 'field.,name': 42 } }],
+    csv: '"nested[""field.,name""]"\r\n42\r\n',
     csvOptions: {
       fields: getNestedFieldsFromJson
     },
     jsonOptions: {
       fields: getNestedFieldsFromCsv
-    }
-  },
-  {
-    description: 'flatten nested fields with custom keySeparator',
-    json: nestedData,
-    csv:
-      'name,details_address_city,details_location_0,details_location_1\r\n' +
-      'Joe,Rotterdam,51.9280712,4.4207888\r\n',
-    csvOptions: {
-      fields: (json) => getNestedFieldsFromJson(json, '_')
-    },
-    parsedJson: nestedDataParsed,
-    jsonOptions: {
-      fields: (names) => getNestedFieldsFromCsv(names, '_')
-    }
-  },
-  {
-    description:
-      'flatten nested fields with a custom keySeparator containing the keySeparator and control characters',
-    json: nestedData4,
-    csv: '"nested_field\\_,name"\r\n42\r\n',
-    csvOptions: {
-      fields: (json) => getNestedFieldsFromJson(json, '_')
-    },
-    jsonOptions: {
-      fields: (names) => getNestedFieldsFromCsv(names, '_')
     }
   },
   {

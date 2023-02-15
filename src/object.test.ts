@@ -19,5 +19,9 @@ describe('object', () => {
         address: { city: 'Rotterdam' }
       })
     })
+
+    test('set a nested property with numeric index', () => {
+      expect(setIn({}, ['values', 0], 42)).toEqual({ values: [42] })
+    })
   })
 })

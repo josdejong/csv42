@@ -9,10 +9,10 @@ export function getFieldsFromJson(records: NestedObject[]): CsvField[] {
   }))
 }
 
-export function getNestedFieldsFromJson(records: NestedObject[], keySeparator = '.'): CsvField[] {
+export function getNestedFieldsFromJson(records: NestedObject[]): CsvField[] {
   return collectNestedPaths(records).map((path) => {
     return {
-      name: stringifyPath(path, keySeparator),
+      name: stringifyPath(path),
       getValue: createGetValue(path)
     }
   })
@@ -22,8 +22,8 @@ export function getFieldsFromCsv(fieldNames: string[]): JsonField[] {
   return fieldNames.map(parseSimpleFieldName)
 }
 
-export function getNestedFieldsFromCsv(names: string[], keySeparator = '.'): JsonField[] {
-  return names.map((name) => parseNestedFieldName(name, keySeparator))
+export function getNestedFieldsFromCsv(names: string[]): JsonField[] {
+  return names.map(parseNestedFieldName)
 }
 
 export function mapFieldsByName(
@@ -45,17 +45,17 @@ export function mapFieldsByName(
   return mappedFields
 }
 
-function parseSimpleFieldName(name: string): JsonField {
+function parseSimpleFieldName(name: string | number): JsonField {
   return {
-    name,
+    name: String(name),
     setValue: (record, value) => {
       record[name] = value
     }
   }
 }
 
-function parseNestedFieldName(name: string, keySeparator = '.'): JsonField {
-  const path = parsePath(name, keySeparator)
+function parseNestedFieldName(name: string): JsonField {
+  const path = parsePath(name)
 
   if (path.length === 1) {
     // this is no nested field
@@ -89,7 +89,7 @@ function collectNestedPaths(records: NestedObject[]): Path[] {
 
       if (isObjectOrArray(value)) {
         if (merged[key] === undefined) {
-          merged[key] = {}
+          merged[key] = Array.isArray(object[key]) ? [] : {}
         }
 
         mergeRecord(value as NestedObject, merged[key] as NestedObject)
@@ -102,9 +102,9 @@ function collectNestedPaths(records: NestedObject[]): Path[] {
   records.forEach((record) => mergeRecord(record, merged))
 
   const paths: Path[] = []
-  function collectPaths(object: NestedObject, parentPath: string[]) {
+  function collectPaths(object: NestedObject, parentPath: Path) {
     for (const key in object) {
-      const path = parentPath.concat(key)
+      const path = parentPath.concat(Array.isArray(object) ? parseInt(key) : key)
       const value = object[key]
 
       if (isObjectOrArray(value)) {

@@ -1,4 +1,5 @@
-export type Path = string[]
+// Note that a number in a Path has meaning: that means an array index and not an object key
+export type Path = (string | number)[]
 
 export type NestedObject = { [key: string]: NestedObject | unknown }
 
