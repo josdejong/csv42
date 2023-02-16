@@ -67,7 +67,9 @@ export function collectNestedPaths(records: NestedObject[], recurse: boolean): P
 
         mergeRecord(value, merged[key] as NestedObject)
       } else {
-        merged[key] = true
+        if (merged[key] === undefined) {
+          merged[key] = true
+        }
       }
     }
   }
