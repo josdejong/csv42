@@ -1,4 +1,4 @@
-import { getFieldsFromJson } from './fields.js'
+import { collectFields } from './fields.js'
 import { createFormatValue } from './value.js'
 import { CsvOptions, NestedObject } from './types.js'
 import { validateDelimiter, validateEOL } from './validate.js'
@@ -11,7 +11,7 @@ export function json2csv(json: NestedObject[], options?: CsvOptions): string {
     ? Array.isArray(options?.fields)
       ? options?.fields
       : options?.fields(json)
-    : getFieldsFromJson(json)
+    : collectFields(json, options?.flatten !== false)
   const formatValue = options?.formatValue || createFormatValue(delimiter)
 
   let output = ''

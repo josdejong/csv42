@@ -1,6 +1,6 @@
 import { JsonField, JsonOptions, NestedObject } from './types.js'
 import { parseValue } from './value.js'
-import { getFieldsFromCsv, mapFieldsByName } from './fields'
+import { toFields, mapFieldsByName } from './fields.js'
 import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
@@ -18,7 +18,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
         fieldNames,
         Array.isArray(options?.fields) ? options?.fields : options?.fields(fieldNames)
       )
-    : getFieldsFromCsv(fieldNames)
+    : toFields(fieldNames, options?.nested !== false)
 
   while (i < csv.length) {
     const object = {}

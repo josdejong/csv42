@@ -1,12 +1,8 @@
-export { json2csv } from './json2csv'
-export { csv2json } from './csv2json'
-export { createFormatValue, parseValue } from './value'
-export {
-  getFieldsFromJson,
-  getFieldsFromCsv,
-  getNestedFieldsFromJson,
-  getNestedFieldsFromCsv
-} from './fields'
-export { parsePath, stringifyPath } from './path'
+export { json2csv } from './json2csv.js'
+export { csv2json } from './csv2json.js'
+export { createFormatValue, parseValue } from './value.js'
+export { collectFields, toFields } from './fields.js'
+export { parsePath, stringifyPath } from './path.js'
+export { getIn, setIn } from './object.js'
 
-export * from './types'
+export * from './types.js'

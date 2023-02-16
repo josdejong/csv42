@@ -1,16 +1,17 @@
-import { Path } from './types'
+import { Path } from './types.js'
 
 /**
  * Stringify an array with a path in a JSON path like 'items[3].name'
+ * Note that we allow all characters in a property name, like "item with spaces[3].name"
  */
 export function stringifyPath(path: Path): string {
   return path
     .map((p, index) => {
       return typeof p === 'number'
         ? '[' + p + ']'
-        : p.match(/^[A-Za-z0-9_$]+$/)
-        ? (index > 0 ? '.' : '') + p
-        : '["' + p + '"]'
+        : /[.\[\]]/.test(p)
+        ? '["' + p + '"]'
+        : (index > 0 ? '.' : '') + p
     })
     .join('')
 }
@@ -58,13 +59,9 @@ export function parsePath(pathStr: string): Path {
 
   function eatCharacter(char: string) {
     if (pathStr[i] !== char) {
-      throw new SyntaxError(message(char, i))
+      throw new SyntaxError(`Invalid JSON path: ${char} expected at position ${i}`)
     }
     i++
-  }
-
-  function message(expected: string, position: number) {
-    return `Invalid JSON path: ${expected} expected at position ${position}`
   }
 
   return path

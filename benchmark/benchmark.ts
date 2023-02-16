@@ -1,6 +1,5 @@
 import { Parser } from 'json2csv'
-import { json2csv } from '../src/json2csv.js'
-import { getNestedFieldsFromJson } from '../src/fields.js'
+import { json2csv } from '../src/index.js'
 
 const count = 100_000
 const data = generateData(count)
@@ -9,15 +8,13 @@ console.time('parse with json2csv')
 const csv1 = new Parser({ header: true }).parse(data)
 console.timeEnd('parse with json2csv')
 
-console.time('parse with this library (flat)')
-const csv2 = json2csv(data)
-console.timeEnd('parse with this library (flat)')
+console.time('parse with this library (flatten=false)')
+const csv2 = json2csv(data, { flatten: false })
+console.timeEnd('parse with this library (flatten=false)')
 
-console.time('parse with this library (nested)')
-const csv3 = json2csv(data, {
-  fields: getNestedFieldsFromJson(data)
-})
-console.timeEnd('parse with this library (nested)')
+console.time('parse with this library (flatten=true)')
+const csv3 = json2csv(data, { flatten: true })
+console.timeEnd('parse with this library (flatten=true)')
 
 console.log('Number of items:           ', count)
 console.log('json2csv library size:     ', csv1.length, 'bytes')

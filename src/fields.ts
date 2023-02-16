@@ -2,28 +2,25 @@ import { getIn, setIn } from './object.js'
 import { parsePath, stringifyPath } from './path.js'
 import { CsvField, JsonField, NestedObject, Path, ValueGetter } from './types.js'
 
-export function getFieldsFromJson(records: NestedObject[]): CsvField[] {
-  return collectAllKeys(records).map((key) => ({
-    name: key,
-    getValue: (item) => item[key]
+export function collectFields(records: NestedObject[], recurse: boolean): CsvField[] {
+  return collectNestedPaths(records, recurse).map((path) => ({
+    name: stringifyPath(path),
+    getValue: createGetValue(path)
   }))
 }
 
-export function getNestedFieldsFromJson(records: NestedObject[]): CsvField[] {
-  return collectNestedPaths(records).map((path) => {
+export function toFields(names: string[], nested: boolean): JsonField[] {
+  return names.map((name) => {
+    const path = parsePath(name)
+
     return {
-      name: stringifyPath(path),
-      getValue: createGetValue(path)
+      name,
+      setValue:
+        path.length === 1 || !nested
+          ? (record, value) => (record[name] = value)
+          : (record, value) => setIn(record, path, value)
     }
   })
-}
-
-export function getFieldsFromCsv(fieldNames: string[]): JsonField[] {
-  return fieldNames.map(parseSimpleFieldName)
-}
-
-export function getNestedFieldsFromCsv(names: string[]): JsonField[] {
-  return names.map(parseNestedFieldName)
 }
 
 export function mapFieldsByName(
@@ -45,49 +42,14 @@ export function mapFieldsByName(
   return mappedFields
 }
 
-function parseSimpleFieldName(name: string | number): JsonField {
-  return {
-    name: String(name),
-    setValue: (record, value) => {
-      record[name] = value
-    }
-  }
-}
-
-function parseNestedFieldName(name: string): JsonField {
-  const path = parsePath(name)
-
-  if (path.length === 1) {
-    // this is no nested field
-    return parseSimpleFieldName(path[0])
-  }
-
-  return {
-    name,
-    setValue: (record, value) => {
-      setIn(record, path, value)
-    }
-  }
-}
-
-function collectAllKeys(records: NestedObject[]): string[] {
-  const keys = new Set<string>()
-
-  records.forEach((record) => {
-    Object.keys(record).forEach((key) => keys.add(key))
-  })
-
-  return [...keys]
-}
-
-function collectNestedPaths(records: NestedObject[]): Path[] {
+function collectNestedPaths(records: NestedObject[], recurse: boolean): Path[] {
   const merged: NestedObject = {}
 
   function mergeRecord(object: NestedObject, merged: NestedObject) {
     for (const key in object) {
       const value = object[key]
 
-      if (isObjectOrArray(value)) {
+      if (isObjectOrArray(value) && recurse) {
         if (merged[key] === undefined) {
           merged[key] = Array.isArray(object[key]) ? [] : {}
         }

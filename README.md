@@ -25,112 +25,96 @@ Well, you have to write a CSV parser at least once in you life, right? ;)
 
 The `csv7` library was developed specifically for https://jsoneditoronline.org. The library was developed to be small, fast, convert from and to CSV, and support nested JSON objects.
 
-## Usage
-
-Install the library once:
-
-### Install
+## Install
 
 ```
 npm install csv7
 ```
 
-### Basic usage
+## Usage
 
-Convert JSON to CSV. Note that all options are optional.
+Install the library once:
+
+### Convert JSON to CSV
 
 ```ts
 import { json2csv } from 'csv7'
-
-const users = [
-  { id: 1, name: 'Joe' },
-  { id: 2, name: 'Sarah' }
-]
-
-const csv = json2csv(users, { header: true, delimiter: ',', eol: '\n' })
-console.log(csv)
-// id,name
-// 1,Joe
-// 2,Sarah
-```
-
-Convert CSV to JSON:
-
-```ts
-import { csv2json } from 'csv7'
-
-const csv = `id,name
-1,Joe
-2,Sarah` 
-
-const users = csv2json(csv, { header: true, delimiter: ',' })
-console.log(users)
-// [
-//   { id: 1, name: 'Joe' },
-//   { id: 2, name: 'Sarah' }
-// ]
-```
-
-### Nested JSON Objects
-
-```ts
-import { json2csv, getNestedFieldsFromJson } from 'csv7'
 
 const users = [
   { id: 1, name: 'Joe', address: { city: 'New York', street: '1st Ave' } },
   { id: 2, name: 'Sarah', address: { city: 'Manhattan', street: 'Spring street' } }
 ]
 
-// By default, nested JSON is serialized as an escaped JSON file:
-const csvNested = json2csv(users)
-console.log(csvNested)
+// By default, nested JSON properties are flattened
+const csv = json2csv(users)
+console.log(csv)
+// id,name,address.city,address.street
+// 1,Joe,New York,1st Ave
+// 2,Sarah,Manhattan,Spring street
+
+// You can turn off flattening using the option `flatten`
+const csvFlat = json2csv(users, { flatten: false })
+console.log(csvFlat)
 // id,name,address
 // 1,Joe,"{""city"":""New York"",""street"":""1st Ave""}"
 // 2,Sarah,"{""city"":""Manhattan"",""street"":""Spring street""}"
 
-// Nested fields can be flattened using getNestedFieldsFromJson:
-const csvFlat = json2csv(users, { 
-  fields: getNestedFieldsFromJson 
+// The CSV output can be fully customized and transformed using `fields`:
+const csvCustom = json2csv(users, {
+  fields: [
+    { name: 'name', getValue: (object) => object.name },
+    { name: 'address', getValue: (object) => object.address.city + ' - ' + object.address.street }
+  ]
 })
-console.log(csvFlat)
-// id,name,address.city,address.street
-// 1,Joe,New York,1st Ave
-// 2,Sarah,Manhattan,Spring street
+console.log(csvCustom)
+// name,address
+// Joe,New York - 1st Ave
+// Sarah,Manhattan - Spring street
 ```
 
-The other way around:
+### Convert CSV to JSON
 
 ```ts
-import { csv2json, getNestedFieldsFromCsv } from 'csv7'
+import { csv2json } from 'csv7'
 
 const csv = `id,name,address.city,address.street
 1,Joe,New York,1st Ave
 2,Sarah,Manhattan,Spring street`
 
-// By default, fields will be parsed as is, into flat JSON objects
-const usersFlat = csv2json(csv)
+// By default, fields containing a dot will be parsed inty nested JSON objects
+const users = csv2json(csv)
+console.log(users)
+// [
+//   { id: 1, name: 'Joe', address: { city: 'New York', street: '1st Ave' } },
+//   { id: 2, name: 'Sarah', address: { city: 'Manhattan', street: 'Spring street' } }
+// ]
+
+// Creating nested objects can be turned off using the option `nested`
+const usersFlat = csv2json(csv, { nested: false })
 console.log(usersFlat)
 // [
 //   { id: 1, name: 'Joe', 'address.city': 'New York', 'address.street': '1st Ave' },
 //   { id: 2, name: 'Sarah', 'address.city': 'Manhattan', 'address.street': 'Spring street' }
 // ]
 
-// Use getNestedFieldsFromCsv to parse the CSV into nested JSON objects
-const usersNested = csv2json(csv, {
-  fields: getNestedFieldsFromCsv
+// The JSON output can be customized using `fields`
+const usersCustom = csv2json(csv, {
+  fields: [
+    {name : 'name', setValue: (object, value) => object.name = value },
+    {name : 'address.city', setValue: (object, value) => object.city = value }
+  ]
 })
-console.log(usersNested)
+console.log(usersCustom)
 // [
-//   { id: 1, name: 'Joe', address: { city: 'New York', street: '1st Ave' } },
-//   { id: 2, name: 'Sarah', address: { city: 'Manhattan', street: 'Spring street' } }
+//   { name: 'Joe', city: 'New York' },
+//   { name: 'Sarah', city: 'Manhattan' }
 // ]
 ```
 
 
-
 ## API
 
-### `json2csv(json: NestedObject[], options: CsvOptions) : string`
+### `json2csv(json: NestedObject[], options?: CsvOptions) : string`
 
 Where `options` is an object with the following properties:
 
@@ -139,6 +123,7 @@ Where `options` is an object with the following properties:
 | `header`      | `boolean`                         | If true, a header will be created as first line of the CSV.                                                                                                                                                                                                               |
 | `delimiter`   | `string`                          | Default delimiter is `,`. A delimiter must be a single character.                                                                                                                                                                                                         |
 | `eol`         | `\r\n` or `\n`                    | End of line, can be `\r\n` (default) or `\n`.                                                                                                                                                                                                                             |
+| `flatten`     | `boolean`                         | If true (default), nested object properties will be flattened in multiple CSV columns.                                                                                                                                                                                    |
 | `fields`      | `CsvField[]` or `CsvFieldsParser` | A list with fields to be put into the CSV file. This allows specifying the order of the fields and which fields to include/exclued. There are two field parsers included: `getFieldsFromJson` and `getNestedFieldsFromJson`. The latter will flatten nested JSON objects. |
 | `formatValue` | `ValueFormatter`                  | Function used to change any type of value into a serialized string for the CSV. The build in formatter will only enclose values in quotes when necessary, and will stringify nested JSON objects.                                                                         |
 
@@ -151,7 +136,7 @@ function formatValue(value: unknown) : string {
 ```
 
 
-### `csv2json(csv: string, options: JsonOptions) : NestedObject[]`
+### `csv2json(csv: string, options?: JsonOptions) : NestedObject[]`
 
 Where `options` is an object with the following properties: 
 
@@ -159,6 +144,7 @@ Where `options` is an object with the following properties:
 |--------------|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `header`     | `boolean`                           | Should be set `true` when the first line of the CSV file contains a header                                                                                                                                                                                                                                  |
 | `delimiter`  | `string`                            | Default delimiter is `,`. A delimiter must be a single character.                                                                                                                                                                                                                                           |
+| `nested`     | `boolean`                           | If true (default), field names containing a dot will be parsed into nested JSON objects.                                                                                                                                                                                                                    |
 | `fields`     | `JsonField[]` or `JsonFieldsParser` | A list with fields to be extracted from the CSV file into JSON. This allows specifying which fields are include/exclued, and how they will be put into the JSON object. There are two field parsers included: `getFieldsFromCsv` and `getNestedFieldsFromCsv`. The latter will flatten nested JSON objects. |
 | `parseValue` | `ValueParser`                       | Used to parse a stringified value into a value again (number, boolean, string, ...). The build in parser will parse numbers and booleans, and will parse stringified JSON objects.                                                                                                                          |
 

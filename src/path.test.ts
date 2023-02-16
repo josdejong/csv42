@@ -8,7 +8,7 @@ describe('path', () => {
     expect(stringifyPath(['address', 'location', 0])).toEqual('address.location[0]')
     expect(stringifyPath([0, 'name'])).toEqual('[0].name')
     expect(stringifyPath(['prop.with.dot'])).toEqual('["prop.with.dot"]')
-    expect(stringifyPath(['prop with space'])).toEqual('["prop with space"]')
+    expect(stringifyPath(['prop with space'])).toEqual('prop with space')
   })
 
   test('parsePath', () => {

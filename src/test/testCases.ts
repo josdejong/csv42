@@ -1,5 +1,4 @@
 import { CsvOptions, JsonOptions, NestedObject } from '../types'
-import { getNestedFieldsFromCsv, getNestedFieldsFromJson } from '../fields'
 
 interface TestCase {
   description: string
@@ -33,7 +32,8 @@ export const testCases: TestCase[] = [
     ],
     csv:
       'string,empty,number,true,false,object,array,null,undefined\r\n' +
-      'hi,"",42,true,false,"{""key"":""value""}","[""item1""]",,\r\n'
+      'hi,"",42,true,false,"{""key"":""value""}","[""item1""]",,\r\n',
+    csvOptions: { flatten: false }
   },
   {
     description: 'with header (default)',
@@ -164,34 +164,64 @@ export const testCases: TestCase[] = [
     csv:
       'name,details.address.city,details.location[0],details.location[1]\r\n' +
       'Joe,Rotterdam,51.9280712,4.4207888\r\n',
-    csvOptions: {
-      fields: getNestedFieldsFromJson
-    },
-    jsonOptions: {
-      fields: getNestedFieldsFromCsv
-    }
+    csvOptions: { flatten: true },
+    jsonOptions: { nested: true }
+  },
+  {
+    description: 'do not flatten nested fields from json to csv',
+    json: [
+      {
+        name: 'Joe',
+        details: {
+          address: { city: 'Rotterdam' },
+          location: [51.9280712, 4.4207888]
+        }
+      }
+    ],
+    csv:
+      'name,details\r\n' +
+      'Joe,"{""address"":{""city"":""Rotterdam""},""location"":[51.9280712,4.4207888]}"\r\n',
+    csvOptions: { flatten: false },
+    jsonOptions: { nested: false }
+  },
+  {
+    description: 'do not flatten nested fields from csv to json',
+    json: [
+      {
+        name: 'Joe',
+        details: {
+          address: { city: 'Rotterdam' },
+          location: [51.9280712, 4.4207888]
+        }
+      }
+    ],
+    csv:
+      'name,details.address.city,details.location[0],details.location[1]\r\n' +
+      'Joe,Rotterdam,51.9280712,4.4207888\r\n',
+    parsedJson: [
+      {
+        name: 'Joe',
+        'details.address.city': 'Rotterdam',
+        'details.location[0]': 51.9280712,
+        'details.location[1]': 4.4207888
+      }
+    ],
+    csvOptions: { flatten: true },
+    jsonOptions: { nested: false }
   },
   {
     description: 'flatten nested fields containing the key separator',
     json: [{ nested: { 'field.name': 42 } }],
     csv: '"nested[""field.name""]"\r\n42\r\n',
-    csvOptions: {
-      fields: getNestedFieldsFromJson
-    },
-    jsonOptions: {
-      fields: getNestedFieldsFromCsv
-    }
+    csvOptions: { flatten: true },
+    jsonOptions: { nested: true }
   },
   {
     description: 'flatten nested fields containing the key separator and control characters',
     json: [{ nested: { 'field.,name': 42 } }],
     csv: '"nested[""field.,name""]"\r\n42\r\n',
-    csvOptions: {
-      fields: getNestedFieldsFromJson
-    },
-    jsonOptions: {
-      fields: getNestedFieldsFromCsv
-    }
+    csvOptions: { flatten: true },
+    jsonOptions: { nested: true }
   },
   {
     description: 'no data',

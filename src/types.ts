@@ -25,6 +25,7 @@ export interface CsvOptions {
   header?: boolean
   delimiter?: string
   eol?: '\r\n' | '\n'
+  flatten?: boolean
   fields?: CsvField[] | CsvFieldsParser
   formatValue?: ValueFormatter
 }
@@ -32,6 +33,7 @@ export interface CsvOptions {
 export interface JsonOptions {
   header?: boolean
   delimiter?: string
+  nested?: boolean
   fields?: JsonField[] | JsonFieldsParser
   parseValue?: ValueParser
 }
