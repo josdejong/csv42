@@ -42,7 +42,7 @@ export function mapFieldsByName(
   return mappedFields
 }
 
-function collectNestedPaths(records: NestedObject[], recurse: boolean): Path[] {
+export function collectNestedPaths(records: NestedObject[], recurse: boolean): Path[] {
   const merged: NestedObject = {}
 
   function mergeRecord(object: NestedObject, merged: NestedObject) {
