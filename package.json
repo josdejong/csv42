@@ -1,11 +1,21 @@
 {
   "name": "csv42",
-  "description": "Small and fast CSV parser to convert JSON to CSV and CSV to JSON",
+  "description": "Small and fast CSV parser to convert nested JSON to CSV and CSV to JSON",
   "keywords": [
     "csv",
     "json",
     "csv2json",
-    "json2csv"
+    "json2csv",
+    "fast",
+    "simple",
+    "nested",
+    "flatten",
+    "format",
+    "parse",
+    "delimiter",
+    "header",
+    "eol",
+    "fields"
   ],
   "version": "1.0.0",
   "type": "module",
