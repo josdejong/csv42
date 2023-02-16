@@ -70,6 +70,25 @@ describe('csv2json', () => {
     ).toEqual([{ name: 'Joe' }, { name: 'Sarah' }])
   })
 
+  test('should parse custom fields by index', () => {
+    expect(
+      csv2json('id,name\r\n1,Joe\r\n2,Sarah\r\n', {
+        fields: [{ index: 1, setValue: (item, value) => (item.name = value) }]
+      })
+    ).toEqual([{ name: 'Joe' }, { name: 'Sarah' }])
+  })
+
+  test('should throw an error when defining the same field twice', () => {
+    expect(() =>
+      csv2json('id,name\r\n1,Joe\r\n2,Sarah\r\n', {
+        fields: [
+          { index: 1, setValue: (item, value) => (item.name = value) },
+          { name: 'name', setValue: (item, value) => (item.name = value) }
+        ]
+      })
+    ).toThrow('Duplicate field for index 1')
+  })
+
   test('should throw an error when a field is not found', () => {
     expect(() => {
       csv2json('id,name\n42,Joe', {

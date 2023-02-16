@@ -13,10 +13,15 @@ export interface CsvField {
   getValue: ValueGetter
 }
 
-export interface JsonField {
+export interface JsonFieldName {
   name: string
   setValue: ValueSetter
 }
+export interface JsonFieldIndex {
+  index: number
+  setValue: ValueSetter
+}
+export type JsonField = JsonFieldName | JsonFieldIndex
 
 export type CsvFieldsParser = (json: NestedObject[]) => CsvField[]
 export type JsonFieldsParser = (fieldNames: string[]) => JsonField[]

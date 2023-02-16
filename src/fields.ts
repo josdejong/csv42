@@ -23,17 +23,28 @@ export function toFields(names: string[], nested: boolean): JsonField[] {
   })
 }
 
-export function mapFieldsByName(
-  fieldNames: string[],
-  fields: JsonField[]
-): (JsonField | undefined)[] {
+/**
+ * Create an array which has an entry for every column in a CSV file, which is:
+ * - undefined when the column is not needed in the generated JSON output
+ * - JsonField otherwise, where the field can be configured by index, or by name
+ *   In the latter case, the index will be resolved by looking the field name up in the
+ *   list with fieldNames (containing all available fields)
+ */
+export function mapFields(fieldNames: string[], fields: JsonField[]): (JsonField | undefined)[] {
   const mappedFields: (JsonField | undefined)[] = []
 
   for (let field of fields) {
     // an indexOf inside a for loop is inefficient, but it's ok since we're not dealing with a large array
-    const index = fieldNames.indexOf(field.name)
+    // const index = typeof field.index === 'number' ? field.index : fieldNames.indexOf(field.name)
+    // @ts-ignore
+    const index = field.index !== undefined ? field.index : fieldNames.indexOf(field.name)
     if (index === -1) {
+      // @ts-ignores
       throw new Error(`Field "${field.name}" not found in the csv data`)
+    }
+
+    if (mappedFields[index]) {
+      throw new Error(`Duplicate field for index ${index}`)
     }
 
     mappedFields[index] = field

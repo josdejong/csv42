@@ -1,6 +1,10 @@
 {
   "name": "csv42",
   "description": "Small and fast CSV parser to convert nested JSON to CSV and CSV to JSON",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/josdejong/csv42.git"
+  },
   "keywords": [
     "csv",
     "json",
