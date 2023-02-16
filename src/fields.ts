@@ -65,7 +65,7 @@ export function collectNestedPaths(records: NestedObject[], recurse: boolean): P
           merged[key] = Array.isArray(object[key]) ? [] : {}
         }
 
-        mergeRecord(value as NestedObject, merged[key] as NestedObject)
+        mergeRecord(value, merged[key] as NestedObject)
       } else {
         merged[key] = true
       }
@@ -81,7 +81,7 @@ export function collectNestedPaths(records: NestedObject[], recurse: boolean): P
       const value = object[key]
 
       if (isObjectOrArray(value)) {
-        collectPaths(value as NestedObject, path)
+        collectPaths(value, path)
       } else {
         paths.push(path)
       }
@@ -93,7 +93,7 @@ export function collectNestedPaths(records: NestedObject[], recurse: boolean): P
   return paths
 }
 
-function isObjectOrArray(value: unknown): boolean {
+function isObjectOrArray(value: unknown): value is NestedObject {
   return typeof value === 'object' && value !== null
 }
 
