@@ -9,7 +9,7 @@ export function stringifyPath(path: Path): string {
     .map((p, index) => {
       return typeof p === 'number'
         ? '[' + p + ']'
-        : /[.\[\]]/.test(p)
+        : /[.\[\]]/.test(p) // match any character . or [ or ]
         ? '["' + p + '"]'
         : (index > 0 ? '.' : '') + p
     })
