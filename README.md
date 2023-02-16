@@ -1,4 +1,4 @@
-# csv7
+# csv42
 
 Convert **CSV to JSON** and **JSON to CSV**
 
@@ -23,12 +23,12 @@ Note that the parser has no streaming support.
 
 Well, you have to write a CSV parser at least once in you life, right? ;)
 
-The `csv7` library was developed specifically for https://jsoneditoronline.org. The library was developed to be small, fast, convert from and to CSV, and support nested JSON objects.
+The `csv42` library was developed specifically for https://jsoneditoronline.org. The library was developed for the browser. Besides being small and fast, one important feature is supporting nested JSON objects. So, why the name `csv42`? Just because [42](https://simple.wikipedia.org/wiki/42_(answer)) is a beautiful number and reminds us that there is a whole universe of beautiful CSV libraries out there.
 
 ## Install
 
 ```
-npm install csv7
+npm install csv42
 ```
 
 ## Usage
@@ -38,7 +38,7 @@ Install the library once:
 ### Convert JSON to CSV
 
 ```ts
-import { json2csv } from 'csv7'
+import { json2csv } from 'csv42'
 
 const users = [
   { id: 1, name: 'Joe', address: { city: 'New York', street: '1st Ave' } },
@@ -75,7 +75,7 @@ console.log(csvCustom)
 ### Convert CSV to JSON
 
 ```ts
-import { csv2json } from 'csv7'
+import { csv2json } from 'csv42'
 
 const csv = `id,name,address.city,address.street
 1,Joe,New York,1st Ave
@@ -172,6 +172,6 @@ function parseValue(value: string) : unknown {
 
 ## License
 
-`csv7` is released as open source under the permissive the [ISC license](LICENSE.md).
+`csv42` is released as open source under the permissive the [ISC license](LICENSE.md).
 
-**If you are using `csv7` commercially, there is a _social_ (but no legal) expectation that you help fund its maintenance. [Start here](https://github.com/sponsors/josdejong).**
+**If you are using `csv42` commercially, there is a _social_ (but no legal) expectation that you help fund its maintenance. [Start here](https://github.com/sponsors/josdejong).**

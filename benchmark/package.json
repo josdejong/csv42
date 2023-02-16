@@ -1,5 +1,5 @@
 {
-  "name": "csv7-benchmark",
+  "name": "csv42-benchmark",
   "type": "module",
   "scripts": {
     "benchmark": "ts-node-esm --preferTsExts benchmark.ts"
