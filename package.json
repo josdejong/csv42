@@ -49,7 +49,7 @@
     "build:umd": "rollup lib/esm/index.js --format umd --name csv42 --sourcemap --output.file lib/umd/csv42.js && cpy tools/cjs/package.json lib/umd --flat",
     "build:umd:min": "uglifyjs --compress --mangle --source-map --comments --output lib/umd/csv42.min.js -- lib/umd/csv42.js",
     "build:types": "tsc --project tsconfig-types.json",
-    "build:validate": "vitest run test-lib",
+    "build:validate": "vitest run test-lib"
   },
   "devDependencies": {
     "@babel/cli": "7.20.7",
