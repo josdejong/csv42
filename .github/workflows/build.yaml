@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -52,7 +52,7 @@ jobs:
         env:
           CI: true
 
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -61,6 +61,6 @@ jobs:
         with:
           node-version: 18.x
       - run: npm ci
-      - run: npm run build-and-test
+      - run: npm run build
         env:
           CI: true
