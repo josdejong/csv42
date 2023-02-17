@@ -27,16 +27,10 @@ export function json2csv(json: NestedObject[], options?: CsvOptions): string {
   return output
 
   function headerToCsv(): string {
-    return fields
-      .map((field) => field.name)
-      .map(formatValue)
-      .join(delimiter)
+    return fields.map((field) => formatValue(field.name)).join(delimiter)
   }
 
   function rowToCsv(item: NestedObject): string {
-    return fields
-      .map((field) => field.getValue(item))
-      .map(formatValue)
-      .join(delimiter)
+    return fields.map((field) => formatValue(field.getValue(item))).join(delimiter)
   }
 }
