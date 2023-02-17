@@ -5,7 +5,8 @@ import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   const withHeader = options?.header !== false // true when not specified
-  const delimiter = validateDelimiter(options?.delimiter || ',')
+  const delimiter: number = validateDelimiter(options?.delimiter || ',').charCodeAt(0)
+  const quote = '"'.charCodeAt(0)
   const parse = options?.parseValue || parseValue
 
   const json: NestedObject[] = []
@@ -54,7 +55,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
 
       index++
 
-      if (csv[i] === delimiter) {
+      if (csv.charCodeAt(i) === delimiter) {
         i++
       }
     }
@@ -65,25 +66,25 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   function parseField(): unknown {
     const start = i
 
-    if (csv[i] === '"') {
+    if (csv.charCodeAt(i) === quote) {
       // parse a quoted value
       do {
         i++
 
-        if (csv[i] === '"' && csv[i + 1] === '"') {
+        if (csv.charCodeAt(i) === quote && csv.charCodeAt(i + 1) === quote) {
           // skip over escaped quote (two quotes)
           i += 2
         }
-      } while (i < csv.length && csv[i] !== '"')
+      } while (i < csv.length && csv.charCodeAt(i) !== quote)
 
       // eat end quote
-      if (csv[i] !== '"') {
+      if (csv.charCodeAt(i) !== quote) {
         throw new Error('Unexpected end: end quote " missing')
       }
       i++
     } else {
       // parse an unquoted value
-      while (i < csv.length && csv[i] !== delimiter && !isEol(csv, i)) {
+      while (i < csv.length && csv.charCodeAt(i) !== delimiter && !isEol(csv, i)) {
         i++
       }
     }

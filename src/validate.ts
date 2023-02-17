@@ -19,9 +19,12 @@ export function isEol(text: string, index: number): boolean {
 }
 
 export function isLF(text: string, index: number) {
-  return text[index] === '\n'
+  return text.charCodeAt(index) === newline
 }
 
 export function isCRLF(text: string, index: number) {
-  return text[index] === '\r' && text[index + 1] === '\n'
+  return text.charCodeAt(index) === carriageReturn && text.charCodeAt(index + 1) === newline
 }
+
+const newline = 0xa // "\n"
+const carriageReturn = 0xd // "\r"
