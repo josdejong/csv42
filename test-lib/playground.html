@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV parser playground</title>
+  <style>
+    textarea {
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+<h1>csv42 playground</h1>
+<table>
+  <tbody>
+  <tr>
+    <td>JSON</td>
+    <td>CSV</td>
+  </tr>
+  <tr>
+    <td>
+      <label><textarea id="json"></textarea></label>
+    </td>
+    <td>
+      <label><textarea id="csv"></textarea></label>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<script type="module">
+  import { json2csv, csv2json } from '../lib/esm/index.js'
+
+  const jsonTextArea = document.getElementById('json')
+  const csvTextArea = document.getElementById('csv')
+
+  function initialize() {
+    const json = [
+      { id: 1, name: 'Joe' },
+      { id: 2, name: 'Sarah' }
+    ]
+    const csv = json2csv(json)
+
+    jsonTextArea.value = JSON.stringify(json, null, 2)
+    csvTextArea.value = csv
+  }
+
+  function updateJSON() {
+    const json = csv2json(csvTextArea.value)
+    jsonTextArea.value = JSON.stringify(json, null, 2)
+  }
+
+  function updateCSV() {
+    const json = JSON.parse(jsonTextArea.value)
+    csvTextArea.value = json2csv(json)
+  }
+
+  jsonTextArea.addEventListener('input', updateCSV)
+  csvTextArea.addEventListener('input', updateJSON)
+  initialize()
+</script>
+</body>
+</html>

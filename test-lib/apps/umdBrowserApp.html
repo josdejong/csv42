@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV parser (UMD)</title>
+
+  <script src="../../lib/umd/csv42.js"></script>
+  <style>
+      textarea {
+          width: 200px;
+          height: 200px;
+      }
+  </style>
+</head>
+<body>
+<label>json: <textarea id="json" readonly></textarea></label>
+<label>csv: <textarea id="csv" readonly></textarea></label>
+
+<script>
+  const json = [
+    { id: 1, name: 'Joe' },
+    { id: 2, name: 'Sarah' }
+  ]
+  const csv = csv42.json2csv(json)
+
+  document.getElementById('json').innerHTML = JSON.stringify(json, null, 2)
+  document.getElementById('csv').innerHTML = csv
+</script>
+</body>
+</html>

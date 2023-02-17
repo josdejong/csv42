@@ -23,7 +23,7 @@
   ],
   "version": "1.0.0",
   "type": "module",
-  "main": "lib/esm/index.js",
+  "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
   "browser": "lib/umd/csv42.js",
   "types": "lib/types/index.d.ts",
@@ -46,9 +46,10 @@
     "build:clean": "del-cli lib",
     "build:esm": "babel src --out-dir lib/esm --extensions \".ts\" --source-maps --config-file ./babel.config.json",
     "build:cjs": "babel src --out-dir lib/cjs --extensions \".ts\" --source-maps --config-file ./babel-cjs.config.json && cpy tools/cjs/package.json lib/cjs --flat",
-    "build:umd": "rollup lib/esm/index.js --format umd --name 'csv42' --sourcemap --output.file lib/umd/csv42.js && cpy tools/cjs/package.json lib/umd --flat",
+    "build:umd": "rollup lib/esm/index.js --format umd --name csv42 --sourcemap --output.file lib/umd/csv42.js && cpy tools/cjs/package.json lib/umd --flat",
     "build:umd:min": "uglifyjs --compress --mangle --source-map --comments --output lib/umd/csv42.min.js -- lib/umd/csv42.js",
-    "build:types": "tsc --project tsconfig-types.json"
+    "build:types": "tsc --project tsconfig-types.json",
+    "build:test-lib": "vitest run test-lib"
   },
   "devDependencies": {
     "@babel/cli": "7.20.7",
