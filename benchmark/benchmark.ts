@@ -35,34 +35,44 @@ interface Result {
 
 const results: Result[] = []
 
-console.log('SECTION 1: JSON to CSV')
+console.log('SECTION 1: FLAT JSON to CSV')
 console.log()
 
 for (let count of itemCounts) {
   results.push(
-    await runBenchmark('flatToCsv', generateFlatJson(count), (library) => library.flatToCsv)
+    await runBenchmark('flat json to csv', generateFlatJson(count), (library) => library.flatToCsv)
   )
 }
 
-for (let count of itemCounts) {
-  results.push(
-    await runBenchmark('nestedToCsv', generateNestedJson(count), (library) => library.nestedToCsv)
-  )
-}
-
-console.log('SECTION 2: CSV to JSON')
+console.log('SECTION 2: NESTED JSON to CSV')
 console.log()
-
-for (let count of itemCounts) {
-  results.push(
-    await runBenchmark('flatFromCsv', generateFlatCsv(count), (library) => library.flatFromCsv)
-  )
-}
 
 for (let count of itemCounts) {
   results.push(
     await runBenchmark(
-      'nestedFromCsv',
+      'nested json to csv',
+      generateNestedJson(count),
+      (library) => library.nestedToCsv
+    )
+  )
+}
+
+console.log('SECTION 3: FLAT CSV to JSON')
+console.log()
+
+for (let count of itemCounts) {
+  results.push(
+    await runBenchmark('flat csv to json', generateFlatCsv(count), (library) => library.flatFromCsv)
+  )
+}
+
+console.log('SECTION 4: NESTED CSV to JSON')
+console.log()
+
+for (let count of itemCounts) {
+  results.push(
+    await runBenchmark(
+      'nested csv to json',
       generateNestedCsv(count),
       (library) => library.nestedFromCsv
     )
@@ -72,26 +82,6 @@ for (let count of itemCounts) {
 console.log('RESULTS TABLE (1000x ROWS/SEC, HIGHER IS BETTER)')
 console.table(results)
 console.log()
-
-console.log('REMARKS')
-console.log(`1. The performance depends of course on what kind of data a single
-   row contains and how much. This benchmark generates test data that contains
-   a bit of everything: string, numbers, strings that need escaping.`)
-console.log(`2. Not all libraries do support flattening nested JSON objects.
-   This has been tested by flattening the data using the library "flat".
-   When the flat library is used, this is added to the name of the library.
-   However, flattening is only applied in the nested JSON benchmarks
-   "nestedToCsv" and "nestedFromCsv", and NOT to "flatToCsv" and "flatFromCsv".
-   From what I've seen, the "flat" step adds something like 20% to the duration: 
-   significant, but not the largest part of the work.`)
-console.log(`3. The CSV libraries have different defaults when parsing values. 
-   In these benchmarks, numeric values are being parsed into numbers. 
-   That is slower than leaving all values a string, but is a more realistic test.`)
-console.log(`4. For example the library "fast-csv" has a stream based API, 
-   meant to read/write to disk or network. It may be that this benchmark is 
-   not ideal for such a library.`)
-console.log(`5. A library like "json2csv" is very fast for small amounts of data, 
-   but the performance degrades a lot with large amounts of data.`)
 
 function runBenchmark<T extends NestedObject[] | string>(
   name: string,
