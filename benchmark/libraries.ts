@@ -50,14 +50,6 @@ export const libraries: CsvLibrary[] = [
   },
   {
     id: 4,
-    name: 'json-2-csv',
-    flatToCsv: converter.json2csvAsync,
-    flatFromCsv: converter.csv2jsonAsync,
-    nestedToCsv: converter.json2csvAsync,
-    nestedFromCsv: converter.csv2jsonAsync
-  },
-  {
-    id: 5,
     name: 'papaparse (+flat)',
     flatToCsv: (json) => Papa.unparse(json),
     flatFromCsv: (csv) => Papa.parse(csv, { header: true, transform }).data as NestedObject[],
@@ -68,12 +60,20 @@ export const libraries: CsvLibrary[] = [
       ) as NestedObject[]
   },
   {
-    id: 6,
+    id: 5,
     name: 'fast-csv (+flat)',
     flatToCsv: (json) => fastCsvFormat(json, false),
     flatFromCsv: (csv) => fastCsvParse(csv, false),
     nestedToCsv: (json) => fastCsvFormat(json, true),
     nestedFromCsv: (csv) => fastCsvParse(csv, true)
+  },
+  {
+    id: 6,
+    name: 'json-2-csv',
+    flatToCsv: converter.json2csvAsync,
+    flatFromCsv: converter.csv2jsonAsync,
+    nestedToCsv: converter.json2csvAsync,
+    nestedFromCsv: converter.csv2jsonAsync
   }
 ]
 
