@@ -68,7 +68,7 @@ export const libraries: CsvLibrary[] = [
       ) as NestedObject[]
   },
   {
-    id: 5,
+    id: 6,
     name: 'fast-csv (+flat)',
     flatToCsv: (json) => fastCsvFormat(json, false),
     flatFromCsv: (csv) => fastCsvParse(csv, false),
