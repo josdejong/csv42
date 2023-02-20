@@ -2,12 +2,13 @@
   "name": "csv42-benchmark",
   "type": "module",
   "scripts": {
-    "benchmark": "ts-node-esm --preferTsExts benchmark.ts"
+    "benchmark": "ts-node-esm benchmark.ts"
   },
   "dependencies": {
     "@types/benchmark": "2.1.2",
     "@types/flat": "5.0.2",
     "@types/json2csv": "5.0.3",
+    "@types/lodash-es": "4.17.6",
     "@types/papaparse": "5.3.7",
     "benchmark": "2.1.4",
     "csv": "6.2.7",
@@ -17,6 +18,7 @@
     "flat": "5.0.2",
     "json-2-csv": "3.18.0",
     "json2csv": "5.0.7",
+    "lodash-es": "4.17.21",
     "papaparse": "5.3.2",
     "ts-node": "10.9.1",
     "typescript": "4.9.5"

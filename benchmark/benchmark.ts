@@ -1,173 +1,172 @@
+import assert from 'assert'
+import {
+  generateFlatCsv,
+  generateFlatJson,
+  generateNestedCsv,
+  generateNestedJson
+} from './generateData.js'
 import Benchmark from 'benchmark'
-import { Parser } from 'json2csv'
-import converter from 'json-2-csv'
-import { stringify as csvStringify } from 'csv-stringify/browser/esm/sync'
-import { parse as csvParse } from 'csv-parse/browser/esm/sync'
-// @ts-ignore
-import csvParser from 'csv-parser'
-import Papa from 'papaparse'
-import { json2csv, csv2json } from '../src/index.js'
-import flat from 'flat'
-import { format, parse } from 'fast-csv'
+import { CsvLibrary, libraries } from './libraries.js'
+import { humanSize, printCsvPreview, printJsonPreview, validateAll } from './validate.js'
+import { NestedObject } from '../src'
 
-const count = 10_000
-const data = generateData(count)
+// for nicely aligning the library names in the console output:
+const maxNameLength = 20
 
-const csv1 = json2csv(data, { flatten: true })
-console.log(`2) csv42 preview, flatten=true (${csv1.length} bytes):`)
-console.log(truncateLines(csv1))
-console.time('json1')
-const json1 = csv2json(csv1)
-console.timeEnd('json1')
-console.log(json1[1])
+// specify different number of items to run all tests multiple times,
+// so you can compare the effect of small vs large amounts of rows
+const itemCounts = [100, 1000, 10_000, 100_000]
+// const itemCounts = [100]
+
+console.log('PREVIEW')
+console.log()
+printPreviews()
+
+const issueCount = await validateAll(libraries)
+assert(issueCount === 0, 'There must be zero validation issues in order to continue')
+console.log('VALIDATION')
+console.log()
+console.log('All CSV libraries are successfully validated')
 console.log()
 
-const csv2 = json2csv(data, { flatten: false })
-console.log(`1) csv42 preview, flatten=false (${csv2.length} bytes):`)
-console.log(truncateLines(csv2))
-console.time('json2')
-const json2 = csv2json(csv2)
-console.timeEnd('json2')
-console.log(json2[1])
+interface Result {
+  [name: string]: string
+}
+
+const results: Result[] = []
+
+console.log('SECTION 1: JSON to CSV')
 console.log()
 
-const csv3 = new Parser({ header: true }).parse(data)
-console.log(`3) json2csv preview (${csv3.length} bytes):`)
-console.log(truncateLines(csv3))
-console.log()
-
-const csv4 = await converter.json2csvAsync(data)
-console.log(`4) json-2-csv preview (${csv4.length} bytes):`)
-console.log(truncateLines(csv4))
-console.time('json4')
-const json4 = await converter.csv2jsonAsync(csv4)
-console.timeEnd('json4')
-console.log(json4[1])
-console.log()
-
-const csv5 = csvStringify(data)
-console.log(`5) csv preview (${csv5.length} bytes):`)
-console.log(truncateLines(csv5))
-console.log()
-
-const csv6 = Papa.unparse(data.map(flat.flatten as any))
-console.log(`6) papaparse+flat preview (${csv6.length} bytes):`)
-console.log(truncateLines(csv6))
-console.time('json6')
-const json6 = Papa.parse(csv6).data.map(flat.unflatten as any) // FIXME: must parse into an object instead of array
-console.log(json6[1])
-console.timeEnd('json6')
-console.log()
-
-const csv7 = await fastCsvFormat(data)
-console.log(`7) fast-csv+flat preview (${csv7.length} bytes):`)
-console.log(truncateLines(csv7))
-console.time('json7')
-const json7 = await fastCsvParse(csv7)
-console.log(json7[1])
-console.timeEnd('json7')
-console.log()
-
-const suite = new Benchmark.Suite('JSON -> CSV benchmark')
-suite
-  // Section 1: JSON to CSV
-  .add('1) JSON to CSV: csv42 (flatten=true)  ', () => json2csv(data, { flatten: true }))
-  .add('2) JSON to CSV: csv42 (flatten=false) ', () => json2csv(data, { flatten: false }))
-  .add('3) JSON to CSV: json2csv              ', () => new Parser({ header: true }).parse(data))
-  .add('4) JSON to CSV: json-2-csv            ', {
-    defer: true,
-    fn(deferred: any) {
-      converter.json2csvAsync(data).then(() => deferred.resolve())
-    }
-  })
-  .add('5) JSON to CSV: csv                   ', () => csvStringify(data))
-  .add('6) JSON to CSV: papaparse+flat        ', () => Papa.unparse(data.map(flat.flatten as any)))
-  .add('7) JSON to CSV: fast-csv+flat         ', {
-    defer: true,
-    fn(deferred: any) {
-      fastCsvFormat(data).then(() => deferred.resolve())
-    }
-  })
-
-  // Section 2: CSV to JSON
-  .add('1) CSV to JSON: csv42 (flatten=true)  ', () => csv2json(csv1))
-  .add('2) CSV to JSON: csv42 (flatten=false) ', () => csv2json(csv2))
-  .add('4) CSV to JSON: json-2-csv            ', {
-    defer: true,
-    fn(deferred: any) {
-      converter.csv2jsonAsync(csv4).then(() => deferred.resolve())
-    }
-  })
-  .add('5) CSV to JSON: csv                   ', () => csvParse(csv5))
-  .add(
-    '6) CSV to JSON: papaparse+flat (!FIXME) ',
-    () =>
-      // FIXME: the returned data are array items, no JSON objects and no nested json objects
-      Papa.parse(csv6).data
+for (let count of itemCounts) {
+  results.push(
+    await runBenchmark('flatToCsv', generateFlatJson(count), (library) => library.flatToCsv)
   )
-  .add('7) CSV to JSON: fast-csv (!flatten?)            ', {
-    defer: true,
-    fn(deferred: any) {
-      fastCsvParse(csv7).then(() => deferred.resolve())
-    }
-  })
+}
 
-  .on('cycle', function (event: Event) {
-    console.log(String(event.target))
-  })
-  .run()
+for (let count of itemCounts) {
+  results.push(
+    await runBenchmark('nestedToCsv', generateNestedJson(count), (library) => library.nestedToCsv)
+  )
+}
 
-function fastCsvFormat(data: any[]) {
-  return new Promise<string>((resolve) => {
-    let csv = ''
-    const stream = format({ headers: true })
-    stream.on('data', (chunk) => (csv += chunk))
-    stream.on('end', () => resolve(csv))
-    data.forEach((item) => {
-      stream.write(flat.flatten(item))
+console.log('SECTION 2: CSV to JSON')
+console.log()
+
+for (let count of itemCounts) {
+  results.push(
+    await runBenchmark('flatFromCsv', generateFlatCsv(count), (library) => library.flatFromCsv)
+  )
+}
+
+for (let count of itemCounts) {
+  results.push(
+    await runBenchmark(
+      'nestedFromCsv',
+      generateNestedCsv(count),
+      (library) => library.nestedFromCsv
+    )
+  )
+}
+
+console.log('RESULTS TABLE (1000x ROWS/SEC, HIGHER IS BETTER)')
+console.table(results)
+console.log()
+
+console.log('REMARKS')
+console.log(`1. The performance depends of course on what kind of data a single
+   row contains and how much. This benchmark generates test data that contains
+   a bit of everything: string, numbers, strings that need escaping.`)
+console.log(`2. Not all libraries do support flattening nested JSON objects.
+   This has been tested by flattening the data using the library "flat".
+   When the flat library is used, this is added to the name of the library.
+   However, flattening is only applied in the nested JSON benchmarks
+   "nestedToCsv" and "nestedFromCsv", and NOT to "flatToCsv" and "flatFromCsv".
+   From what I've seen, the "flat" step adds something like 20% to the duration: 
+   significant, but not the largest part of the work.`)
+console.log(`3. The CSV libraries have different defaults when parsing values. 
+   In these benchmarks, numeric values are being parsed into numbers. 
+   That is slower than leaving all values a string, but is a more realistic test.`)
+console.log(`4. For example the library "fast-csv" has a stream based API, 
+   meant to read/write to disk or network. It may be that this benchmark is 
+   not ideal for such a library.`)
+console.log(`5. A library like "json2csv" is very fast for small amounts of data, 
+   but the performance degrades a lot with large amounts of data.`)
+
+function runBenchmark<T extends NestedObject[] | string>(
+  name: string,
+  data: T,
+  getRunner: (library: CsvLibrary) => ((json: T) => void) | null
+) {
+  return new Promise<Result>((resolve) => {
+    const desc = description(name, data)
+    console.log(desc)
+
+    const result: Result = {}
+    const suite = new Benchmark.Suite(name)
+
+    libraries.forEach((library) => {
+      const runner = getRunner(library)
+
+      if (runner) {
+        suite.add(padRight(`${library.id}:${library.name}`, maxNameLength), {
+          defer: true,
+          fn: async (deferred: any) => {
+            await runner(data)
+            deferred.resolve()
+          }
+        })
+      }
     })
-    stream.end()
+
+    suite.on('cycle', function (event: Event) {
+      const summary = String(event.target)
+      console.log(name.includes('flat') ? summary.replace('(+flat)', ' '.repeat(7)) : summary)
+
+      result.test = desc
+
+      // calculate ops per second per 1000 items
+      // @ts-ignore
+      result[event.target.name] = round((event.target.hz * getItemCount(data)) / 1000)
+    })
+    suite.on('complete', () => {
+      console.log()
+      resolve(result)
+    })
+    suite.run()
   })
 }
 
-function fastCsvParse(csv: string) {
-  return new Promise<any[]>((resolve) => {
-    const data: any[] = []
-    const stream = parse({ headers: true })
-      .on('error', (error) => console.error(error))
-      // .on('data', (row) => data.push(flat.unflatten(row)))
-      .on('data', (row) => data.push(row))
-      .on('end', () => resolve(data))
-
-    stream.write(csv)
-    stream.end()
-  })
+function printPreviews() {
+  const count = 10
+  printJsonPreview('flat json', generateFlatJson(count))
+  printCsvPreview('flat csv', generateFlatCsv(count))
+  printJsonPreview('nested json', generateNestedJson(count))
+  printCsvPreview('nested csv', generateNestedCsv(count))
 }
 
-function generateData(count: number) {
-  const data = []
+function round(value: number): number {
+  return value < 100 ? Math.round(value * 100) / 100 : Math.round(value)
+}
 
-  for (let i = 0; i < count; i++) {
-    data.push({
-      _type: 'item',
-      name: 'Item ' + i,
-      description: 'Item ' + i + ' description in text',
-      location: {
-        city: 'Rotterdam',
-        street: 'Main street',
-        geo: [51.9280712, 4.4207888]
-      },
-      speed: 5.4,
-      heading: 128.3,
-      size: [3.4, 5.1, 0.9],
-      'field with , delimiter': 'value with , delimiter',
-      'field with " double quote': 'value with " double quote'
-    })
+function padRight(text: string, length: number, fill = ' '): string {
+  return text + (length > text.length ? fill.repeat(length - text.length) : '')
+}
+
+function description(name: string, data: NestedObject[] | string): string {
+  if (typeof data === 'string') {
+    return `benchmark ${name} (${getItemCount(data)} rows, ${humanSize(data.length)})`
+  } else {
+    return `benchmark ${name} (${getItemCount(data)} items, ${humanSize(
+      JSON.stringify(data).length
+    )})`
   }
-
-  return data
 }
 
-function truncateLines(csvText: string, lines = 5): string {
-  return csvText.split('\n').slice(0, lines).join('\n') + '\n...'
+function getItemCount(data: NestedObject[] | string): number {
+  if (typeof data === 'string') {
+    return data.split('\n').length - 2 // minus 2 to remove the header and trailing newline
+  } else {
+    return data.length
+  }
 }

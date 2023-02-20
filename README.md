@@ -7,7 +7,7 @@ Convert **CSV to JSON** and **JSON to CSV**
 - **2 way**: convert from and to CSV
 - **Simple**: straightforward and flexible API
 - **Lightweight**: <2KB gzipped with everything included, <1KB gzipped when only using `json2csv`
-- **Fast**
+- **Fast**: faster than the popular CSV libraries out there. See [benchmark](/benchmark).
 - **Modular**: only load what you use, thanks to ES5 modules and a plugin architecture
 - **Powerful**:
   - Configurable properties: `header`, `delimiter`, `eol`
