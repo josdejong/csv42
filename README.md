@@ -15,7 +15,7 @@ Convert **CSV to JSON** and **JSON to CSV**
   - Configurable serialization and deserialization of values via `formatValue` and `parseValue`
   - Support for nested JSON objects: either flatten nested contents, or stringify as a JSON object
 - **Standards compliant**: adheres to the CSV standard [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180)
-- **Universal**: Created for the browser, but can be used in any JavaScript environment like node.js. 
+- **Universal**: Created for the browser, but can be used in any JavaScript environment like node.js.
 
 Note that the parser has no streaming support.
 
@@ -23,7 +23,7 @@ Note that the parser has no streaming support.
 
 Well, you have to write a CSV parser at least once in you life, right? ;)
 
-The `csv42` library was developed specifically for https://jsoneditoronline.org. The library was developed for the browser. Besides being small and fast, one important feature is supporting nested JSON objects. So, why the name `csv42`? Just because [42](https://simple.wikipedia.org/wiki/42_(answer)) is a beautiful number and reminds us that there is a whole universe of beautiful CSV libraries out there.
+The `csv42` library was developed specifically for https://jsoneditoronline.org. The library was developed for the browser. Besides being small and fast, one important feature is supporting nested JSON objects. So, why the name `csv42`? Just because [42](<https://simple.wikipedia.org/wiki/42_(answer)>) is a beautiful number and reminds us that there is a whole universe of beautiful CSV libraries out there.
 
 ## Install
 
@@ -100,8 +100,8 @@ console.log(usersFlat)
 // The JSON output can be customized using `fields`
 const usersCustom = csv2json(csv, {
   fields: [
-    {name : 'name', setValue: (object, value) => object.name = value },
-    {name : 'address.city', setValue: (object, value) => object.city = value }
+    { name: 'name', setValue: (object, value) => (object.name = value) },
+    { name: 'address.city', setValue: (object, value) => (object.city = value) }
   ]
 })
 console.log(usersCustom)
@@ -111,7 +111,6 @@ console.log(usersCustom)
 // ]
 ```
 
-
 ## API
 
 ### `json2csv(json: NestedObject[], options?: CsvOptions) : string`
@@ -119,7 +118,7 @@ console.log(usersCustom)
 Where `options` is an object with the following properties:
 
 | Option        | Type                              | Description                                                                                                                                                                                       |
-|---------------|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `header`      | `boolean`                         | If true, a header will be created as first line of the CSV.                                                                                                                                       |
 | `delimiter`   | `string`                          | Default delimiter is `,`. A delimiter must be a single character.                                                                                                                                 |
 | `eol`         | `\r\n` or `\n`                    | End of line, can be `\r\n` (default) or `\n`.                                                                                                                                                     |
@@ -130,31 +129,28 @@ Where `options` is an object with the following properties:
 A simple example of a `ValueFormatter` is the following. This formatter will enclose every value in quotes:
 
 ```ts
-function formatValue(value: unknown) : string {
+function formatValue(value: unknown): string {
   return '"' + String(value) + '"'
 }
 ```
 
-
 ### `csv2json(csv: string, options?: JsonOptions) : NestedObject[]`
 
-Where `options` is an object with the following properties: 
+Where `options` is an object with the following properties:
 
 | Option       | Type                                | Description                                                                                                                                                                                                                                                                                                              |
-|--------------|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `header`     | `boolean`                           | Should be set `true` when the first line of the CSV file contains a header                                                                                                                                                                                                                                               |
 | `delimiter`  | `string`                            | Default delimiter is `,`. A delimiter must be a single character.                                                                                                                                                                                                                                                        |
 | `nested`     | `boolean`                           | If true (default), field names containing a dot will be parsed into nested JSON objects.                                                                                                                                                                                                                                 |
 | `fields`     | `JsonField[]` or `JsonFieldsParser` | A list with fields to be extracted from the CSV file into JSON. This allows specifying which fields are include/excluded, and how they will be put into the JSON object. A field can be specified either by name, like `{ name, setValue }`, or by the index of the columns in the CSV file, like `{ index, setValue }`. |
 | `parseValue` | `ValueParser`                       | Used to parse a stringified value into a value again (number, boolean, string, ...). The build in parser will parse numbers and booleans, and will parse stringified JSON objects.                                                                                                                                       |
 
-A simple value parser can look as follows. This will keep all values as string: 
+A simple value parser can look as follows. This will keep all values as string:
 
 ```ts
-function parseValue(value: string) : unknown {
-  return value.startsWith('"')
-    ? value.substring(1, value.length - 1).replaceAll('""', '"')
-    : value
+function parseValue(value: string): unknown {
+  return value.startsWith('"') ? value.substring(1, value.length - 1).replaceAll('""', '"') : value
 }
 ```
 
@@ -163,7 +159,7 @@ function parseValue(value: string) : unknown {
 The library exports a number of utility functions:
 
 | Function                                                                | Description                                                                                                                                                                  |
-|-------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `createFormatValue(delimiter: string): (value: unknown) => string`      | Create a function that can format (stringify) a value into a valid CSV value, escaping the value when needed. This function is used as default for the option `formatValue`. |
 | `parseValue(value: string): unknown`                                    | Parse a string into a value, parse numbers into a number, etc. This is the function used by default for the option `parseValue`.                                             |
 | `collectNestedPaths(records: NestedObject[], recurse: boolean): Path[]` | Loop over the data and collect all nested paths. This can be used to generate a list with fields.                                                                            |
@@ -194,7 +190,7 @@ $ npm run release
 
 This will:
 
--   lint
+- lint
 - test
 - build
 - increment the version number
