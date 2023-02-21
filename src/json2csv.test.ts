@@ -82,6 +82,18 @@ describe('json2csv', () => {
     ).toEqual('name,id\r\nJoe,1\r\nSarah,2\r\n')
   })
 
+  test('should flatten an items with conflicting structures (1)', () => {
+    expect(json2csv([{ address: true }, { address: { city: 'Rotterdam' } }])).toEqual(
+      'address\r\ntrue\r\n"{""city"":""Rotterdam""}"\r\n'
+    )
+  })
+
+  test('should flatten an items with conflicting structures (2)', () => {
+    expect(json2csv([{ address: { city: 'Rotterdam' } }, { address: true }])).toEqual(
+      'address\r\n"{""city"":""Rotterdam""}"\r\ntrue\r\n'
+    )
+  })
+
   test('should escape control character "', () => {
     expect(json2csv([{ name: '"Big" Joe' }])).toEqual('name\r\n"""Big"" Joe"\r\n')
   })

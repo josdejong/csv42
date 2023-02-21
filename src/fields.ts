@@ -61,13 +61,16 @@ export function collectNestedPaths(records: NestedObject[], flatten: FlattenValu
       const value = object[key]
 
       if (flatten(value)) {
-        if (merged[key] === undefined) {
-          merged[key] = Array.isArray(object[key]) ? [] : {}
-        }
+        // if merged[key] === true we have mixed content, in that case we should not iterate deeper
+        if (merged[key] !== true) {
+          if (merged[key] === undefined) {
+            merged[key] = Array.isArray(object[key]) ? [] : {}
+          }
 
-        mergeRecord(value as NestedObject, merged[key] as NestedObject)
+          mergeRecord(value as NestedObject, merged[key] as NestedObject)
+        }
       } else {
-        if (merged[key] === undefined) {
+        if (merged[key] !== true) {
           merged[key] = true
         }
       }
