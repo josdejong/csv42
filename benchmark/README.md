@@ -20,9 +20,9 @@
 
 ## Conclusion
 
-The `csv42` does no really well. It is faster than the CSV libraries that are popular right now, sometimes by a big margin. The `json2csv` library does a very good job too, though it can only turn JSON into CSV and not the other way around, and it works better with smaller documents. It beats `csv42` when documents are small.
+The `csv42` does no really well. It is faster than the CSV libraries that are popular right now, sometimes by a big margin. It is only outpaced in a few cases where the document is small, and we have a flat JSON document. The libraries `json2csv` and `papaparse` do very well too in many of the tests.
 
-Most libraries do not support flattening nested JSON, and are not designed with this in mind. That may clarify why `csv42` is way faster when working with nested JSON data.
+The biggest gaps can be seen when working with nested JSON data. Many libraries do not support flattening nested JSON data, and thus are not designed with this in mind. That may clarify the big differences. Also, some libraries do not support parsing CSV values into numbers for example. My real-world experience is that JSON data models more often than not contain nesting and numeric values, so I think these are essential features to have and test with if you want to mimic real-world situations as well as possible, and offer a batteries included API for a CSV library. But the needs can vary widely of course, hence the large amount of CSV libraries out there, each with a different approach.
 
 ## Results
 
