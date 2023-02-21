@@ -40,8 +40,8 @@
     "test": "vitest src",
     "test-ci": "vitest run src",
     "coverage": "vitest run src --coverage",
-    "lint": "prettier --check src benchmark *.md",
-    "format": "prettier --write src benchmark *.md",
+    "lint": "prettier --check src benchmark *.md *.json",
+    "format": "prettier --write src benchmark *.md *.json",
     "build": "npm-run-all build:**",
     "build:clean": "del-cli lib",
     "build:esm": "babel src --out-dir lib/esm --extensions \".ts\" --source-maps --config-file ./babel.config.json",
@@ -79,5 +79,10 @@
     "uglify-js": "3.17.4",
     "vite": "4.1.1",
     "vitest": "0.28.5"
-  }
+  },
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "lib"
+  ]
 }

@@ -7,12 +7,7 @@
         "modules": "commonjs"
       }
     ],
-    [
-      "@babel/preset-typescript"
-    ]
+    ["@babel/preset-typescript"]
   ],
-  "ignore": [
-    "**/*.test.js",
-    "**/*.test.ts"
-  ]
+  "ignore": ["**/*.test.js", "**/*.test.ts"]
 }
