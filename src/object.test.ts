@@ -9,6 +9,10 @@ describe('object', () => {
       expect(getIn({ nested: { name: 'Joe' } }, ['nested', 'name'])).toEqual('Joe')
       expect(getIn({ nested: { array: ['a', 'b'] } }, ['nested', 'array', '1'])).toEqual('b')
       expect(getIn({ nested: { array: ['a', 'b'] } }, ['nested', 'foo', 'bar'])).toEqual(undefined)
+      expect(getIn({ nested: null }, ['nested', 'foo', 'bar'])).toEqual(undefined)
+      expect(getIn({ nested: undefined }, ['nested', 'foo', 'bar'])).toEqual(undefined)
+      expect(getIn({ nested: 123 }, ['nested', 'foo', 'bar'])).toEqual(undefined)
+      expect(getIn({ nested: true }, ['nested', 'foo', 'bar'])).toEqual(undefined)
     })
   })
 

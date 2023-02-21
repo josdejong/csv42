@@ -5,7 +5,7 @@ export function getIn(object: NestedObject, path: Path): unknown {
   let i = 0
 
   while (i < path.length && value !== undefined) {
-    value = value[path[i]] as NestedObject | undefined
+    value = value?.[path[i]] as NestedObject | undefined
     i++
   }
 
