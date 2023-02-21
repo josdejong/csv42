@@ -24,6 +24,7 @@ The `csv42` does no really well. It is faster than the CSV libraries that are po
 
 Most libraries do not support flattening nested JSON, and are not designed with this in mind. That may clarify why `csv42` is way faster when working with nested JSON data.
 
+
 ## Results
 
 These are the results run on a Windows 11 machine, Intel(R) Core(TM) i7-9750H CPU @ 4200 GHz, 16 GB RAM, Node.js v18.12.1, 2023-02-20.

@@ -184,6 +184,29 @@ The library exports a number of utility functions:
 - https://www.npmjs.com/package/fast-csv
 - Any many many more...
 
+### Release
+
+To release a new version:
+
+```
+$ npm run release
+```
+
+This will:
+
+-   lint
+- test
+- build
+- increment the version number
+- push the changes to git, add a git version tag
+- publish the npm package
+
+To try the build and see the change list without actually publishing:
+
+```
+$ npm run release-dry-run
+```
+
 ## License
 
 `csv42` is released as open source under the permissive the [ISC license](LICENSE.md).
