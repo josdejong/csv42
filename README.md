@@ -12,18 +12,18 @@ A small and fast CSV parser with support for nested JSON.
 
 ## Features
 
-- **2 way**: convert from and to CSV
-- **Simple**: straightforward and flexible API
-- **Lightweight**: <2KB gzipped with everything included, <1KB gzipped when only using `json2csv`
+- **2 way**: convert JSON to CSV and the other way around.
+- **Simple**: straightforward and flexible API.
+- **Lightweight**: <2KB gzipped with everything included, <1KB gzipped when only using `json2csv`.
 - **Fast**: faster than the popular CSV libraries out there. See [benchmark](/benchmark).
-- **Modular**: only load what you use, thanks to ES5 modules and a plugin architecture
+- **Modular**: only load what you use, thanks to ES5 modules and a plugin architecture.
 - **Powerful**:
-  - Configurable properties: `header`, `delimiter`, `eol`
-  - Configurable `fields`, with custom value getters and setters and the ability to ignore fields
-  - Configurable serialization and deserialization of values via `formatValue` and `parseValue`
-  - Support for nested JSON objects: either flatten nested contents, or stringify as a JSON object
-- **Standards compliant**: adheres to the CSV standard [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180)
-- **Universal**: Created for the browser, but can be used in any JavaScript environment like node.js.
+  - Configurable properties: `header`, `delimiter`, `eol`.
+  - Configurable `fields`, with custom value getters and setters and the ability to ignore fields.
+  - Configurable serialization and deserialization of values via `formatValue` and `parseValue`.
+  - Support for nested JSON objects: either flatten nested contents, or stringify as a JSON object.
+- **Standards compliant**: adheres to the CSV standard [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180).
+- **Universal**: Created for the browser, but can be used in any JavaScript environment like node.js. TypeScript types included.
 
 Note that the parser has no streaming support.
 
@@ -31,7 +31,7 @@ Note that the parser has no streaming support.
 
 Well, you have to write a CSV parser at least once in you life, right? ;)
 
-The `csv42` library was developed specifically for https://jsoneditoronline.org. The library was developed for the browser. Besides being small and fast, one important feature is supporting nested JSON objects. So, why the name `csv42`? Just because [42](<https://simple.wikipedia.org/wiki/42_(answer)>) is a beautiful number and reminds us that there is a whole universe of beautiful CSV libraries out there.
+The `csv42` library was developed specifically for https://jsoneditoronline.org, for use in the browser. Besides being small and fast, one important feature is supporting nested JSON objects. So, why the name `csv42`? Just because [42](<https://simple.wikipedia.org/wiki/42_(answer)>) is a beautiful number and to remind us that there is a whole universe of beautiful CSV libraries out there.
 
 ## Install
 
