@@ -1,9 +1,9 @@
 import { getIn, setIn } from './object.js'
 import { parsePath, stringifyPath } from './path.js'
-import { CsvField, JsonField, NestedObject, Path, ValueGetter } from './types.js'
+import { CsvField, FlattenValue, JsonField, NestedObject, Path, ValueGetter } from './types.js'
 
-export function collectFields(records: NestedObject[], recurse: boolean): CsvField[] {
-  return collectNestedPaths(records, recurse).map((path) => ({
+export function collectFields(records: NestedObject[], flatten: FlattenValue): CsvField[] {
+  return collectNestedPaths(records, flatten).map((path) => ({
     name: stringifyPath(path),
     getValue: createGetValue(path)
   }))
@@ -53,19 +53,19 @@ export function mapFields(fieldNames: string[], fields: JsonField[]): (JsonField
   return mappedFields
 }
 
-export function collectNestedPaths(records: NestedObject[], recurse: boolean): Path[] {
+export function collectNestedPaths(records: NestedObject[], flatten: FlattenValue): Path[] {
   const merged: NestedObject = {}
 
   function mergeRecord(object: NestedObject, merged: NestedObject) {
     for (const key in object) {
       const value = object[key]
 
-      if (isObjectOrArray(value) && recurse) {
+      if (flatten(value)) {
         if (merged[key] === undefined) {
           merged[key] = Array.isArray(object[key]) ? [] : {}
         }
 
-        mergeRecord(value, merged[key] as NestedObject)
+        mergeRecord(value as NestedObject, merged[key] as NestedObject)
       } else {
         if (merged[key] === undefined) {
           merged[key] = true
@@ -82,8 +82,8 @@ export function collectNestedPaths(records: NestedObject[], recurse: boolean): P
       const path = parentPath.concat(Array.isArray(object) ? parseInt(key) : key)
       const value = object[key]
 
-      if (isObjectOrArray(value)) {
-        collectPaths(value, path)
+      if (flatten(value)) {
+        collectPaths(value as NestedObject, path)
       } else {
         paths.push(path)
       }
@@ -93,10 +93,6 @@ export function collectNestedPaths(records: NestedObject[], recurse: boolean): P
   collectPaths(merged, [])
 
   return paths
-}
-
-function isObjectOrArray(value: unknown): value is NestedObject {
-  return typeof value === 'object' && value !== null
 }
 
 function createGetValue(path: Path): ValueGetter {

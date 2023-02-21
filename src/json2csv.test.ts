@@ -138,6 +138,29 @@ describe('json2csv', () => {
     expect(json2csv(json, { flatten: false })).toEqual(csvNested)
   })
 
+  test('should flatten nested fields with a custom callback', () => {
+    const json = [
+      {
+        name: 'Joe',
+        details: {
+          address: { city: 'Rotterdam' },
+          location: [51.9280712, 4.4207888]
+        }
+      }
+    ]
+
+    const csvFlatObjects =
+      'name,details.address.city,details.location\r\n' +
+      'Joe,Rotterdam,"[51.9280712,4.4207888]"\r\n'
+
+    function isObject(value: unknown): boolean {
+      return value ? value.constructor === Object : false
+    }
+
+    // flatten objects but not arrays
+    expect(json2csv(json, { flatten: isObject })).toEqual(csvFlatObjects)
+  })
+
   test('should flatten nested fields containing the key separator', () => {
     expect(json2csv([{ nested: { 'field.name': 42 } }])).toEqual(
       '"nested[""field.name""]"\r\n42\r\n'

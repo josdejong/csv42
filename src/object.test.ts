@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getIn, setIn } from './object'
+import { getIn, isObjectOrArray, setIn } from './object'
 
 describe('object', () => {
   describe('getIn', () => {
@@ -23,5 +23,14 @@ describe('object', () => {
     test('set a nested property with numeric index', () => {
       expect(setIn({}, ['values', 0], 42)).toEqual({ values: [42] })
     })
+  })
+
+  test('isObjectOrArray', () => {
+    expect(isObjectOrArray([])).toBe(true)
+    expect(isObjectOrArray({})).toBe(true)
+    expect(isObjectOrArray(null)).toBe(false)
+    expect(isObjectOrArray('text')).toBe(false)
+    expect(isObjectOrArray(42)).toBe(false)
+    expect(isObjectOrArray(new Date())).toBe(true) // hm. should this return true?
   })
 })

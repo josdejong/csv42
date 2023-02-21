@@ -1,7 +1,6 @@
 import { csv2json, json2csv, NestedObject } from '../src/index.js'
 import { Parser } from 'json2csv'
-import { stringify as csvStringify } from 'csv/browser/esm/sync'
-import { parse as csvParse } from 'csv/browser/esm/sync'
+import { parse as csvParse, stringify as csvStringify } from 'csv/browser/esm/sync'
 import flat from 'flat'
 import converter from 'json-2-csv'
 import Papa from 'papaparse'
@@ -115,7 +114,6 @@ function fastCsvParse(csv: string, unflatten: boolean): Promise<NestedObject[]> 
               data.push(row)
             }
       )
-      // .on('data', (row) => data.push(row))
       .on('end', () => resolve(data))
 
     stream.write(csv)

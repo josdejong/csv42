@@ -36,3 +36,7 @@ export function setIn(object: NestedObject, path: Path, value: unknown): NestedO
 
   return object
 }
+
+export function isObjectOrArray(value: unknown): value is NestedObject {
+  return value !== null && typeof value === 'object'
+}
