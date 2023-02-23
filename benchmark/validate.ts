@@ -26,7 +26,8 @@ export async function validate(library: CsvLibrary): Promise<number> {
       'id,name\r\n1,Joe\r\n2,Sarah',
       'id,name\n1,Joe\n2,Sarah\n',
       'id,name\n1,Joe\n2,Sarah',
-      '"id","name"\r\n1,"Joe"\r\n2,"Sarah"'
+      '"id","name"\r\n1,"Joe"\r\n2,"Sarah"',
+      '"id","name"\n1,"Joe"\n2,"Sarah"'
     ]
 
     const actual = await flatToCsv(jsonFlat)
@@ -53,7 +54,8 @@ export async function validate(library: CsvLibrary): Promise<number> {
       'name,address.city\r\nJoe,Rotterdam\r\nSarah,Amsterdam',
       'name,address.city\nJoe,Rotterdam\nSarah,Amsterdam\n',
       'name,address.city\nJoe,Rotterdam\nSarah,Amsterdam',
-      '"name","address.city"\r\n"Joe","Rotterdam"\r\n"Sarah","Amsterdam"'
+      '"name","address.city"\r\n"Joe","Rotterdam"\r\n"Sarah","Amsterdam"',
+      '"name","address.city"\n"Joe","Rotterdam"\n"Sarah","Amsterdam"'
     ]
 
     const actual = await nestedToCsv(jsonNested)
