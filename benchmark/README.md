@@ -2,11 +2,23 @@
 
 ## Usage
 
-1. Install the dependencies once:
+1. Checkout the source code of the `csv42` project:
+   ```
+   git clone git@github.com:josdejong/csv42.git
+   ```
+2. Install the dependencies of the `csv42` library itself:
    ```
    npm run install
    ```
-2. Run the benchmark:
+3. Move into the directory of the benchmark project:
+   ```
+   cd ./benchmark
+   ```
+4. Install the dependencies of the benchmark project once:
+   ```
+   npm run install
+   ```
+5. Run the benchmark:
    ```
    npm run benchmark
    ```
