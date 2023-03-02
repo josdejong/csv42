@@ -37,6 +37,11 @@ export function setIn(object: NestedObject, path: Path, value: unknown): NestedO
   return object
 }
 
+// TODO: remove this function from the library?
 export function isObjectOrArray(value: unknown): value is NestedObject {
-  return value !== null && typeof value === 'object'
+  return typeof value === 'object' && value !== null
+}
+
+export function isObject(value: unknown): boolean {
+  return typeof value === 'object' && value !== null && value.constructor === Object // do not match on classes or Array
 }

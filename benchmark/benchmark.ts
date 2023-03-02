@@ -15,8 +15,8 @@ const maxNameLength = 20
 
 // specify different number of items to run all tests multiple times,
 // so you can compare the effect of small vs large amounts of rows
-const itemCounts = [100, 1000, 10_000, 100_000]
-// const itemCounts = [100]
+// const itemCounts = [100, 1000, 10_000, 100_000]
+const itemCounts = [100]
 
 console.log('PREVIEW')
 console.log()

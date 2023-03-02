@@ -14,7 +14,7 @@ A small and fast CSV parser with support for nested JSON.
 
 - **2 way**: convert JSON to CSV and the other way around.
 - **Simple**: straightforward and flexible API.
-- **Lightweight**: <2KB gzipped with everything included, <1KB gzipped when only using `json2csv`.
+- **Lightweight**: 2KB gzipped with everything included, 1KB gzipped when only using `json2csv`.
 - **Fast**: faster than the popular CSV libraries out there. See [benchmark](/benchmark).
 - **Modular**: only load what you use, thanks to ES5 modules and a plugin architecture.
 - **Powerful**:
@@ -170,9 +170,10 @@ The library exports a number of utility functions:
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `createFormatValue(delimiter: string): (value: unknown) => string`      | Create a function that can format (stringify) a value into a valid CSV value, escaping the value when needed. This function is used as default for the option `formatValue`. |
 | `parseValue(value: string): unknown`                                    | Parse a string into a value, parse numbers into a number, etc. This is the function used by default for the option `parseValue`.                                             |
+| `unescapeValue(value: string) : string`                                 | Unescape an escaped value like `"hello ""Joe"""` into the string `hello "Joe"`.                                                                                              |
 | `collectNestedPaths(records: NestedObject[], recurse: boolean): Path[]` | Loop over the data and collect all nested paths. This can be used to generate a list with fields.                                                                            |
 | `parsePath(pathStr: string): Path`                                      | Parse a path like `'items[3].name'`                                                                                                                                          |
-| `function stringifyPath(path: Path): string`                            | Stringify a path into a string like `'items[3].name'`                                                                                                                        |
+| `stringifyPath(path: Path): string`                                     | Stringify a path into a string like `'items[3].name'`                                                                                                                        |
 | `getIn(object: NestedObject, path: Path): unknown`                      | Get a nested property from an object                                                                                                                                         |
 | `setIn(object: NestedObject, path: Path, value: unknown): NestedObject` | Set a nested property in an object                                                                                                                                           |
 

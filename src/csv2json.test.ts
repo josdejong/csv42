@@ -41,6 +41,22 @@ describe('csv2json', () => {
     ])
   })
 
+  test('should multiple subsequent escaped quotes', () => {
+    expect(csv2json('text\r\n"""""hello""""""""world"\r\n')).toEqual([{ text: '""hello""""world' }])
+  })
+
+  test('should convert a list with a number in the name', () => {
+    expect(csv2json('1a\r\nhello\r\n')).toEqual([{ '1a': 'hello' }])
+  })
+
+  test('should convert a list with an empty field name', () => {
+    expect(csv2json('"[""""]"\r\n1\r\n2\r\n3\r\n')).toEqual([{ '': 1 }, { '': 2 }, { '': 3 }])
+  })
+
+  test('should convert a list with values instead of objects', () => {
+    expect(csv2json('""\r\n1\r\n2\r\n3\r\n')).toEqual([{ '': 1 }, { '': 2 }, { '': 3 }])
+  })
+
   test('should parse a custom delimiter', () => {
     expect(csv2json('a;b\r\n"containing;delimiter";text\r\n', { delimiter: ';' })).toEqual([
       { a: 'containing;delimiter', b: 'text' }

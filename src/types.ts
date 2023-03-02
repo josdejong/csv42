@@ -1,7 +1,9 @@
 // Note that a number in a Path has meaning: that means an array index and not an object key
 export type Path = (string | number)[]
 
-export type NestedObject = { [key: string]: NestedObject | unknown }
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export type NestedObject = Record<string, NestedObject>
 
 export type ValueGetter = (object: NestedObject) => unknown
 export type ValueSetter = (object: NestedObject, value: unknown) => void

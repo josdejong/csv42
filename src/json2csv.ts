@@ -1,8 +1,8 @@
 import { collectFields } from './fields.js'
 import { createFormatValue } from './value.js'
-import { CsvOptions, NestedObject, FlattenValue } from './types.js'
+import { CsvOptions, FlattenValue, NestedObject } from './types.js'
 import { validateDelimiter, validateEOL } from './validate.js'
-import { isObjectOrArray } from './object.js'
+import { isObject } from './object.js'
 
 export function json2csv(json: NestedObject[], options?: CsvOptions): string {
   const header = options?.header !== false // true when not specified
@@ -13,7 +13,7 @@ export function json2csv(json: NestedObject[], options?: CsvOptions): string {
       ? options?.flatten
       : options?.flatten === false
       ? () => false
-      : isObjectOrArray // options?.flatten is true or undefined
+      : isObject // options?.flatten is true or undefined
   const fields = options?.fields
     ? Array.isArray(options?.fields)
       ? options?.fields
