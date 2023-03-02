@@ -86,6 +86,15 @@ describe('json2csv', () => {
     expect(json2csv([{ '': 1 }, { '': 2 }, { '': 3 }])).toEqual('"[""""]"\r\n1\r\n2\r\n3\r\n')
   })
 
+  test('should convert an array with arrays', () => {
+    expect(
+      json2csv([
+        [1, 2],
+        [3, 4]
+      ])
+    ).toEqual('0,1\r\n1,2\r\n3,4\r\n')
+  })
+
   test('should convert a list with values instead of objects', () => {
     expect(json2csv([1, 2, 3])).toEqual('""\r\n1\r\n2\r\n3\r\n')
   })

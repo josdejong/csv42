@@ -70,9 +70,6 @@ export function collectNestedPaths(array: NestedObject[], flatten: FlattenValue)
   })
 
   const paths: Path[] = []
-  if (leaf in merged) {
-    paths.push([])
-  }
   _collectPaths(merged, [], paths, flatten)
 
   return paths
@@ -107,17 +104,13 @@ function _collectPaths(
   paths: Path[],
   flatten: FlattenValue
 ): void {
-  for (const key in object) {
-    const path = parentPath.concat(Array.isArray(object) ? parseInt(key) : key)
-    const value = object[key]
-
-    if (
-      (value && value[leaf] === true) ||
-      (value[leafNull] === true && Object.keys(value).length === 0)
-    ) {
-      paths.push(path)
-    } else if (flatten(value)) {
-      _collectPaths(value, path, paths, flatten)
+  if (object[leaf] === true || (object[leafNull] === true && Object.keys(object).length === 0)) {
+    paths.push(parentPath)
+  } else if (Array.isArray(object)) {
+    object.forEach((item, index) => _collectPaths(item, parentPath.concat(index), paths, flatten))
+  } else if (isObjectOrArray(object)) {
+    for (const key in object) {
+      _collectPaths(object[key], parentPath.concat(key), paths, flatten)
     }
   }
 }

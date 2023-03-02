@@ -50,11 +50,22 @@ describe('csv2json', () => {
   })
 
   test('should convert a list with an empty field name', () => {
+    // note: this does not result in the same output as the original,
+    // but I think it is ok to parse everything into an object instead of catering for these edge cases
     expect(csv2json('"[""""]"\r\n1\r\n2\r\n3\r\n')).toEqual([{ '': 1 }, { '': 2 }, { '': 3 }])
   })
 
   test('should convert a list with values instead of objects', () => {
     expect(csv2json('""\r\n1\r\n2\r\n3\r\n')).toEqual([{ '': 1 }, { '': 2 }, { '': 3 }])
+  })
+
+  test('should convert an array with arrays', () => {
+    // note: this does not result in the same output as the original,
+    // but I think it is ok to parse everything into an object instead of catering for these edge cases
+    expect(csv2json('0,1\r\n1,2\r\n3,4\r\n')).toEqual([
+      { 0: 1, 1: 2 },
+      { 0: 3, 1: 4 }
+    ])
   })
 
   test('should parse a custom delimiter', () => {
