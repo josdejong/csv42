@@ -250,6 +250,17 @@ describe('json2csv', () => {
     expect(json2csv([])).toEqual('\r\n')
   })
 
+  test('should convert a Date', () => {
+    // a date is simply stringified via JSON
+    expect(
+      json2csv([
+        {
+          date: new Date('2023-02-03T10:00:00.000Z')
+        }
+      ])
+    ).toEqual('date\r\n"""2023-02-03T10:00:00.000Z"""\r\n')
+  })
+
   test('should throw an error when passing an invalid delimiter', () => {
     expect(() => {
       json2csv([], { delimiter: 'foo' })
