@@ -5,7 +5,6 @@ import flat from 'flat'
 import converter from 'json-2-csv'
 import Papa from 'papaparse'
 import { format, parse } from 'fast-csv'
-import { isObjectOrArray } from '../src/object.js'
 
 export interface CsvLibrary {
   id: number
@@ -28,7 +27,7 @@ export const libraries: CsvLibrary[] = [
     name: 'csv42',
     flatToCsv: json2csv,
     flatFromCsv: csv2json,
-    nestedToCsv: (json) => json2csv(json, { flatten: isObjectOrArray }),
+    nestedToCsv: (json) => json2csv(json, { flattenArray: true }),
     nestedFromCsv: csv2json
   },
   {

@@ -208,7 +208,7 @@ describe('json2csv', () => {
     expect(json2csv(json, { flatten: false })).toEqual(csvNested)
   })
 
-  test('should flatten nested fields with a custom callback', () => {
+  test('should flatten nested arrays when configured', () => {
     const json = [
       {
         name: 'Joe',
@@ -223,12 +223,8 @@ describe('json2csv', () => {
       'name,details.address.city,details.location[0],details.location[1]\r\n' +
       'Joe,Rotterdam,51.9280712,4.4207888\r\n'
 
-    function isObjectOrArray(value: unknown): boolean {
-      return typeof value === 'object' && value !== null
-    }
-
     // flatten objects but not arrays
-    expect(json2csv(json, { flatten: isObjectOrArray })).toEqual(csvFlatObjects)
+    expect(json2csv(json, { flatten: true, flattenArray: true })).toEqual(csvFlatObjects)
   })
 
   test('should flatten nested fields containing the key separator', () => {

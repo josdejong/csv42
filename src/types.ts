@@ -10,8 +10,6 @@ export type ValueSetter = (object: NestedObject, value: unknown) => void
 export type ValueFormatter = (value: unknown) => string
 export type ValueParser = (value: string) => unknown
 
-export type FlattenValue = (value: unknown) => boolean
-
 export interface CsvField {
   name: string
   getValue: ValueGetter
@@ -34,7 +32,8 @@ export interface CsvOptions {
   header?: boolean
   delimiter?: string
   eol?: '\r\n' | '\n'
-  flatten?: boolean | FlattenValue
+  flatten?: boolean
+  flattenArray?: boolean
   fields?: CsvField[] | CsvFieldsParser
   formatValue?: ValueFormatter
 }
