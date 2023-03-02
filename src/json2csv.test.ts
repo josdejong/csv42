@@ -99,7 +99,7 @@ describe('json2csv', () => {
     expect(json2csv([1, 2, 3])).toEqual('""\r\n1\r\n2\r\n3\r\n')
   })
 
-  test('should flatten an items with conflicting structures (mixed object and string)', () => {
+  test('should flatten items with conflicting structures (mixed object and string)', () => {
     expect(json2csv([{ address: 'Amsterdam' }, { address: { city: 'Rotterdam' } }])).toEqual(
       'address\r\nAmsterdam\r\n"{""city"":""Rotterdam""}"\r\n'
     )
@@ -109,7 +109,7 @@ describe('json2csv', () => {
     )
   })
 
-  test('should flatten an items with conflicting structures (mixed null and an object)', () => {
+  test('should flatten items with conflicting structures (mixed null and an object)', () => {
     expect(
       json2csv([
         { id: 1, address: null },
@@ -132,7 +132,7 @@ describe('json2csv', () => {
     ).toEqual('id,address\r\n1,\r\n2,\r\n')
   })
 
-  test('should flatten items with mixed array and object contents', () => {
+  test('should flatten items with conflicting structures (array and object)', () => {
     expect(
       json2csv([
         { id: 1, address: { city: 'Rotterdam' } },
@@ -146,6 +146,13 @@ describe('json2csv', () => {
         { id: 2, address: { city: 'Rotterdam' } }
       ])
     ).toEqual('id,address\r\n1,"[1,2,3]"\r\n2,"{""city"":""Rotterdam""}"\r\n')
+  })
+
+  test('should flatten items with conflicting structures (null and string)', () => {
+    expect(json2csv([{ name: null }, { name: 'Joe' }])).toEqual('name\r\n\r\nJoe\r\n')
+    expect(json2csv([{ name: undefined }, { name: 'Joe' }])).toEqual('name\r\n\r\nJoe\r\n')
+    expect(json2csv([{ name: 'Joe' }, { name: null }])).toEqual('name\r\nJoe\r\n\r\n')
+    expect(json2csv([{ name: 'Joe' }, { name: undefined }])).toEqual('name\r\nJoe\r\n\r\n')
   })
 
   test('should flatten items being null', () => {
