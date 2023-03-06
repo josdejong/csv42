@@ -1,9 +1,13 @@
-import { getIn, setIn } from './object.js'
+import { getIn, isObject, isObjectOrArray, setIn } from './object.js'
 import { parsePath, stringifyPath } from './path.js'
-import { CsvField, FlattenValue, JsonField, NestedObject, Path, ValueGetter } from './types.js'
+import { CsvField, JsonField, NestedObject, Path, ValueGetter } from './types.js'
 
-export function collectFields(records: NestedObject[], flatten: FlattenValue): CsvField[] {
-  return collectNestedPaths(records, flatten).map((path) => ({
+export function collectFields(
+  records: NestedObject[],
+  flatten: boolean,
+  flattenArray: boolean
+): CsvField[] {
+  return collectNestedPaths(records, flatten, flattenArray).map((path) => ({
     name: stringifyPath(path),
     getValue: createGetValue(path)
   }))
@@ -12,12 +16,15 @@ export function collectFields(records: NestedObject[], flatten: FlattenValue): C
 export function toFields(names: string[], nested: boolean): JsonField[] {
   return names.map((name) => {
     const path = parsePath(name)
+    const first = path[0]
 
     return {
       name,
       setValue:
-        path.length === 1 || !nested
+        path.length === 0 || !nested
           ? (record, value) => (record[name] = value)
+          : path.length === 1
+          ? (record, value) => (record[first] = value)
           : (record, value) => setIn(record, path, value)
     }
   })
@@ -53,49 +60,69 @@ export function mapFields(fieldNames: string[], fields: JsonField[]): (JsonField
   return mappedFields
 }
 
-export function collectNestedPaths(records: NestedObject[], flatten: FlattenValue): Path[] {
+const leaf = Symbol()
+
+export function collectNestedPaths(
+  array: NestedObject[],
+  flatten: boolean,
+  flattenArray: boolean
+): Path[] {
+  const recurse = flatten ? (flattenArray ? isObjectOrArray : isObject) : () => false
+
   const merged: NestedObject = {}
-
-  function mergeRecord(object: NestedObject, merged: NestedObject) {
-    for (const key in object) {
-      const value = object[key]
-
-      if (flatten(value)) {
-        // if merged[key] === true we have mixed content, in that case we should not iterate deeper
-        if (merged[key] !== true) {
-          if (merged[key] === undefined) {
-            merged[key] = Array.isArray(object[key]) ? [] : {}
-          }
-
-          mergeRecord(value as NestedObject, merged[key] as NestedObject)
-        }
-      } else {
-        if (merged[key] !== true) {
-          merged[key] = true
-        }
-      }
+  array.forEach((item) => {
+    if (isObjectOrArray(item)) {
+      _mergeObject(item, merged, recurse)
+    } else {
+      _mergeValue(item, merged)
     }
-  }
-
-  records.forEach((record) => mergeRecord(record, merged))
+  })
 
   const paths: Path[] = []
-  function collectPaths(object: NestedObject, parentPath: Path) {
-    for (const key in object) {
-      const path = parentPath.concat(Array.isArray(object) ? parseInt(key) : key)
-      const value = object[key]
-
-      if (flatten(value)) {
-        collectPaths(value as NestedObject, path)
-      } else {
-        paths.push(path)
-      }
-    }
-  }
-
-  collectPaths(merged, [])
+  _collectPaths(merged, [], paths)
 
   return paths
+}
+
+// internal function for collectNestedPaths
+// mutates the argument `merged`
+function _mergeObject(
+  object: NestedObject,
+  merged: NestedObject,
+  recurse: (value: unknown) => boolean
+): void {
+  for (const key in object) {
+    const value = object[key]
+    const valueMerged = merged[key] || (merged[key] = Array.isArray(value) ? [] : {})
+
+    if (recurse(value)) {
+      _mergeObject(value as NestedObject, valueMerged as NestedObject, recurse)
+    } else {
+      _mergeValue(value, valueMerged)
+    }
+  }
+}
+
+// internal function for collectNestedPaths
+// mutates the argument `merged`
+function _mergeValue(value: NestedObject, merged: NestedObject) {
+  if (merged[leaf] === undefined) {
+    merged[leaf] = value === null || value === undefined ? null : true
+  }
+}
+
+// internal function for collectNestedPaths
+// mutates the argument `paths`
+function _collectPaths(object: NestedObject, parentPath: Path, paths: Path[]): void {
+  if (object[leaf] === true || (object[leaf] === null && isEmpty(object))) {
+    paths.push(parentPath)
+  } else if (Array.isArray(object)) {
+    object.forEach((item, index) => _collectPaths(item, parentPath.concat(index), paths))
+  } else if (isObjectOrArray(object)) {
+    for (const key in object) {
+      _collectPaths(object[key], parentPath.concat(key), paths)
+    }
+  }
 }
 
 function createGetValue(path: Path): ValueGetter {
@@ -109,4 +136,8 @@ function createGetValue(path: Path): ValueGetter {
   // (like only 2% faster or so, and depending a lot on the data structure)
 
   return (item) => getIn(item, path)
+}
+
+function isEmpty(object: NestedObject): boolean {
+  return Object.keys(object).length === 0
 }

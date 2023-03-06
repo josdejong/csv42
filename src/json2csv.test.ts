@@ -82,16 +82,81 @@ describe('json2csv', () => {
     ).toEqual('name,id\r\nJoe,1\r\nSarah,2\r\n')
   })
 
-  test('should flatten an items with conflicting structures (1)', () => {
-    expect(json2csv([{ address: true }, { address: { city: 'Rotterdam' } }])).toEqual(
-      'address\r\ntrue\r\n"{""city"":""Rotterdam""}"\r\n'
+  test('should convert an empty field name', () => {
+    expect(json2csv([{ '': 1 }, { '': 2 }, { '': 3 }])).toEqual('"[""""]"\r\n1\r\n2\r\n3\r\n')
+  })
+
+  test('should convert an array with arrays', () => {
+    expect(
+      json2csv([
+        [1, 2],
+        [3, 4]
+      ])
+    ).toEqual('0,1\r\n1,2\r\n3,4\r\n')
+  })
+
+  test('should convert a list with values instead of objects', () => {
+    expect(json2csv([1, 2, 3])).toEqual('""\r\n1\r\n2\r\n3\r\n')
+  })
+
+  test('should flatten items with conflicting structures (mixed object and string)', () => {
+    expect(json2csv([{ address: 'Amsterdam' }, { address: { city: 'Rotterdam' } }])).toEqual(
+      'address\r\nAmsterdam\r\n"{""city"":""Rotterdam""}"\r\n'
+    )
+
+    expect(json2csv([{ address: { city: 'Rotterdam' } }, { address: 'Amsterdam' }])).toEqual(
+      'address\r\n"{""city"":""Rotterdam""}"\r\nAmsterdam\r\n'
     )
   })
 
-  test('should flatten an items with conflicting structures (2)', () => {
-    expect(json2csv([{ address: { city: 'Rotterdam' } }, { address: true }])).toEqual(
-      'address\r\n"{""city"":""Rotterdam""}"\r\ntrue\r\n'
-    )
+  test('should flatten items with conflicting structures (mixed null and an object)', () => {
+    expect(
+      json2csv([
+        { id: 1, address: null },
+        { id: 2, address: { city: 'Rotterdam' } }
+      ])
+    ).toEqual('id,address.city\r\n1,\r\n2,Rotterdam\r\n')
+
+    expect(
+      json2csv([
+        { id: 1, address: { city: 'Rotterdam' } },
+        { id: 2, address: null }
+      ])
+    ).toEqual('id,address.city\r\n1,Rotterdam\r\n2,\r\n')
+
+    expect(
+      json2csv([
+        { id: 1, address: null },
+        { id: 2, address: null }
+      ])
+    ).toEqual('id,address\r\n1,\r\n2,\r\n')
+  })
+
+  test('should flatten items with conflicting structures (array and object)', () => {
+    expect(
+      json2csv([
+        { id: 1, address: { city: 'Rotterdam' } },
+        { id: 2, address: [1, 2, 3] }
+      ])
+    ).toEqual('id,address\r\n1,"{""city"":""Rotterdam""}"\r\n2,"[1,2,3]"\r\n')
+
+    expect(
+      json2csv([
+        { id: 1, address: [1, 2, 3] },
+        { id: 2, address: { city: 'Rotterdam' } }
+      ])
+    ).toEqual('id,address\r\n1,"[1,2,3]"\r\n2,"{""city"":""Rotterdam""}"\r\n')
+  })
+
+  test('should flatten items with conflicting structures (null and string)', () => {
+    expect(json2csv([{ name: null }, { name: 'Joe' }])).toEqual('name\r\n\r\nJoe\r\n')
+    expect(json2csv([{ name: undefined }, { name: 'Joe' }])).toEqual('name\r\n\r\nJoe\r\n')
+    expect(json2csv([{ name: 'Joe' }, { name: null }])).toEqual('name\r\nJoe\r\n\r\n')
+    expect(json2csv([{ name: 'Joe' }, { name: undefined }])).toEqual('name\r\nJoe\r\n\r\n')
+  })
+
+  test('should flatten items being null', () => {
+    expect(json2csv([{ id: 1, address: null }])).toEqual('id,address\r\n1,\r\n')
   })
 
   test('should escape control character "', () => {
@@ -138,8 +203,8 @@ describe('json2csv', () => {
     ]
 
     const csvFlat =
-      'name,details.address.city,details.location[0],details.location[1]\r\n' +
-      'Joe,Rotterdam,51.9280712,4.4207888\r\n'
+      'name,details.address.city,details.location\r\n' +
+      'Joe,Rotterdam,"[51.9280712,4.4207888]"\r\n'
 
     const csvNested =
       'name,details\r\n' +
@@ -150,7 +215,7 @@ describe('json2csv', () => {
     expect(json2csv(json, { flatten: false })).toEqual(csvNested)
   })
 
-  test('should flatten nested fields with a custom callback', () => {
+  test('should flatten nested arrays when configured', () => {
     const json = [
       {
         name: 'Joe',
@@ -162,15 +227,11 @@ describe('json2csv', () => {
     ]
 
     const csvFlatObjects =
-      'name,details.address.city,details.location\r\n' +
-      'Joe,Rotterdam,"[51.9280712,4.4207888]"\r\n'
-
-    function isObject(value: unknown): boolean {
-      return value ? value.constructor === Object : false
-    }
+      'name,details.address.city,details.location[0],details.location[1]\r\n' +
+      'Joe,Rotterdam,51.9280712,4.4207888\r\n'
 
     // flatten objects but not arrays
-    expect(json2csv(json, { flatten: isObject })).toEqual(csvFlatObjects)
+    expect(json2csv(json, { flatten: true, flattenArray: true })).toEqual(csvFlatObjects)
   })
 
   test('should flatten nested fields containing the key separator', () => {
@@ -187,6 +248,17 @@ describe('json2csv', () => {
 
   test('should convert an empty array', () => {
     expect(json2csv([])).toEqual('\r\n')
+  })
+
+  test('should convert a Date', () => {
+    // a date is simply stringified via JSON
+    expect(
+      json2csv([
+        {
+          date: new Date('2023-02-03T10:00:00.000Z')
+        }
+      ])
+    ).toEqual('date\r\n"""2023-02-03T10:00:00.000Z"""\r\n')
   })
 
   test('should throw an error when passing an invalid delimiter', () => {

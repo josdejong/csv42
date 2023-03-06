@@ -2,7 +2,8 @@
   "name": "csv42-benchmark",
   "type": "module",
   "scripts": {
-    "benchmark": "ts-node-esm benchmark.ts"
+    "benchmark": "ts-node-esm benchmark.ts",
+    "benchmark:collectNestedPaths": "ts-node-esm benchmarkCollectNestedPaths.ts"
   },
   "dependencies": {
     "@types/benchmark": "2.1.2",

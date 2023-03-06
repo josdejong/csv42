@@ -27,7 +27,7 @@ export const libraries: CsvLibrary[] = [
     name: 'csv42',
     flatToCsv: json2csv,
     flatFromCsv: csv2json,
-    nestedToCsv: json2csv,
+    nestedToCsv: (json) => json2csv(json, { flattenArray: true }),
     nestedFromCsv: csv2json
   },
   {

@@ -4,7 +4,7 @@
 
 1. Checkout the source code of the `csv42` project:
    ```
-   git clone git@github.com:josdejong/csv42.git
+   git clone https://github.com/josdejong/csv42.git
    ```
 2. Install the dependencies of the `csv42` library itself:
    ```

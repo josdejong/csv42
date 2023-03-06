@@ -4,6 +4,7 @@ import { parsePath, stringifyPath } from './path'
 describe('path', () => {
   test('stringifyPath', () => {
     expect(stringifyPath([])).toEqual('')
+    expect(stringifyPath([''])).toEqual('[""]')
     expect(stringifyPath(['name'])).toEqual('name')
     expect(stringifyPath(['address', 'location', 0])).toEqual('address.location[0]')
     expect(stringifyPath([0, 'name'])).toEqual('[0].name')
@@ -13,6 +14,7 @@ describe('path', () => {
 
   test('parsePath', () => {
     expect(parsePath('')).toEqual([])
+    expect(parsePath('[""]')).toEqual([''])
     expect(parsePath('name')).toEqual(['name'])
     expect(parsePath('address.location[0]')).toEqual(['address', 'location', 0])
     expect(parsePath('[0].name')).toEqual([0, 'name'])

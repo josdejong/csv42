@@ -30,12 +30,15 @@ export function createFormatValue(delimiter: string): ValueFormatter {
 }
 
 export function parseValue(value: string): unknown {
-  if (value[0] === '"') {
-    const unescapedValue = value.substring(1, value.length - 1).replaceAll('""', '"')
-    return unescapedValue === '' ? unescapedValue : parseUnescapedValue(unescapedValue)
+  if (value === '') {
+    return null
   }
 
-  return parseUnescapedValue(value)
+  return parseUnescapedValue(unescapeValue(value))
+}
+
+export function unescapeValue(value: string): string {
+  return value[0] === '"' ? value.substring(1, value.length - 1).replaceAll('""', '"') : value
 }
 
 function parseUnescapedValue(value: string): unknown {
@@ -52,7 +55,7 @@ function parseUnescapedValue(value: string): unknown {
     return false
   }
 
-  if (value === 'null' || value === '') {
+  if (value === 'null') {
     return null
   }
 

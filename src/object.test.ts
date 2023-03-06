@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getIn, isObjectOrArray, setIn } from './object'
+import { getIn, isObject, isObjectOrArray, setIn } from './object'
 
 describe('object', () => {
   describe('getIn', () => {
@@ -36,5 +36,14 @@ describe('object', () => {
     expect(isObjectOrArray('text')).toBe(false)
     expect(isObjectOrArray(42)).toBe(false)
     expect(isObjectOrArray(new Date())).toBe(true) // hm. should this return true?
+  })
+
+  test('isObject', () => {
+    expect(isObject({})).toBe(true)
+    expect(isObject(null)).toBe(false)
+    expect(isObject('text')).toBe(false)
+    expect(isObject(42)).toBe(false)
+    expect(isObject([])).toBe(false)
+    expect(isObject(new Date())).toBe(false)
   })
 })

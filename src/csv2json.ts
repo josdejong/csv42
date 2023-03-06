@@ -1,6 +1,6 @@
-import { JsonField, JsonOptions, NestedObject } from './types.js'
-import { parseValue } from './value.js'
-import { toFields, mapFields } from './fields.js'
+import { JsonField, JsonOptions, NestedObject, ValueParser } from './types.js'
+import { parseValue, unescapeValue } from './value.js'
+import { mapFields, toFields } from './fields.js'
 import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
 
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
@@ -26,7 +26,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
 
     parseRecord((value, index) => {
       fields[index]?.setValue(object, value)
-    })
+    }, parse)
 
     json.push(object)
   }
@@ -38,7 +38,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
 
     parseRecord((fieldName, index) => {
       names.push(withHeader ? String(fieldName) : `Field ${index}`)
-    })
+    }, unescapeValue)
 
     if (!withHeader) {
       i = 0 // reset the pointer again: the first line contains data, not a header
@@ -47,11 +47,11 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
     return names
   }
 
-  function parseRecord(onField: (field: unknown, fieldIndex: number) => void) {
+  function parseRecord(onField: (field: unknown, fieldIndex: number) => void, parse: ValueParser) {
     let index = 0
 
     while (i < csv.length && !isEol(csv, i)) {
-      onField(parseField(), index)
+      onField(parseField(parse), index)
 
       index++
 
@@ -63,7 +63,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
     eatEol()
   }
 
-  function parseField(): unknown {
+  function parseField(parse: ValueParser): unknown {
     const start = i
 
     if (csv.charCodeAt(i) === quote) {
@@ -71,7 +71,7 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
       do {
         i++
 
-        if (csv.charCodeAt(i) === quote && csv.charCodeAt(i + 1) === quote) {
+        while (csv.charCodeAt(i) === quote && csv.charCodeAt(i + 1) === quote) {
           // skip over escaped quote (two quotes)
           i += 2
         }
