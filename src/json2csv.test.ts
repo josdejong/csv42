@@ -238,6 +238,41 @@ describe('json2csv', () => {
     expect(json2csv(json, { flatten: isObjectOrArray })).toEqual(csvFlatObjects)
   })
 
+  test('should flatten classes when configured', () => {
+    class User {
+      id: number
+      name: string
+
+      constructor(id: number, name: string) {
+        this.id = id
+        this.name = name
+      }
+    }
+
+    function isUser(value: unknown): boolean {
+      return (
+        typeof value === 'object' &&
+        value !== null &&
+        // @ts-ignore
+        typeof value.id === 'number' &&
+        // @ts-ignore
+        typeof value.name === 'string'
+      )
+    }
+
+    const user1 = new User(1, 'Joe')
+    const json = [
+      {
+        user: user1
+      }
+    ]
+
+    expect(json2csv(json)).toEqual('user\r\n"{""id"":1,""name"":""Joe""}"\r\n')
+    expect(json2csv(json, { flatten: (value) => isObject(value) || isUser(value) })).toEqual(
+      'user.id,user.name\r\n1,Joe\r\n'
+    )
+  })
+
   test('should flatten nested fields containing the key separator', () => {
     expect(json2csv([{ nested: { 'field.name': 42 } }])).toEqual(
       '"nested[""field.name""]"\r\n42\r\n'
