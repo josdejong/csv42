@@ -8,7 +8,7 @@ import {
 import Benchmark from 'benchmark'
 import { CsvLibrary, libraries } from './libraries.js'
 import { humanSize, printCsvPreview, printJsonPreview, validateAll } from './validate.js'
-import { NestedObject } from '../src'
+import { json2csv, NestedObject } from '../src/index.js'
 
 // for nicely aligning the library names in the console output:
 const maxNameLength = 20
@@ -30,7 +30,9 @@ console.log('All CSV libraries are successfully validated')
 console.log()
 
 interface Result {
-  [name: string]: string
+  benchmark: string
+  data: string
+  [name: string]: number | string
 }
 
 const results: Result[] = []
@@ -83,6 +85,11 @@ console.log('RESULTS TABLE (1000x ROWS/SEC, HIGHER IS BETTER)')
 console.table(results)
 console.log()
 
+console.log('RESULTS TABLE CSV (1000x ROWS/SEC, HIGHER IS BETTER)')
+console.log()
+console.log(json2csv(results))
+console.log()
+
 function runBenchmark<T extends NestedObject[] | string>(
   name: string,
   data: T,
@@ -92,7 +99,13 @@ function runBenchmark<T extends NestedObject[] | string>(
     const desc = description(name, data)
     console.log(desc)
 
-    const result: Result = {}
+    const rows = getItemCount(data)
+    const size = humanSize(typeof data === 'string' ? data.length : JSON.stringify(data).length)
+
+    const result: Result = {
+      benchmark: name,
+      data: `${rows} rows, ${size}`
+    }
     const suite = new Benchmark.Suite(name)
 
     libraries.forEach((library) => {
@@ -113,11 +126,9 @@ function runBenchmark<T extends NestedObject[] | string>(
       const summary = String(event.target)
       console.log(name.includes('flat') ? summary.replace('(+flat)', ' '.repeat(7)) : summary)
 
-      result.test = desc
-
-      // calculate ops per second per 1000 items
+      // calculate rows per second per 1000 items
       // @ts-ignore
-      result[event.target.name] = round((event.target.hz * getItemCount(data)) / 1000)
+      result[event.target.name.trim()] = round((event.target.hz * getItemCount(data)) / 1000)
     })
     suite.on('complete', () => {
       console.log()
@@ -147,7 +158,7 @@ function description(name: string, data: NestedObject[] | string): string {
   if (typeof data === 'string') {
     return `benchmark ${name} (${getItemCount(data)} rows, ${humanSize(data.length)})`
   } else {
-    return `benchmark ${name} (${getItemCount(data)} items, ${humanSize(
+    return `benchmark ${name} (${getItemCount(data)} rows, ${humanSize(
       JSON.stringify(data).length
     )})`
   }
