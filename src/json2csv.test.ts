@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { json2csv } from './json2csv'
 // @ts-ignore
 import spectrum from 'csv-spectrum'
+import { isObject, isObjectOrArray } from './object'
 
 describe('json2csv', () => {
   const users = [
@@ -88,10 +89,13 @@ describe('json2csv', () => {
 
   test('should convert an array with arrays', () => {
     expect(
-      json2csv([
-        [1, 2],
-        [3, 4]
-      ])
+      json2csv(
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        { flatten: (item) => isObject(item) || Array.isArray(item) }
+      )
     ).toEqual('0,1\r\n1,2\r\n3,4\r\n')
   })
 
@@ -231,7 +235,7 @@ describe('json2csv', () => {
       'Joe,Rotterdam,51.9280712,4.4207888\r\n'
 
     // flatten objects but not arrays
-    expect(json2csv(json, { flatten: true, flattenArray: true })).toEqual(csvFlatObjects)
+    expect(json2csv(json, { flatten: isObjectOrArray })).toEqual(csvFlatObjects)
   })
 
   test('should flatten nested fields containing the key separator', () => {

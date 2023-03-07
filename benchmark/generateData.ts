@@ -1,4 +1,5 @@
 import { json2csv } from '../src/json2csv.js'
+import { isObjectOrArray } from '../src/object'
 
 export function generateNestedJson(count: number) {
   const data = []
@@ -47,9 +48,13 @@ export function generateFlatJson(count: number) {
 }
 
 export function generateNestedCsv(count: number) {
-  return json2csv(generateNestedJson(count), { flatten: true, flattenArray: true })
+  return json2csv(generateNestedJson(count), {
+    flatten: isObjectOrArray
+  })
 }
 
 export function generateFlatCsv(count: number) {
-  return json2csv(generateFlatJson(count), { flatten: true, flattenArray: true })
+  return json2csv(generateFlatJson(count), {
+    flatten: isObjectOrArray
+  })
 }

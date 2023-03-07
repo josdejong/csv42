@@ -1,13 +1,9 @@
-import { getIn, isObject, isObjectOrArray, setIn } from './object.js'
+import { getIn, isObject, setIn } from './object.js'
 import { parsePath, stringifyPath } from './path.js'
-import { CsvField, JsonField, NestedObject, Path, ValueGetter } from './types.js'
+import { CsvField, FlattenCallback, JsonField, NestedObject, Path, ValueGetter } from './types.js'
 
-export function collectFields(
-  records: NestedObject[],
-  flatten: boolean,
-  flattenArray: boolean
-): CsvField[] {
-  return collectNestedPaths(records, flatten, flattenArray).map((path) => ({
+export function collectFields(records: NestedObject[], flatten: FlattenCallback): CsvField[] {
+  return collectNestedPaths(records, flatten).map((path) => ({
     name: stringifyPath(path),
     getValue: createGetValue(path)
   }))
@@ -62,16 +58,10 @@ export function mapFields(fieldNames: string[], fields: JsonField[]): (JsonField
 
 const leaf = Symbol()
 
-export function collectNestedPaths(
-  array: NestedObject[],
-  flatten: boolean,
-  flattenArray: boolean
-): Path[] {
-  const recurse = flatten ? (flattenArray ? isObjectOrArray : isObject) : () => false
-
+export function collectNestedPaths(array: NestedObject[], recurse: FlattenCallback): Path[] {
   const merged: NestedObject = {}
   array.forEach((item) => {
-    if (isObjectOrArray(item)) {
+    if (recurse(item) || isObject(item)) {
       _mergeObject(item, merged, recurse)
     } else {
       _mergeValue(item, merged)
@@ -86,11 +76,7 @@ export function collectNestedPaths(
 
 // internal function for collectNestedPaths
 // mutates the argument `merged`
-function _mergeObject(
-  object: NestedObject,
-  merged: NestedObject,
-  recurse: (value: unknown) => boolean
-): void {
+function _mergeObject(object: NestedObject, merged: NestedObject, recurse: FlattenCallback): void {
   for (const key in object) {
     const value = object[key]
     const valueMerged = merged[key] || (merged[key] = Array.isArray(value) ? [] : {})
@@ -118,7 +104,7 @@ function _collectPaths(object: NestedObject, parentPath: Path, paths: Path[]): v
     paths.push(parentPath)
   } else if (Array.isArray(object)) {
     object.forEach((item, index) => _collectPaths(item, parentPath.concat(index), paths))
-  } else if (isObjectOrArray(object)) {
+  } else if (isObject(object)) {
     for (const key in object) {
       _collectPaths(object[key], parentPath.concat(key), paths)
     }

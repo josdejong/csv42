@@ -29,13 +29,23 @@ describe('object', () => {
     })
   })
 
+  class CustomClass {
+    name: string
+
+    constructor(name: string) {
+      this.name = name
+    }
+  }
+  const customClass = new CustomClass('foo')
+
   test('isObjectOrArray', () => {
     expect(isObjectOrArray([])).toBe(true)
     expect(isObjectOrArray({})).toBe(true)
     expect(isObjectOrArray(null)).toBe(false)
     expect(isObjectOrArray('text')).toBe(false)
     expect(isObjectOrArray(42)).toBe(false)
-    expect(isObjectOrArray(new Date())).toBe(true) // hm. should this return true?
+    expect(isObjectOrArray(new Date())).toBe(false)
+    expect(isObjectOrArray(customClass)).toBe(false)
   })
 
   test('isObject', () => {
@@ -45,5 +55,6 @@ describe('object', () => {
     expect(isObject(42)).toBe(false)
     expect(isObject([])).toBe(false)
     expect(isObject(new Date())).toBe(false)
+    expect(isObject(customClass)).toBe(false)
   })
 })
