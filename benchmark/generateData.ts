@@ -1,5 +1,5 @@
 import { json2csv } from '../src/json2csv.js'
-import { isObjectOrArray } from '../src/object'
+import { isObjectOrArray } from '../src/object.js'
 
 export function generateNestedJson(count: number) {
   const data = []
