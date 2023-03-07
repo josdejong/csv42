@@ -95,7 +95,7 @@ function runBenchmark<T extends NestedObject[] | string>(
   data: T,
   getRunner: (library: CsvLibrary) => ((json: T) => void) | null
 ) {
-  return new Promise<Result>((resolve) => {
+  return new Promise<Result>(async (resolve) => {
     const desc = description(name, data)
     console.log(desc)
 
@@ -108,10 +108,13 @@ function runBenchmark<T extends NestedObject[] | string>(
     }
     const suite = new Benchmark.Suite(name)
 
-    libraries.forEach((library) => {
+    for (let library of libraries) {
       const runner = getRunner(library)
 
       if (runner) {
+        // cold start: run once before actually benchmarking
+        await runner(data)
+
         suite.add(padRight(`${library.id}:${library.name}`, maxNameLength), {
           defer: true,
           fn: async (deferred: any) => {
@@ -120,7 +123,7 @@ function runBenchmark<T extends NestedObject[] | string>(
           }
         })
       }
-    })
+    }
 
     suite.on('cycle', function (event: Event) {
       const summary = String(event.target)

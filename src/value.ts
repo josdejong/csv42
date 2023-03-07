@@ -4,11 +4,12 @@ export function createFormatValue(delimiter: string): ValueFormatter {
   // match at least one occurrence of a control character in a string:
   // a delimiter (comma by default), double quote, return, or newline
   const controlCharactersRegex = new RegExp('[' + delimiter + '"\r\n]')
+  const quoteRegex = /"/g
 
   function formatString(value: string): string {
     const needToEscape = controlCharactersRegex.test(value) || value.length === 0
 
-    return needToEscape ? '"' + value.replaceAll('"', '""') + '"' : value
+    return needToEscape ? `"${value.replaceAll(quoteRegex, '""')}"` : value
   }
 
   return function formatValue(value: unknown): string {
@@ -17,7 +18,7 @@ export function createFormatValue(delimiter: string): ValueFormatter {
     }
 
     if (typeof value === 'number' || typeof value === 'boolean') {
-      return String(value)
+      return value + ''
     }
 
     if (value === undefined || value === null) {
@@ -30,7 +31,7 @@ export function createFormatValue(delimiter: string): ValueFormatter {
 }
 
 export function parseValue(value: string): unknown {
-  if (value === '') {
+  if (value.length === 0) {
     return null
   }
 

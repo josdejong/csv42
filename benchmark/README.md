@@ -80,170 +80,170 @@ All CSV libraries are successfully validated
 SECTION 1: FLAT JSON to CSV
 
 benchmark flat json to csv (100 rows, 29 KB)
-1:csv42              x 5,251 ops/sec ±1.98% (81 runs sampled)
-2:json2csv           x 7,798 ops/sec ±0.52% (76 runs sampled)
-3:csv                x 3,905 ops/sec ±0.77% (81 runs sampled)
-4:papaparse          x 5,774 ops/sec ±0.64% (82 runs sampled)
-5:fast-csv           x 3,037 ops/sec ±0.82% (78 runs sampled)
-6:json-2-csv         x 1,374 ops/sec ±0.26% (83 runs sampled)
+1:csv42              x 5,722 ops/sec ±1.89% (82 runs sampled)
+2:json2csv           x 7,805 ops/sec ±0.64% (78 runs sampled)
+3:csv                x 4,023 ops/sec ±0.66% (83 runs sampled)
+4:papaparse          x 5,749 ops/sec ±0.41% (80 runs sampled)
+5:fast-csv           x 3,141 ops/sec ±0.65% (74 runs sampled)
+6:json-2-csv         x 1,313 ops/sec ±0.79% (81 runs sampled)
 
 benchmark flat json to csv (1000 rows, 295 KB)
-1:csv42              x 546 ops/sec ±0.34% (84 runs sampled)
-2:json2csv           x 658 ops/sec ±0.29% (83 runs sampled)
-3:csv                x 356 ops/sec ±0.35% (84 runs sampled)
-4:papaparse          x 544 ops/sec ±0.36% (83 runs sampled)
-5:fast-csv           x 320 ops/sec ±0.29% (84 runs sampled)
-6:json-2-csv         x 140 ops/sec ±0.35% (72 runs sampled)
+1:csv42              x 590 ops/sec ±0.63% (82 runs sampled)
+2:json2csv           x 654 ops/sec ±0.43% (76 runs sampled)
+3:csv                x 361 ops/sec ±0.34% (83 runs sampled)
+4:papaparse          x 522 ops/sec ±1.13% (81 runs sampled)
+5:fast-csv           x 325 ops/sec ±0.44% (83 runs sampled)
+6:json-2-csv         x 139 ops/sec ±0.39% (70 runs sampled)
 
 benchmark flat json to csv (10000 rows, 3 MB)
-1:csv42              x 52.07 ops/sec ±0.39% (70 runs sampled)
-2:json2csv           x 37.33 ops/sec ±5.94% (58 runs sampled)
-3:csv                x 28.04 ops/sec ±4.30% (66 runs sampled)
-4:papaparse          x 31.60 ops/sec ±2.81% (68 runs sampled)
-5:fast-csv           x 30.20 ops/sec ±2.04% (67 runs sampled)
-6:json-2-csv         x 13.40 ops/sec ±0.60% (58 runs sampled)
+1:csv42              x 55.99 ops/sec ±0.40% (83 runs sampled)
+2:json2csv           x 36.46 ops/sec ±6.51% (57 runs sampled)
+3:csv                x 27.37 ops/sec ±4.58% (65 runs sampled)
+4:papaparse          x 31.37 ops/sec ±2.86% (67 runs sampled)
+5:fast-csv           x 30.29 ops/sec ±1.90% (67 runs sampled)
+6:json-2-csv         x 13.00 ops/sec ±0.55% (57 runs sampled)
 
 benchmark flat json to csv (100000 rows, 29 MB)
-1:csv42              x 4.56 ops/sec ±2.21% (26 runs sampled)
-2:json2csv           x 4.16 ops/sec ±5.32% (24 runs sampled)
-3:csv                x 2.70 ops/sec ±6.31% (18 runs sampled)
-4:papaparse          x 2.56 ops/sec ±5.45% (17 runs sampled)
-5:fast-csv           x 2.94 ops/sec ±0.88% (19 runs sampled)
-6:json-2-csv         x 1.28 ops/sec ±1.95% (11 runs sampled)
+1:csv42              x 4.80 ops/sec ±2.04% (27 runs sampled)
+2:json2csv           x 4.10 ops/sec ±6.94% (24 runs sampled)
+3:csv                x 2.69 ops/sec ±5.74% (18 runs sampled)
+4:papaparse          x 2.57 ops/sec ±3.69% (17 runs sampled)
+5:fast-csv           x 2.90 ops/sec ±2.32% (18 runs sampled)
+6:json-2-csv         x 1.26 ops/sec ±1.16% (11 runs sampled)
 
 SECTION 2: NESTED JSON to CSV
 
 benchmark nested json to csv (100 rows, 31 KB)
-1:csv42              x 3,088 ops/sec ±0.28% (82 runs sampled)
-2:json2csv (+flat)   x 1,826 ops/sec ±0.34% (82 runs sampled)
-3:csv (+flat)        x 1,522 ops/sec ±0.30% (83 runs sampled)
-4:papaparse (+flat)  x 1,893 ops/sec ±0.27% (84 runs sampled)
-5:fast-csv (+flat)   x 1,279 ops/sec ±0.30% (84 runs sampled)
-6:json-2-csv         x 956 ops/sec ±0.34% (82 runs sampled)
+1:csv42              x 3,228 ops/sec ±0.36% (82 runs sampled)
+2:json2csv (+flat)   x 1,799 ops/sec ±0.32% (83 runs sampled)
+3:csv (+flat)        x 1,469 ops/sec ±0.34% (83 runs sampled)
+4:papaparse (+flat)  x 1,866 ops/sec ±2.05% (81 runs sampled)
+5:fast-csv (+flat)   x 1,281 ops/sec ±1.79% (83 runs sampled)
+6:json-2-csv         x 938 ops/sec ±1.13% (82 runs sampled)
 
 benchmark nested json to csv (1000 rows, 313 KB)
-1:csv42              x 314 ops/sec ±0.31% (83 runs sampled)
-2:json2csv (+flat)   x 160 ops/sec ±0.39% (76 runs sampled)
-3:csv (+flat)        x 140 ops/sec ±2.47% (75 runs sampled)
-4:papaparse (+flat)  x 175 ops/sec ±0.38% (75 runs sampled)
-5:fast-csv (+flat)   x 126 ops/sec ±1.94% (81 runs sampled)
-6:json-2-csv         x 95.81 ops/sec ±0.56% (84 runs sampled)
+1:csv42              x 333 ops/sec ±1.20% (83 runs sampled)
+2:json2csv (+flat)   x 161 ops/sec ±1.57% (78 runs sampled)
+3:csv (+flat)        x 141 ops/sec ±2.00% (77 runs sampled)
+4:papaparse (+flat)  x 176 ops/sec ±0.31% (75 runs sampled)
+5:fast-csv (+flat)   x 131 ops/sec ±0.50% (82 runs sampled)
+6:json-2-csv         x 92.48 ops/sec ±1.59% (83 runs sampled)
 
 benchmark nested json to csv (10000 rows, 3 MB)
-1:csv42              x 29.59 ops/sec ±1.70% (67 runs sampled)
-2:json2csv (+flat)   x 14.75 ops/sec ±2.85% (68 runs sampled)
-3:csv (+flat)        x 12.41 ops/sec ±3.32% (56 runs sampled)
-4:papaparse (+flat)  x 13.43 ops/sec ±2.82% (60 runs sampled)
-5:fast-csv (+flat)   x 12.28 ops/sec ±2.26% (57 runs sampled)
-6:json-2-csv         x 9.16 ops/sec ±1.69% (44 runs sampled)
+1:csv42              x 31.89 ops/sec ±0.61% (68 runs sampled)
+2:json2csv (+flat)   x 14.81 ops/sec ±2.56% (68 runs sampled)
+3:csv (+flat)        x 12.44 ops/sec ±3.17% (56 runs sampled)
+4:papaparse (+flat)  x 13.23 ops/sec ±3.25% (59 runs sampled)
+5:fast-csv (+flat)   x 12.25 ops/sec ±1.96% (57 runs sampled)
+6:json-2-csv         x 9.16 ops/sec ±0.54% (44 runs sampled)
 
 benchmark nested json to csv (100000 rows, 31 MB)
-1:csv42              x 2.83 ops/sec ±2.29% (19 runs sampled)
-2:json2csv (+flat)   x 1.43 ops/sec ±5.38% (12 runs sampled)
-3:csv (+flat)        x 1.19 ops/sec ±4.41% (10 runs sampled)
-4:papaparse (+flat)  x 1.18 ops/sec ±6.65% (10 runs sampled)
-5:fast-csv (+flat)   x 1.21 ops/sec ±0.51% (10 runs sampled)
-6:json-2-csv         x 0.91 ops/sec ±2.18% (9 runs sampled)
+1:csv42              x 2.94 ops/sec ±1.58% (19 runs sampled)
+2:json2csv (+flat)   x 1.44 ops/sec ±4.14% (12 runs sampled)
+3:csv (+flat)        x 1.14 ops/sec ±6.08% (10 runs sampled)
+4:papaparse (+flat)  x 1.19 ops/sec ±4.24% (10 runs sampled)
+5:fast-csv (+flat)   x 1.24 ops/sec ±2.01% (11 runs sampled)
+6:json-2-csv         x 0.89 ops/sec ±2.15% (9 runs sampled)
 
 SECTION 3: FLAT CSV to JSON
 
 benchmark flat csv to json (100 rows, 15 KB)
-1:csv42              x 2,462 ops/sec ±0.41% (81 runs sampled)
-3:csv                x 362 ops/sec ±0.81% (84 runs sampled)
-4:papaparse          x 2,234 ops/sec ±0.74% (82 runs sampled)
-5:fast-csv           x 608 ops/sec ±0.31% (83 runs sampled)
-6:json-2-csv         x 407 ops/sec ±17.72% (84 runs sampled)
+1:csv42              x 2,731 ops/sec ±0.44% (82 runs sampled)
+3:csv                x 360 ops/sec ±1.14% (83 runs sampled)
+4:papaparse          x 2,176 ops/sec ±2.21% (78 runs sampled)
+5:fast-csv           x 593 ops/sec ±0.74% (82 runs sampled)
+6:json-2-csv         x 413 ops/sec ±17.82% (84 runs sampled)
 
 benchmark flat csv to json (1000 rows, 147 KB)
-1:csv42              x 276 ops/sec ±0.26% (82 runs sampled)
-3:csv                x 35.33 ops/sec ±0.65% (77 runs sampled)
-4:papaparse          x 245 ops/sec ±2.02% (82 runs sampled)
-5:fast-csv           x 60.80 ops/sec ±3.44% (68 runs sampled)
-6:json-2-csv         x 45.69 ops/sec ±0.77% (68 runs sampled)
+1:csv42              x 275 ops/sec ±0.34% (82 runs sampled)
+3:csv                x 49.92 ops/sec ±0.53% (68 runs sampled)
+4:papaparse          x 237 ops/sec ±1.98% (80 runs sampled)
+5:fast-csv           x 60.49 ops/sec ±1.57% (67 runs sampled)
+6:json-2-csv         x 45.55 ops/sec ±0.87% (68 runs sampled)
 
 benchmark flat csv to json (10000 rows, 1 MB)
-1:csv42              x 26.42 ops/sec ±0.36% (57 runs sampled)
-3:csv                x 4.45 ops/sec ±3.02% (26 runs sampled)
-4:papaparse          x 23.61 ops/sec ±2.48% (57 runs sampled)
-5:fast-csv           x 6.09 ops/sec ±1.45% (33 runs sampled)
-6:json-2-csv         x 4.51 ops/sec ±0.82% (25 runs sampled)
+1:csv42              x 26.68 ops/sec ±0.40% (58 runs sampled)
+3:csv                x 4.49 ops/sec ±2.08% (26 runs sampled)
+4:papaparse          x 22.90 ops/sec ±2.13% (56 runs sampled)
+5:fast-csv           x 6.10 ops/sec ±1.91% (33 runs sampled)
+6:json-2-csv         x 4.52 ops/sec ±0.80% (25 runs sampled)
 
 benchmark flat csv to json (100000 rows, 15 MB)
-1:csv42              x 2.49 ops/sec ±1.62% (17 runs sampled)
-3:csv                x 0.43 ops/sec ±1.99% (7 runs sampled)
-4:papaparse          x 2.29 ops/sec ±3.60% (16 runs sampled)
-5:fast-csv           x 0.60 ops/sec ±2.35% (7 runs sampled)
-6:json-2-csv         x 0.44 ops/sec ±0.92% (7 runs sampled)
+1:csv42              x 2.48 ops/sec ±2.28% (16 runs sampled)
+3:csv                x 0.42 ops/sec ±1.55% (7 runs sampled)
+4:papaparse          x 2.25 ops/sec ±2.65% (15 runs sampled)
+5:fast-csv           x 0.60 ops/sec ±1.15% (8 runs sampled)
+6:json-2-csv         x 0.45 ops/sec ±0.95% (7 runs sampled)
 
 SECTION 4: NESTED CSV to JSON
 
 benchmark nested csv to json (100 rows, 16 KB)
-1:csv42              x 1,894 ops/sec ±1.75% (82 runs sampled)
-3:csv (+flat)        x 247 ops/sec ±0.29% (84 runs sampled)
-4:papaparse (+flat)  x 774 ops/sec ±1.68% (82 runs sampled)
-5:fast-csv (+flat)   x 369 ops/sec ±0.57% (82 runs sampled)
-6:json-2-csv         x 422 ops/sec ±0.28% (84 runs sampled)
+1:csv42              x 1,856 ops/sec ±1.46% (82 runs sampled)
+3:csv (+flat)        x 316 ops/sec ±0.36% (82 runs sampled)
+4:papaparse (+flat)  x 819 ops/sec ±1.65% (82 runs sampled)
+5:fast-csv (+flat)   x 380 ops/sec ±0.46% (83 runs sampled)
+6:json-2-csv         x 421 ops/sec ±0.39% (84 runs sampled)
 
 benchmark nested csv to json (1000 rows, 159 KB)
-1:csv42              x 193 ops/sec ±0.44% (73 runs sampled)
-3:csv (+flat)        x 30.95 ops/sec ±4.38% (68 runs sampled)
-4:papaparse (+flat)  x 79.32 ops/sec ±0.34% (68 runs sampled)
-5:fast-csv (+flat)   x 36.49 ops/sec ±1.92% (83 runs sampled)
-6:json-2-csv         x 42.36 ops/sec ±0.69% (67 runs sampled)
+1:csv42              x 192 ops/sec ±0.64% (76 runs sampled)
+3:csv (+flat)        x 32.62 ops/sec ±0.72% (68 runs sampled)
+4:papaparse (+flat)  x 82.80 ops/sec ±0.44% (68 runs sampled)
+5:fast-csv (+flat)   x 36.97 ops/sec ±0.73% (83 runs sampled)
+6:json-2-csv         x 42.24 ops/sec ±0.78% (66 runs sampled)
 
 benchmark nested csv to json (10000 rows, 2 MB)
-1:csv42              x 17.84 ops/sec ±2.19% (45 runs sampled)
-3:csv (+flat)        x 2.99 ops/sec ±3.70% (19 runs sampled)
-4:papaparse (+flat)  x 7.82 ops/sec ±1.07% (40 runs sampled)
-5:fast-csv (+flat)   x 3.65 ops/sec ±1.64% (22 runs sampled)
-6:json-2-csv         x 4.17 ops/sec ±0.76% (24 runs sampled)
+1:csv42              x 18.19 ops/sec ±1.19% (48 runs sampled)
+3:csv (+flat)        x 3.10 ops/sec ±3.72% (20 runs sampled)
+4:papaparse (+flat)  x 8.07 ops/sec ±2.48% (41 runs sampled)
+5:fast-csv (+flat)   x 3.76 ops/sec ±0.35% (22 runs sampled)
+6:json-2-csv         x 4.19 ops/sec ±0.62% (24 runs sampled)
 
 benchmark nested csv to json (100000 rows, 16 MB)
-1:csv42              x 1.75 ops/sec ±1.65% (13 runs sampled)
-3:csv (+flat)        x 0.29 ops/sec ±2.19% (6 runs sampled)
-4:papaparse (+flat)  x 0.76 ops/sec ±2.91% (8 runs sampled)
-5:fast-csv (+flat)   x 0.37 ops/sec ±1.55% (6 runs sampled)
-6:json-2-csv         x 0.41 ops/sec ±0.35% (7 runs sampled)
+1:csv42              x 1.72 ops/sec ±2.42% (13 runs sampled)
+3:csv (+flat)        x 0.30 ops/sec ±2.21% (6 runs sampled)
+4:papaparse (+flat)  x 0.79 ops/sec ±3.13% (8 runs sampled)
+5:fast-csv (+flat)   x 0.37 ops/sec ±2.04% (6 runs sampled)
+6:json-2-csv         x 0.41 ops/sec ±1.19% (7 runs sampled)
 
 RESULTS TABLE (1000x ROWS/SEC, HIGHER IS BETTER)
 ┌─────────┬──────────────────────┬──────────────────────┬─────────┬────────────────────┬───────────────┬─────────────────────┬────────────────────┬──────────────┐
 │ (index) │      benchmark       │         data         │ 1:csv42 │ 2:json2csv (+flat) │ 3:csv (+flat) │ 4:papaparse (+flat) │ 5:fast-csv (+flat) │ 6:json-2-csv │
 ├─────────┼──────────────────────┼──────────────────────┼─────────┼────────────────────┼───────────────┼─────────────────────┼────────────────────┼──────────────┤
-│    0    │  'flat json to csv'  │  '100 rows, 29 KB'   │   525   │        780         │      391      │         577         │        304         │     137      │
-│    1    │  'flat json to csv'  │ '1000 rows, 295 KB'  │   546   │        658         │      356      │         544         │        320         │     140      │
-│    2    │  'flat json to csv'  │  '10000 rows, 3 MB'  │   521   │        373         │      280      │         316         │        302         │     134      │
-│    3    │  'flat json to csv'  │ '100000 rows, 29 MB' │   456   │        416         │      270      │         256         │        294         │     128      │
-│    4    │ 'nested json to csv' │  '100 rows, 31 KB'   │   309   │        183         │      152      │         189         │        128         │    95.64     │
-│    5    │ 'nested json to csv' │ '1000 rows, 313 KB'  │   314   │        160         │      140      │         175         │        126         │    95.81     │
-│    6    │ 'nested json to csv' │  '10000 rows, 3 MB'  │   296   │        148         │      124      │         134         │        123         │     91.6     │
-│    7    │ 'nested json to csv' │ '100000 rows, 31 MB' │   283   │        143         │      119      │         118         │        121         │    90.95     │
-│    8    │  'flat csv to json'  │  '100 rows, 15 KB'   │   246   │                    │     36.24     │         223         │       60.76        │    40.65     │
-│    9    │  'flat csv to json'  │ '1000 rows, 147 KB'  │   276   │                    │     35.33     │         245         │        60.8        │    45.69     │
-│   10    │  'flat csv to json'  │  '10000 rows, 1 MB'  │   264   │                    │     44.48     │         236         │       60.87        │    45.09     │
-│   11    │  'flat csv to json'  │ '100000 rows, 15 MB' │   249   │                    │     42.68     │         229         │       60.27        │    44.31     │
-│   12    │ 'nested csv to json' │  '100 rows, 16 KB'   │   189   │                    │     24.68     │        77.35        │       36.87        │    42.19     │
-│   13    │ 'nested csv to json' │ '1000 rows, 159 KB'  │   193   │                    │     30.95     │        79.32        │       36.49        │    42.36     │
-│   14    │ 'nested csv to json' │  '10000 rows, 2 MB'  │   178   │                    │     29.9      │        78.24        │        36.5        │    41.68     │
-│   15    │ 'nested csv to json' │ '100000 rows, 16 MB' │   175   │                    │     28.58     │        75.63        │       36.55        │    41.14     │
+│    0    │  'flat json to csv'  │  '100 rows, 29 KB'   │   572   │        781         │      402      │         575         │        314         │     131      │
+│    1    │  'flat json to csv'  │ '1000 rows, 295 KB'  │   590   │        654         │      361      │         522         │        325         │     139      │
+│    2    │  'flat json to csv'  │  '10000 rows, 3 MB'  │   560   │        365         │      274      │         314         │        303         │     130      │
+│    3    │  'flat json to csv'  │ '100000 rows, 29 MB' │   480   │        410         │      269      │         257         │        290         │     126      │
+│    4    │ 'nested json to csv' │  '100 rows, 31 KB'   │   323   │        180         │      147      │         187         │        128         │    93.76     │
+│    5    │ 'nested json to csv' │ '1000 rows, 313 KB'  │   333   │        161         │      141      │         176         │        131         │    92.48     │
+│    6    │ 'nested json to csv' │  '10000 rows, 3 MB'  │   319   │        148         │      124      │         132         │        123         │    91.62     │
+│    7    │ 'nested json to csv' │ '100000 rows, 31 MB' │   294   │        144         │      114      │         119         │        124         │    89.05     │
+│    8    │  'flat csv to json'  │  '100 rows, 15 KB'   │   273   │                    │     36.03     │         218         │        59.3        │    41.34     │
+│    9    │  'flat csv to json'  │ '1000 rows, 147 KB'  │   275   │                    │     49.92     │         237         │       60.49        │    45.55     │
+│   10    │  'flat csv to json'  │  '10000 rows, 1 MB'  │   267   │                    │     44.95     │         229         │       61.03        │    45.21     │
+│   11    │  'flat csv to json'  │ '100000 rows, 15 MB' │   248   │                    │     41.81     │         225         │        60.3        │     44.6     │
+│   12    │ 'nested csv to json' │  '100 rows, 16 KB'   │   186   │                    │     31.57     │        81.92        │       37.98        │    42.11     │
+│   13    │ 'nested csv to json' │ '1000 rows, 159 KB'  │   192   │                    │     32.62     │        82.8         │       36.97        │    42.24     │
+│   14    │ 'nested csv to json' │  '10000 rows, 2 MB'  │   182   │                    │     31.04     │        80.69        │       37.59        │    41.89     │
+│   15    │ 'nested csv to json' │ '100000 rows, 16 MB' │   172   │                    │     29.57     │        78.89        │       37.03        │    41.17     │
 └─────────┴──────────────────────┴──────────────────────┴─────────┴────────────────────┴───────────────┴─────────────────────┴────────────────────┴──────────────┘
 
 RESULTS TABLE CSV (1000x ROWS/SEC, HIGHER IS BETTER)
 
 benchmark,data,1:csv42,2:json2csv (+flat),3:csv (+flat),4:papaparse (+flat),5:fast-csv (+flat),6:json-2-csv
-flat json to csv,"100 rows, 29 KB",525,780,391,577,304,137
-flat json to csv,"1000 rows, 295 KB",546,658,356,544,320,140
-flat json to csv,"10000 rows, 3 MB",521,373,280,316,302,134
-flat json to csv,"100000 rows, 29 MB",456,416,270,256,294,128
-nested json to csv,"100 rows, 31 KB",309,183,152,189,128,95.64
-nested json to csv,"1000 rows, 313 KB",314,160,140,175,126,95.81
-nested json to csv,"10000 rows, 3 MB",296,148,124,134,123,91.6
-nested json to csv,"100000 rows, 31 MB",283,143,119,118,121,90.95
-flat csv to json,"100 rows, 15 KB",246,,36.24,223,60.76,40.65
-flat csv to json,"1000 rows, 147 KB",276,,35.33,245,60.8,45.69
-flat csv to json,"10000 rows, 1 MB",264,,44.48,236,60.87,45.09
-flat csv to json,"100000 rows, 15 MB",249,,42.68,229,60.27,44.31
-nested csv to json,"100 rows, 16 KB",189,,24.68,77.35,36.87,42.19
-nested csv to json,"1000 rows, 159 KB",193,,30.95,79.32,36.49,42.36
-nested csv to json,"10000 rows, 2 MB",178,,29.9,78.24,36.5,41.68
-nested csv to json,"100000 rows, 16 MB",175,,28.58,75.63,36.55,41.14
+flat json to csv,"100 rows, 29 KB",572,781,402,575,314,131
+flat json to csv,"1000 rows, 295 KB",590,654,361,522,325,139
+flat json to csv,"10000 rows, 3 MB",560,365,274,314,303,130
+flat json to csv,"100000 rows, 29 MB",480,410,269,257,290,126
+nested json to csv,"100 rows, 31 KB",323,180,147,187,128,93.76
+nested json to csv,"1000 rows, 313 KB",333,161,141,176,131,92.48
+nested json to csv,"10000 rows, 3 MB",319,148,124,132,123,91.62
+nested json to csv,"100000 rows, 31 MB",294,144,114,119,124,89.05
+flat csv to json,"100 rows, 15 KB",273,,36.03,218,59.3,41.34
+flat csv to json,"1000 rows, 147 KB",275,,49.92,237,60.49,45.55
+flat csv to json,"10000 rows, 1 MB",267,,44.95,229,61.03,45.21
+flat csv to json,"100000 rows, 15 MB",248,,41.81,225,60.3,44.6
+nested csv to json,"100 rows, 16 KB",186,,31.57,81.92,37.98,42.11
+nested csv to json,"1000 rows, 159 KB",192,,32.62,82.8,36.97,42.24
+nested csv to json,"10000 rows, 2 MB",182,,31.04,80.69,37.59,41.89
+nested csv to json,"100000 rows, 16 MB",172,,29.57,78.89,37.03,41.17
 ```
