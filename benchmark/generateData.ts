@@ -47,9 +47,9 @@ export function generateFlatJson(count: number) {
 }
 
 export function generateNestedCsv(count: number) {
-  return json2csv(generateNestedJson(count))
+  return json2csv(generateNestedJson(count), { flatten: true, flattenArray: true })
 }
 
 export function generateFlatCsv(count: number) {
-  return json2csv(generateFlatJson(count))
+  return json2csv(generateFlatJson(count), { flatten: true, flattenArray: true })
 }
