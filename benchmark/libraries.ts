@@ -1,11 +1,11 @@
-import { csv2json, json2csv, NestedObject } from '../src/index.js'
+// @ts-ignore
+import { csv2json, CsvField, json2csv, NestedObject, isObjectOrArray } from '../lib/esm/index.js'
 import { Parser } from 'json2csv'
 import { parse as csvParse, stringify as csvStringify } from 'csv/browser/esm/sync'
 import flat from 'flat'
 import converter from 'json-2-csv'
 import Papa from 'papaparse'
 import { format, parse } from 'fast-csv'
-import { isObjectOrArray } from '../src/object.js'
 
 export interface CsvLibrary {
   id: number
@@ -27,6 +27,7 @@ export const libraries: CsvLibrary[] = [
     id: 1,
     name: 'csv42',
     flatToCsv: json2csv,
+    // flatToCsv: (json) => json2csv(json, flatOptions), // <-- This is optimized for a flat JSON object
     flatFromCsv: csv2json,
     nestedToCsv: (json) => json2csv(json, { flatten: isObjectOrArray }),
     nestedFromCsv: csv2json
@@ -145,4 +146,26 @@ function transform(value: string): unknown {
   }
 
   return value
+}
+
+// options for csv42 to optimize it for parsing flat JSON data
+export const flatOptions = {
+  flatten: () => false,
+
+  fields: getFlatFields
+}
+
+function getFlatFields(json: NestedObject[]): CsvField[] {
+  const names = new Set<string>()
+
+  for (let i = 0; i < json.length; i++) {
+    for (const key in json[i]) {
+      names.add(key)
+    }
+  }
+
+  return [...names].map((name) => ({
+    name,
+    getValue: (item: Record<string, unknown>) => item[name]
+  }))
 }
