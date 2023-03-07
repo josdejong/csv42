@@ -56,4 +56,24 @@ describe('lib', () => {
       })
     })
   })
+
+  test('should export all documented functions', async () => {
+    // @ts-ignore
+    const csv42 = await import('../lib/esm/index.js')
+
+    expect(Object.keys(csv42)).toEqual([
+      'json2csv',
+      'csv2json',
+      'createFormatValue',
+      'parseValue',
+      'unescapeValue',
+      'collectNestedPaths',
+      'parsePath',
+      'stringifyPath',
+      'getIn',
+      'setIn',
+      'isObject',
+      'isObjectOrArray'
+    ])
+  })
 })

@@ -166,16 +166,18 @@ function parseValue(value: string): unknown {
 
 The library exports a number of utility functions:
 
-| Function                                                                | Description                                                                                                                                                                  |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `createFormatValue(delimiter: string): (value: unknown) => string`      | Create a function that can format (stringify) a value into a valid CSV value, escaping the value when needed. This function is used as default for the option `formatValue`. |
-| `parseValue(value: string): unknown`                                    | Parse a string into a value, parse numbers into a number, etc. This is the function used by default for the option `parseValue`.                                             |
-| `unescapeValue(value: string) : string`                                 | Unescape an escaped value like `"hello ""Joe"""` into the string `hello "Joe"`.                                                                                              |
-| `collectNestedPaths(records: NestedObject[], recurse: boolean): Path[]` | Loop over the data and collect all nested paths. This can be used to generate a list with fields.                                                                            |
-| `parsePath(pathStr: string): Path`                                      | Parse a path like `'items[3].name'`                                                                                                                                          |
-| `stringifyPath(path: Path): string`                                     | Stringify a path into a string like `'items[3].name'`                                                                                                                        |
-| `getIn(object: NestedObject, path: Path): unknown`                      | Get a nested property from an object                                                                                                                                         |
-| `setIn(object: NestedObject, path: Path, value: unknown): NestedObject` | Set a nested property in an object                                                                                                                                           |
+| Function                                                                | Description                                                                                                                                                                     |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `createFormatValue(delimiter: string): (value: unknown) => string`      | Create a function that can format (stringify) a value into a valid CSV value, escaping the value when needed. This function is used as default for the option `formatValue`.    |
+| `parseValue(value: string): unknown`                                    | Parse a string into a value, parse numbers into a number, etc. This is the function used by default for the option `parseValue`.                                                |
+| `unescapeValue(value: string) : string`                                 | Unescape an escaped value like `"hello ""Joe"""` into the string `hello "Joe"`.                                                                                                 |
+| `collectNestedPaths(records: NestedObject[], recurse: boolean): Path[]` | Loop over the data and collect all nested paths. This can be used to generate a list with fields.                                                                               |
+| `parsePath(pathStr: string): Path`                                      | Parse a path like `'items[3].name'`                                                                                                                                             |
+| `stringifyPath(path: Path): string`                                     | Stringify a path into a string like `'items[3].name'`                                                                                                                           |
+| `getIn(object: NestedObject, path: Path): unknown`                      | Get a nested property from an object                                                                                                                                            |
+| `setIn(object: NestedObject, path: Path, value: unknown): NestedObject` | Set a nested property in an object                                                                                                                                              |
+| `isObject(value: unknown): boolean`                                     | Returns true when `value` is a plain JavaScript object, and returns false for primitive values, arrays, and classes. Can be used as callback function for the option `flatten`. |
+| `isObjectOrArray(value: unknown): boolean`                              | Returns true when `value` is a plain JavaScript object or array, and returns false for primitive values and classes. Can be used as callback function for the option `flatten`. |
 
 ## Alternatives
 
