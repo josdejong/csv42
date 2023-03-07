@@ -49,6 +49,16 @@ describe('csv2json', () => {
     expect(csv2json('1a\r\nhello\r\n')).toEqual([{ '1a': 'hello' }])
   })
 
+  test('should parse numbers and strings', () => {
+    expect(csv2json('value\r\n123\r\n')).toEqual([{ value: 123 }])
+    expect(csv2json('value\r\n123.45e6\r\n')).toEqual([{ value: 123.45e6 }])
+    expect(csv2json('value\r\n123a\r\n')).toEqual([{ value: '123a' }])
+    expect(csv2json('value\r\n  123\r\n')).toEqual([{ value: '  123' }])
+    expect(csv2json('value\r\n123  \r\n')).toEqual([{ value: 123 }])
+    expect(csv2json('value\r\na 123\r\n')).toEqual([{ value: 'a 123' }])
+    expect(csv2json('value\r\n123 a\r\n')).toEqual([{ value: '123 a' }])
+  })
+
   test('should convert a list with an empty field name', () => {
     // note: this does not result in the same output as the original,
     // but I think it is ok to parse everything into an object instead of catering for these edge cases

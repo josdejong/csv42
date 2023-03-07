@@ -38,14 +38,18 @@ export function parseValue(value: string): unknown {
   return parseUnescapedValue(unescapeValue(value))
 }
 
+const escapedQuoteRegex = /""/g
+
 export function unescapeValue(value: string): string {
-  return value[0] === '"' ? value.substring(1, value.length - 1).replaceAll('""', '"') : value
+  return value[0] === '"'
+    ? value.substring(1, value.length - 1).replaceAll(escapedQuoteRegex, '"')
+    : value
 }
 
 function parseUnescapedValue(value: string): unknown {
-  const number = Number(value)
-  if (!isNaN(number) && !isNaN(parseFloat(value))) {
-    return number
+  if (value[0] >= '0' && value[0] <= '9') {
+    const number = Number(value)
+    return !isNaN(number) ? number : value
   }
 
   if (value === 'true') {

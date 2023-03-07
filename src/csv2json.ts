@@ -6,7 +6,7 @@ import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
 export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
   const withHeader = options?.header !== false // true when not specified
   const delimiter: number = validateDelimiter(options?.delimiter || ',').charCodeAt(0)
-  const quote = '"'.charCodeAt(0)
+  const quote = 0x22 // char code of "
   const parse = options?.parseValue || parseValue
 
   const json: NestedObject[] = []
