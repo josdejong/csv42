@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/josdejong/csv42/compare/v2.0.0...v3.0.0) (2023-03-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Dropped the `flattenArray` option, use `flatten: isObjectOrArray` instead.
+Also, the utility function `isObjectOrArray` is now strict and does not return true for classes.
+
+### Features
+
+* change `flatten` into a boolean or callback again and make it strict, not matching classes ([5d99eb6](https://github.com/josdejong/csv42/commit/5d99eb6e6b4f9f1627ff7763e67f6447fe0d05f0))
+* export utility functions `isObject` and `isObjectAndArray` ([ecdf273](https://github.com/josdejong/csv42/commit/ecdf273065a7f7f2f1d947e776b6a33dd1a448f2))
+* performance improvement ([b6b2528](https://github.com/josdejong/csv42/commit/b6b2528083cb01e3ca53c16bc1cefd743f158d8e))
+* performance improvement in parsing a CSV file ([baef63a](https://github.com/josdejong/csv42/commit/baef63aea2482b9dbcd609fa41b6695ad12a685b))
+* use the esm output instead of src in the benchmarks (is faster) ([cefeeb6](https://github.com/josdejong/csv42/commit/cefeeb6fa2c92962b426d6ee43263f5b70db349a))
+
 ## [2.0.0](https://github.com/josdejong/csv42/compare/v1.0.0...v2.0.0) (2023-03-06)
 
 
