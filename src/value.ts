@@ -47,7 +47,10 @@ export function unescapeValue(value: string): string {
 }
 
 function parseUnescapedValue(value: string): unknown {
-  if ((value[0] >= '0' && value[0] <= '9') || value[0] === '-') {
+  if (value[0] >= '-' && value[0] <= '9') {
+    // a number can start with one of the following characters: 01234567890.-
+    // the range above contains these characters, but also the forward slash /.
+    // That is not a problem though: parsing as number will fail
     const number = Number(value)
     return !isNaN(number) ? number : value
   }
