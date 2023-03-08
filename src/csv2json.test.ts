@@ -52,6 +52,7 @@ describe('csv2json', () => {
   test('should parse numbers and strings', () => {
     expect(csv2json('value\r\n123\r\n')).toEqual([{ value: 123 }])
     expect(csv2json('value\r\n123.45e6\r\n')).toEqual([{ value: 123.45e6 }])
+    expect(csv2json('value\r\n-123\r\n')).toEqual([{ value: -123 }])
     expect(csv2json('value\r\n123a\r\n')).toEqual([{ value: '123a' }])
     expect(csv2json('value\r\n  123\r\n')).toEqual([{ value: '  123' }])
     expect(csv2json('value\r\n123  \r\n')).toEqual([{ value: 123 }])

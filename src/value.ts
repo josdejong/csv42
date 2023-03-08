@@ -47,7 +47,7 @@ export function unescapeValue(value: string): string {
 }
 
 function parseUnescapedValue(value: string): unknown {
-  if (value[0] >= '0' && value[0] <= '9') {
+  if ((value[0] >= '0' && value[0] <= '9') || value[0] === '-') {
     const number = Number(value)
     return !isNaN(number) ? number : value
   }
