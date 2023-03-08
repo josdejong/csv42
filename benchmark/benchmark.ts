@@ -8,7 +8,7 @@ import {
 import Benchmark from 'benchmark'
 import { CsvLibrary, libraries } from './libraries.js'
 import { humanSize, printCsvPreview, printJsonPreview, validateAll } from './validate.js'
-import { json2csv, NestedObject } from '../src/index.js'
+import { isObjectOrArray, json2csv, NestedObject } from '../src/index.js'
 
 // for nicely aligning the library names in the console output:
 const maxNameLength = 20
@@ -96,11 +96,12 @@ function runBenchmark<T extends NestedObject[] | string>(
   getRunner: (library: CsvLibrary) => ((json: T) => void) | null
 ) {
   return new Promise<Result>(async (resolve) => {
-    const desc = description(name, data)
-    console.log(desc)
-
     const rows = getItemCount(data)
-    const size = humanSize(typeof data === 'string' ? data.length : JSON.stringify(data).length)
+    const size = humanSize(
+      typeof data === 'string' ? data.length : json2csv(data, { flatten: isObjectOrArray }).length
+    )
+
+    console.log('benchmark:', { name, size, rows })
 
     const result: Result = {
       benchmark: name,
@@ -155,16 +156,6 @@ function round(value: number): number {
 
 function padRight(text: string, length: number, fill = ' '): string {
   return text + (length > text.length ? fill.repeat(length - text.length) : '')
-}
-
-function description(name: string, data: NestedObject[] | string): string {
-  if (typeof data === 'string') {
-    return `benchmark ${name} (${getItemCount(data)} rows, ${humanSize(data.length)})`
-  } else {
-    return `benchmark ${name} (${getItemCount(data)} rows, ${humanSize(
-      JSON.stringify(data).length
-    )})`
-  }
 }
 
 function getItemCount(data: NestedObject[] | string): number {
