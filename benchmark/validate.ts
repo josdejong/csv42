@@ -144,13 +144,21 @@ export function truncateCsv(csvText: string, lines = 4): string {
 }
 
 export function humanSize(bytes: number): string {
-  if (bytes > 1024 * 1024) {
+  if (bytes > 1024 * 1024 * 10) {
+    // output like 15 MB
     return Math.round(bytes / 1024 / 1024) + ' MB'
   }
 
+  if (bytes > 1024 * 1024) {
+    // one digit, like 1.4 MB
+    return Math.round((bytes / 1024 / 1024) * 10) / 10 + ' MB'
+  }
+
   if (bytes > 1024) {
+    // output like 23 KB
     return Math.round(bytes / 1024) + ' KB'
   }
 
+  // output like 159 B
   return bytes + ' B'
 }
