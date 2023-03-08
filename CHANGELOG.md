@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/josdejong/csv42/compare/v3.0.0...v3.0.1) (2023-03-08)
+
+
+### Bug Fixes
+
+* negative values not being parsed into numbers when converting a csv file to json ([8a99af7](https://github.com/josdejong/csv42/commit/8a99af7ab34368cb3eb7ae0b09f1026e844562bc))
+
 ## [3.0.0](https://github.com/josdejong/csv42/compare/v2.0.0...v3.0.0) (2023-03-07)
 
 
