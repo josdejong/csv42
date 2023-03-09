@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/josdejong/csv42/compare/v3.0.1...v3.0.2) (2023-03-09)
+
+
+### Bug Fixes
+
+* make the build-in `parseValue` robust against invalid json arrays and objects ([4faa963](https://github.com/josdejong/csv42/commit/4faa9633ec9048abefbd460c8af5c8ccbbb5b0d7))
+
 ### [3.0.1](https://github.com/josdejong/csv42/compare/v3.0.0...v3.0.1) (2023-03-08)
 
 
