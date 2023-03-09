@@ -68,7 +68,11 @@ function parseUnescapedValue(value: string): unknown {
   }
 
   if (value[0] === '{' || value[0] === '[') {
-    return JSON.parse(value)
+    try {
+      return JSON.parse(value)
+    } catch (_) {
+      // ignore the error: this value looked like a JSON array or object but isn't. No problem
+    }
   }
 
   return value

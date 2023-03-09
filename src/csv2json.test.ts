@@ -60,6 +60,12 @@ describe('csv2json', () => {
     expect(csv2json('value\r\n123 a\r\n')).toEqual([{ value: '123 a' }])
   })
 
+  test("should handle strings that look like a number or array or object but aren't", () => {
+    expect(csv2json('value\r\n2abc\r\n')).toEqual([{ value: '2abc' }])
+    expect(csv2json('value\r\n[abc\r\n')).toEqual([{ value: '[abc' }])
+    expect(csv2json('value\r\n{abc\r\n')).toEqual([{ value: '{abc' }])
+  })
+
   test('should convert a list with an empty field name', () => {
     // note: this does not result in the same output as the original,
     // but I think it is ok to parse everything into an object instead of catering for these edge cases
