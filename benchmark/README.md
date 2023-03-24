@@ -1,5 +1,7 @@
 # Benchmark
 
+You can find a detailed article about this benchmark here: https://jsoneditoronline.org/indepth/parse/csv-parser-javascript/
+
 ## Usage
 
 1. Checkout the source code of the `csv42` project:
