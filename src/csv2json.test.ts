@@ -58,6 +58,10 @@ describe('csv2json', () => {
     expect(csv2json('value\r\n123  \r\n')).toEqual([{ value: 123 }])
     expect(csv2json('value\r\na 123\r\n')).toEqual([{ value: 'a 123' }])
     expect(csv2json('value\r\n123 a\r\n')).toEqual([{ value: '123 a' }])
+    expect(csv2json('value\r\n-\r\n')).toEqual([{ value: '-' }])
+    expect(csv2json('value\r\n/\r\n')).toEqual([{ value: '/' }])
+    expect(csv2json('value\r\n.\r\n')).toEqual([{ value: '.' }])
+    expect(csv2json('value\r\n.2\r\n')).toEqual([{ value: 0.2 }])
   })
 
   test("should handle strings that look like a number or array or object but aren't", () => {
