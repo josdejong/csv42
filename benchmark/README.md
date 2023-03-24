@@ -26,16 +26,22 @@
 
 ## Remarks
 
-1. Doing benchmarks right is hard. Please let me know if you see a flaw in the benchmarks, or if you see ways to configure the libraries better, so we can see them shine.
-2. The performance depends of course on what kind of data a single row contains and how much. This benchmark generates test data that contains a bit of everything: string, numbers, strings that need escaping. And in the case of nested data: a nested object and nested array.
-3. Support for nested JSON data was an important goal when developing `csv42`. Not all libraries do support flattening nested JSON objects though. This is why the benchmark is tested with two different kinds of data: flat and nested. To make the libraries work with nested data, the data is flattened using the library `flat`. The use of `flat` is denoted with a `(+flat)` suffix in the name of the library. Note that flattening is only applied in the nested JSON benchmarks "nestedToCsv" and "nestedFromCsv", and NOT in the tests "flatToCsv" and "flatFromCsv". From what I've seen, the "flat" step adds something like 20% to the parsing/formatting duration: significant, but not the largest part of the work.
-4. The CSV libraries have different defaults when parsing values. Some just leave all values a string, which is fastest. Others parse numeric values into a `number`. In these benchmarks, numeric values are being parsed into numbers, since that is what you mostly need in real-world.
+The benchmark tries to test realistic, real-world scenarios. Considerations are the following:
 
-## Conclusion
+- I opted to not try to tweak configuration for individual libraries but go with the “standard” way of using them, since that is how they will normally be used.
+- Since nested JSON data is so common in JSON data structures, the benchmark tests with two different data sets: one with flat JSON data, and one with nested JSON data. Not all CSV libraries do support flattening nested JSON objects though. To make the libraries work with nested data, the data is flattened using the library [flat](https://github.com/hughsk/flat). The use of flat is denoted with a `(+flat)` suffix in the benchmark results. Note that flattening is only applied in the nested JSON benchmarks and NOT in the tests with flat JSON data.
+- The performance depends of course on what kind of data a single row contains and how much. This benchmark generates test data that contains a bit of everything: string, numbers, and strings that need escaping. And in the case of nested data: a nested object and nested array.
+- The CSV libraries have different defaults when parsing values. Some just leave all values a string, which is fast (nothing needs to be parsed). Most parse for example numeric values into a number, which is most useful in real-world scenarios. In the benchmarks, numeric values are being parsed into numbers.
+- In the benchmark, we want to see the performance for both small and large amounts of data. Therefore, the benchmark runs tests for various numbers of rows.
 
-The `csv42` does do really well. It is faster than the CSV libraries that are popular right now, sometimes by a big margin. It is only outpaced in a few cases where the document is small, and we have a flat JSON document. The libraries `json2csv` and `papaparse` do very well too in many of the tests, though when converting JSON to CSV, they are slower for larger documents.
+## Conclusions
 
-The biggest gaps can be seen when working with nested JSON data. Many libraries do not support flattening nested JSON data, and thus are not designed with this in mind. That may clarify the big differences. Also, some libraries do not support parsing CSV values into numbers for example. My real-world experience is that JSON data models more often than not contain nesting and numeric values, so I think these are essential features to have and test with if you want to mimic real-world situations as well as possible, and offer a batteries included API for a CSV library. But the needs can vary widely of course, hence the large amount of CSV libraries out there, each with a different approach.
+Looking at the benchmark results, we can observe the following:
+
+- The `csv42` does really well. It is faster than the popular CSV libraries, sometimes by a big margin. It is only outpaced in one case by `json2csv` when converting a small, flat JSON document. The libraries `json2csv` and `papaparse` do very well too in many of the tests, though their performance drops quite a bit for larger documents when converting JSON to CSV.
+- Most CSV libraries seem optimized mostly to convert small JSON documents to CSV. There is much room for improvement converting CSV to JSON, and processing large amounts of data.
+- Except for `csv42`, none of the libraries does perform well with nested data. Most libraries do not support flattening nested JSON data, and thus are not designed with this in mind. The separate conversion step to flatten nested data is an expensive one.
+- It is important to keep in mind that this benchmark only looks at the performance. Besides performance, there are more reasons to consider a library: size, features, support, and more.
 
 ## Results
 
