@@ -10,6 +10,9 @@ describe('path', () => {
     expect(stringifyPath([0, 'name'])).toEqual('[0].name')
     expect(stringifyPath(['prop.with.dot'])).toEqual('["prop.with.dot"]')
     expect(stringifyPath(['prop with space'])).toEqual('prop with space')
+    expect(stringifyPath(['prop with \'"]['])).toEqual('["prop with \'\\"]["]')
+    expect(stringifyPath(['prop with ."'])).toEqual('["prop with .\\""]')
+    expect(stringifyPath(['prop with "'])).toEqual('prop with "')
   })
 
   test('parsePath', () => {
@@ -21,6 +24,9 @@ describe('path', () => {
     expect(parsePath('[90].name')).toEqual([90, 'name'])
     expect(parsePath('["prop.with.dot"]')).toEqual(['prop.with.dot'])
     expect(parsePath('["prop with space"]')).toEqual(['prop with space'])
+    expect(parsePath('["prop with \'\\"]["]')).toEqual(['prop with \'"]['])
+    expect(parsePath('["prop with \\""]')).toEqual(['prop with "'])
+    expect(parsePath('\\"')).toEqual(['\\"']) // we only unescape when inside a string
 
     // The following is a bit odd.
     // We allow it because (a) we want a forgiving parser
