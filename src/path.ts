@@ -14,13 +14,13 @@ export function stringifyPath(path: Path): string {
       return typeof p === 'number'
         ? '[' + p + ']'
         : /[.\[\]]/.test(p) || p === '' // match any character . or [ or ] and handle an empty string
-        ? '["' + escapeQuote(p) + '"]'
+        ? '["' + escapeQuotes(p) + '"]'
         : (index > 0 ? '.' : '') + p
     })
     .join('')
 }
 
-function escapeQuote(prop: string): string {
+function escapeQuotes(prop: string): string {
   return prop.replace(/"/g, '\\"')
 }
 
