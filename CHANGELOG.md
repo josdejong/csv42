@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.3](https://github.com/josdejong/csv42/compare/v3.0.2...v3.0.3) (2023-04-03)
+
+
+### Bug Fixes
+
+* escape double quotes in column names ([72519a9](https://github.com/josdejong/csv42/commit/72519a9dd56ed0f15fe6db10063fd3469c4923ee))
+
 ### [3.0.2](https://github.com/josdejong/csv42/compare/v3.0.1...v3.0.2) (2023-03-09)
 
 

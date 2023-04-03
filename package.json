@@ -1,6 +1,6 @@
 {
   "name": "csv42",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "A small and fast CSV parser with support for nested JSON",
   "repository": {
     "type": "git",
