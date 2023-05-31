@@ -15,7 +15,7 @@ A small and fast CSV parser with support for nested JSON.
 - **2 way**: convert JSON to CSV and the other way around.
 - **Simple**: straightforward and flexible API.
 - **Lightweight**: 2KB gzipped with everything included, 1KB gzipped when only using `json2csv`.
-- **Fast**: faster than the popular CSV libraries out there. See [benchmark](/benchmark).
+- **Fast**: faster than the popular CSV libraries out there. See [benchmark](https://jsoneditoronline.org/indepth/parse/csv-parser-javascript/).
 - **Modular**: only load what you use, thanks to ES5 modules and a plugin architecture.
 - **Powerful**:
   - Configurable properties: `header`, `delimiter`, `eol`.
