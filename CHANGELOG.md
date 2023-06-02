@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/josdejong/csv42/compare/v3.0.4...v4.0.0) (2023-06-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* The API is now generic, so you can use the library like `json2csv<User>(...)` and
+`csv2json<User>(...)`. The typings of the value getters and setters (`getValue` and
+`setValue`) is changed, and the type of `NestedObject` is changed.
+
+### Features
+
+* improved TypeScript support (fixes [#2](https://github.com/josdejong/csv42/issues/2)) ([9ec74ae](https://github.com/josdejong/csv42/commit/9ec74ae4ffc782a92210e6cc9234835c3ef345da))
+
 ### [3.0.4](https://github.com/josdejong/csv42/compare/v3.0.3...v3.0.4) (2023-05-31)
 
 
