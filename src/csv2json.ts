@@ -3,13 +3,13 @@ import { parseValue, unescapeValue } from './value.js'
 import { mapFields, toFields } from './fields.js'
 import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
 
-export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
+export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
   const withHeader = options?.header !== false // true when not specified
   const delimiter: number = validateDelimiter(options?.delimiter || ',').charCodeAt(0)
   const quote = 0x22 // char code of "
   const parse = options?.parseValue || parseValue
 
-  const json: NestedObject[] = []
+  const items: T[] = []
   let i = 0
 
   const fieldNames = parseHeader()
@@ -22,16 +22,18 @@ export function csv2json(csv: string, options?: JsonOptions): NestedObject[] {
     : toFields(fieldNames, options?.nested !== false)
 
   while (i < csv.length) {
-    const object = {}
+    // Note that item starts as a generic, empty object, and will be populated
+    // with all fields one by one, after which it should be of type T
+    const item: NestedObject = {}
 
     parseRecord((value, index) => {
-      fields[index]?.setValue(object, value)
+      fields[index]?.setValue(item, value)
     }, parse)
 
-    json.push(object)
+    items.push(item as T)
   }
 
-  return json
+  return items
 
   function parseHeader(): string[] {
     const names: string[] = []

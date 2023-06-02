@@ -70,8 +70,8 @@ console.log(csvFlat)
 // The CSV output can be fully customized and transformed using `fields`:
 const csvCustom = json2csv(users, {
   fields: [
-    { name: 'name', getValue: (object) => object.name },
-    { name: 'address', getValue: (object) => object.address.city + ' - ' + object.address.street }
+    { name: 'name', getValue: (item) => item.name },
+    { name: 'address', getValue: (item) => item.address.city + ' - ' + object.address.street }
   ]
 })
 console.log(csvCustom)
@@ -108,8 +108,8 @@ console.log(usersFlat)
 // The JSON output can be customized using `fields`
 const usersCustom = csv2json(csv, {
   fields: [
-    { name: 'name', setValue: (object, value) => (object.name = value) },
-    { name: 'address.city', setValue: (object, value) => (object.city = value) }
+    { name: 'name', setValue: (item, value) => (item.name = value) },
+    { name: 'address.city', setValue: (item, value) => (item.city = value) }
   ]
 })
 console.log(usersCustom)
@@ -121,7 +121,7 @@ console.log(usersCustom)
 
 ## API
 
-### `json2csv(json: NestedObject[], options?: CsvOptions) : string`
+### `json2csv<T>(json: T[], options?: CsvOptions<T>) : string`
 
 Where `options` is an object with the following properties:
 
@@ -131,7 +131,7 @@ Where `options` is an object with the following properties:
 | `delimiter`   | `string`                                   | Default delimiter is `,`. A delimiter must be a single character.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `eol`         | `\r\n` or `\n`                             | End of line, can be `\r\n` (default) or `\n`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `flatten`     | `boolean` or `(value: unknown) => boolean` | If `true` (default), plain, nested objects will be flattened in multiple CSV columns, and arrays and classes will be serialized in a single field. When `false`, nested objects will be serialized as JSON in a single CSV field. This behavior can be customized by providing your own callback function for `flatten`. For example, to flatten objects and arrays, you can use `json2csv(json, { flatten: isObjectOrArray })`, and to flatten a specific class, you can use `json2csv(json, { flatten: value => isObject(value) \|\| isCustomClass(value) })`. The option `flatten`is not applicable when`fields` is defined. |
-| `fields`      | `CsvField[]` or `CsvFieldsParser`          | A list with fields to be put into the CSV file. This allows specifying the order of the fields and which fields to include/excluded.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `fields`      | `CsvField<T>[]` or `CsvFieldsParser<T>`    | A list with fields to be put into the CSV file. This allows specifying the order of the fields and which fields to include/excluded.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `formatValue` | `ValueFormatter`                           | Function used to change any type of value into a serialized string for the CSV. The build in formatter will only enclose values in quotes when necessary, and will stringify nested JSON objects.                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 A simple example of a `ValueFormatter` is the following. This formatter will enclose every value in quotes:
@@ -142,7 +142,7 @@ function formatValue(value: unknown): string {
 }
 ```
 
-### `csv2json(csv: string, options?: JsonOptions) : NestedObject[]`
+### `csv2json<T>(csv: string, options?: JsonOptions) : T[]`
 
 Where `options` is an object with the following properties:
 

@@ -1,10 +1,10 @@
 import { collectFields } from './fields.js'
 import { createFormatValue } from './value.js'
-import { CsvOptions, FlattenCallback, NestedObject } from './types.js'
+import { CsvOptions, FlattenCallback } from './types.js'
 import { validateDelimiter, validateEOL } from './validate.js'
 import { isObject } from './object.js'
 
-export function json2csv(json: NestedObject[], options?: CsvOptions): string {
+export function json2csv<T>(json: T[], options?: CsvOptions<T>): string {
   const header = options?.header !== false // true when not specified
   const delimiter = validateDelimiter(options?.delimiter || ',')
   const eol = validateEOL(options?.eol || '\r\n')
@@ -37,7 +37,7 @@ export function json2csv(json: NestedObject[], options?: CsvOptions): string {
     return fields.map((field) => formatValue(field.name)).join(delimiter)
   }
 
-  function rowToCsv(item: NestedObject): string {
+  function rowToCsv(item: T): string {
     return fields.map((field) => formatValue(field.getValue(item))).join(delimiter)
   }
 }

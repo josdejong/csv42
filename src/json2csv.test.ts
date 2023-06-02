@@ -4,8 +4,13 @@ import { json2csv } from './json2csv'
 import spectrum from 'csv-spectrum'
 import { isObject, isObjectOrArray } from './object'
 
+interface User {
+  id: number
+  name: string
+}
+
 describe('json2csv', () => {
-  const users = [
+  const users: User[] = [
     { id: 1, name: 'Joe' },
     { id: 2, name: 'Sarah' }
   ]

@@ -1,19 +1,18 @@
 // Note that a number in a Path has meaning: that means an array index and not an object key
 export type Path = (string | number)[]
 
-/** @ts-ignore **/
-export type NestedObject = Record<string, NestedObject>
+export type NestedObject = { [key: string]: NestedObject | unknown }
 
-export type ValueGetter = (object: NestedObject) => unknown
-export type ValueSetter = (object: NestedObject, value: unknown) => void
+export type ValueGetter<T> = (item: T) => unknown
+export type ValueSetter = (item: NestedObject, value: unknown) => void
 export type ValueFormatter = (value: unknown) => string
 export type ValueParser = (value: string) => unknown
 
 export type FlattenCallback = (value: unknown) => boolean
 
-export interface CsvField {
+export interface CsvField<T> {
   name: string
-  getValue: ValueGetter
+  getValue: ValueGetter<T>
 }
 
 export interface JsonFieldName {
@@ -26,15 +25,15 @@ export interface JsonFieldIndex {
 }
 export type JsonField = JsonFieldName | JsonFieldIndex
 
-export type CsvFieldsParser = (json: NestedObject[]) => CsvField[]
+export type CsvFieldsParser<T> = (json: T[]) => CsvField<T>[]
 export type JsonFieldsParser = (fieldNames: string[]) => JsonField[]
 
-export interface CsvOptions {
+export interface CsvOptions<T> {
   header?: boolean
   delimiter?: string
   eol?: '\r\n' | '\n'
   flatten?: boolean | FlattenCallback
-  fields?: CsvField[] | CsvFieldsParser
+  fields?: CsvField<T>[] | CsvFieldsParser<T>
   formatValue?: ValueFormatter
 }
 
