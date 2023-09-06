@@ -1,4 +1,4 @@
-import { JsonField, JsonOptions, NestedObject, ValueParser } from './types.js'
+import { JsonField, JsonOptions, NestedObject } from './types.js'
 import { parseValue, unescapeValue } from './value.js'
 import { mapFields, toFields } from './fields.js'
 import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
@@ -27,8 +27,8 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     const item: NestedObject = {}
 
     parseRecord((value, index) => {
-      fields[index]?.setValue(item, value)
-    }, parse)
+      fields[index]?.setValue(item, parse(value))
+    })
 
     items.push(item as T)
   }
@@ -39,8 +39,8 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     const names: string[] = []
 
     parseRecord((fieldName, index) => {
-      names.push(withHeader ? String(fieldName) : `Field ${index}`)
-    }, unescapeValue)
+      names.push(withHeader ? unescapeValue(fieldName) : `Field ${index}`)
+    })
 
     if (!withHeader) {
       i = 0 // reset the pointer again: the first line contains data, not a header
@@ -49,11 +49,11 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     return names
   }
 
-  function parseRecord(onField: (field: unknown, fieldIndex: number) => void, parse: ValueParser) {
+  function parseRecord(onField: (field: string, fieldIndex: number) => void) {
     let index = 0
 
     while (i < csv.length && !isEol(csv, i)) {
-      onField(parseField(parse), index)
+      onField(parseField(), index)
 
       index++
 
@@ -65,7 +65,7 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     eatEol()
   }
 
-  function parseField(parse: ValueParser): unknown {
+  function parseField(): string {
     const start = i
 
     if (csv.charCodeAt(i) === quote) {
@@ -92,7 +92,7 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     }
 
     // note that it is possible that a field is empty
-    return parse(csv.substring(start, i))
+    return csv.substring(start, i)
   }
 
   function eatEol() {
