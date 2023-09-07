@@ -238,6 +238,10 @@ describe('csv2json', () => {
     ])
   })
 
+  test('should create unique column names in case of duplicates', () => {
+    expect(csv2json('name,name,name\na,b,c')).toEqual([{ name: 'a', name_1: 'b', name_2: 'c' }])
+  })
+
   test('should parse empty data', () => {
     expect(csv2json('')).toEqual([])
     expect(csv2json('\r\n')).toEqual([])

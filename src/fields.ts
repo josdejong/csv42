@@ -10,7 +10,7 @@ export function collectFields<T>(records: T[], flatten: FlattenCallback): CsvFie
 }
 
 export function toFields(names: string[], nested: boolean): JsonField[] {
-  return names.map((name) => {
+  return toUniqueNames(names).map((name) => {
     const path = parsePath(name)
     const first = path[0]
 
@@ -23,6 +23,22 @@ export function toFields(names: string[], nested: boolean): JsonField[] {
           ? (record, value) => (record[first] = value)
           : (record, value) => setIn(record, path, value)
     }
+  })
+}
+
+function toUniqueNames(names: string[]): string[] {
+  const uniqueNames = new Set()
+
+  return names.map((name) => {
+    let uniqueName = name
+    let i = 0
+    while (uniqueNames.has(uniqueName)) {
+      i++
+      uniqueName = name + '_' + i
+    }
+    uniqueNames.add(uniqueName)
+
+    return uniqueName
   })
 }
 
