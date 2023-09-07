@@ -3,7 +3,7 @@ import { csv2json, CsvField, json2csv, NestedObject, isObjectOrArray } from '../
 import { Parser } from 'json2csv'
 import { parse as csvParse, stringify as csvStringify } from 'csv/browser/esm/sync'
 import flat from 'flat'
-import converter from 'json-2-csv'
+import Converter from 'json-2-csv'
 import Papa from 'papaparse'
 import { format, parse } from 'fast-csv'
 
@@ -69,10 +69,10 @@ export const libraries: CsvLibrary[] = [
   {
     id: 6,
     name: 'json-2-csv',
-    flatToCsv: converter.json2csvAsync,
-    flatFromCsv: converter.csv2jsonAsync,
-    nestedToCsv: converter.json2csvAsync,
-    nestedFromCsv: converter.csv2jsonAsync
+    flatToCsv: Converter.json2csv,
+    flatFromCsv: Converter.csv2json,
+    nestedToCsv: Converter.json2csv,
+    nestedFromCsv: Converter.csv2json
   }
 ]
 
