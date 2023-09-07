@@ -46,9 +46,8 @@ export function parsePath(pathStr: string): Path {
         eatCharacter('"')
       } else {
         const prop = parseProp((c) => c === ']')
-        const index = Number(prop)
 
-        path.push(isNaN(index) ? prop : index)
+        path.push(prop)
       }
       eatCharacter(']')
     } else {
@@ -70,7 +69,10 @@ export function parsePath(pathStr: string): Path {
       }
     }
 
-    return prop
+    // match a string with only digits and optional spacing at the start and the end
+    const digitsRegex = /^ *\d+ *$/
+
+    return !unescape && digitsRegex.test(prop) ? parseInt(prop) : prop
   }
 
   function eatCharacter(char: string) {

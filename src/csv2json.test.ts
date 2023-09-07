@@ -228,6 +228,10 @@ describe('csv2json', () => {
     ])
   })
 
+  test('should parser nested fields with dot notation for indexes', () => {
+    expect(csv2json('"nested.geo.0"\r\n42\r\n')).toEqual([{ nested: { geo: [42] } }])
+  })
+
   test('should parser nested fields containing the key separator and a control character', () => {
     expect(csv2json('"nested[""field.,name""]"\r\n42\r\n')).toEqual([
       { nested: { 'field.,name': 42 } }
