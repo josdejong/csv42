@@ -94,11 +94,23 @@ export async function validate(library: CsvLibrary): Promise<number> {
 
   const nestedFromCsv = library.nestedFromCsv
   if (nestedFromCsv) {
-    const csvNested = 'id,name,address.city\n1,Joe,Rotterdam\n2,Sarah,Amsterdam'
+    const csvNested =
+      // 'id,name,address.city,address.geo.0,address.geo.1\n' +
+      'id,name,address.city,address.geo.longitude,address.geo.latitude\n' +
+      '1,Joe,Rotterdam,4.4207888,51.9280712\n' +
+      '2,Sarah,Amsterdam,4.8997357,52.378151'
 
     const jsonExpected = [
-      { id: 1, name: 'Joe', address: { city: 'Rotterdam' } },
-      { id: 2, name: 'Sarah', address: { city: 'Amsterdam' } }
+      {
+        id: 1,
+        name: 'Joe',
+        address: { city: 'Rotterdam', geo: { longitude: 4.4207888, latitude: 51.9280712 } }
+      },
+      {
+        id: 2,
+        name: 'Sarah',
+        address: { city: 'Amsterdam', geo: { longitude: 4.8997357, latitude: 52.378151 } }
+      }
     ]
 
     const actual = await nestedFromCsv(csvNested)

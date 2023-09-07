@@ -1,6 +1,8 @@
 import { json2csv } from '../src/json2csv.js'
 import { isObjectOrArray } from '../src/object.js'
 
+// note that `csv42` and `flat` supports nested arrays, but for example json-2-csv
+// does not. Therefor we will not use nested arrays in the benchmark.
 export function generateNestedJson(count: number) {
   const data = []
 
@@ -12,11 +14,11 @@ export function generateNestedJson(count: number) {
       location: {
         city: 'Rotterdam',
         street: 'Main street',
-        geo: [51.9280712, 4.4207888]
+        geo: { latitude: 51.9280712, longitude: 4.4207888 }
       },
       speed: 5.4,
       heading: 128.3,
-      size: [3.4, 5.1, 0.9],
+      sizes: { small: 0.9, medium: 3.4, large: 5.1 },
       'field with , delimiter': 'value with , delimiter',
       'field with " double quote': 'value with " double quote'
     })

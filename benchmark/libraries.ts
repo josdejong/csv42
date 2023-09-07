@@ -56,9 +56,7 @@ export const libraries: CsvLibrary[] = [
     flatFromCsv: (csv) => Papa.parse(csv, { header: true, transform }).data as NestedObject[],
     nestedToCsv: (json) => Papa.unparse(json.map(flat.flatten as any)),
     nestedFromCsv: (csv) =>
-      flat.unflatten(
-        Papa.parse(csv, { header: true, transform }).data.map(flat.unflatten as any)
-      ) as NestedObject[]
+      Papa.parse(csv, { header: true, transform }).data.map(flat.unflatten as any) as NestedObject[]
   },
   {
     id: 5,
