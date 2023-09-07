@@ -31,10 +31,6 @@ export function createFormatValue(delimiter: string): ValueFormatter {
 }
 
 export function parseValue(value: string, quoted: boolean): unknown {
-  if (value.length === 0 && !quoted) {
-    return null
-  }
-
   if (value[0] >= '-' && value[0] <= '9') {
     // a number can start with one of the following characters: 01234567890.-
     // the range above contains these characters, but also the forward slash /.
@@ -52,6 +48,10 @@ export function parseValue(value: string, quoted: boolean): unknown {
   }
 
   if (value === 'null') {
+    return null
+  }
+
+  if (value.length === 0 && !quoted) {
     return null
   }
 

@@ -91,7 +91,8 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
       }
       i++
 
-      return parseValue(csv.substring(start + 1, i - 1).replaceAll(escapedQuoteRegex, '"'), true)
+      const unescapedValue = csv.substring(start + 1, i - 1).replaceAll(escapedQuoteRegex, '"')
+      return parseValue(unescapedValue, true)
     } else {
       // parse an unquoted value
       while (i < csv.length && csv.charCodeAt(i) !== delimiter && !isEol(csv, i)) {
