@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/josdejong/csv42/compare/v4.0.0...v5.0.0) (2023-09-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* - `parseValue` now receives the escaped value and an additional argument `quoted`
+- utility function `unescapeValue` is removed
+
+### Features
+
+* `parseValue` now receives the escaped value and an additional argument `quoted` ([fbc13bc](https://github.com/josdejong/csv42/commit/fbc13bc4f706c119df5db9b48bccb45e64b5cc1f))
+* support dot notation like `coordinates.1` for headers to parse into a nested array ([67c2685](https://github.com/josdejong/csv42/commit/67c268538036f9aa2bb3a4f36271edca012c7c03))
+
+
+### Bug Fixes
+
+* change the nested CSV benchmark to not use nested arrays (not supported by all libraries) ([14c45bd](https://github.com/josdejong/csv42/commit/14c45bd899769169aa9e6ce6232fbdc8ee6f0e50))
+* create unique column names in case of duplicates ([ac5c247](https://github.com/josdejong/csv42/commit/ac5c24751a09f8b947c800cda09435afb9213fe0))
+
 ## [4.0.0](https://github.com/josdejong/csv42/compare/v3.0.4...v4.0.0) (2023-06-02)
 
 
