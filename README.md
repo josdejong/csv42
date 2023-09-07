@@ -189,7 +189,8 @@ The library exports a number of utility functions:
 - https://www.npmjs.com/package/csv-stringify
 - https://www.npmjs.com/package/csv-parser
 - https://www.npmjs.com/package/fast-csv
-- Any many many more...
+- https://github.com/leeoniya/uDSV/
+- Any many, many more...
 
 ### Release
 
