@@ -177,6 +177,18 @@ describe('csv2json', () => {
     expect(csv2json('name\r\n"Joe\rJones"\r\n')).toEqual([{ name: 'Joe\rJones' }])
   })
 
+  test('should parse with a custom parseValue function', () => {
+    function parseValue(value: string, quoted: boolean) {
+      return `|${value}|${quoted}|`
+    }
+
+    expect(csv2json('name\n"first"\nsecond\n"third""with""quotes"', { parseValue })).toEqual([
+      { name: '|first|true|' },
+      { name: '|second|false|' },
+      { name: '|third"with"quotes|true|' }
+    ])
+  })
+
   test('should parse nested fields', () => {
     const csv =
       'name,details.address.city,details.location[0],details.location[1]\r\n' +

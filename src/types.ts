@@ -6,7 +6,7 @@ export type NestedObject = { [key: string]: NestedObject | unknown }
 export type ValueGetter<T> = (item: T) => unknown
 export type ValueSetter = (item: NestedObject, value: unknown) => void
 export type ValueFormatter = (value: unknown) => string
-export type ValueParser = (value: string) => unknown
+export type ValueParser<T = unknown> = (value: string, quoted: boolean) => T
 
 export type FlattenCallback = (value: unknown) => boolean
 

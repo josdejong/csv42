@@ -30,23 +30,11 @@ export function createFormatValue(delimiter: string): ValueFormatter {
   }
 }
 
-export function parseValue(value: string): unknown {
-  if (value.length === 0) {
+export function parseValue(value: string, quoted: boolean): unknown {
+  if (value.length === 0 && !quoted) {
     return null
   }
 
-  return parseUnescapedValue(unescapeValue(value))
-}
-
-const escapedQuoteRegex = /""/g
-
-export function unescapeValue(value: string): string {
-  return value[0] === '"'
-    ? value.substring(1, value.length - 1).replaceAll(escapedQuoteRegex, '"')
-    : value
-}
-
-function parseUnescapedValue(value: string): unknown {
   if (value[0] >= '-' && value[0] <= '9') {
     // a number can start with one of the following characters: 01234567890.-
     // the range above contains these characters, but also the forward slash /.

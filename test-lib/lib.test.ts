@@ -66,7 +66,6 @@ describe('lib', () => {
       'csv2json',
       'createFormatValue',
       'parseValue',
-      'unescapeValue',
       'collectNestedPaths',
       'parsePath',
       'stringifyPath',

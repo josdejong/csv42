@@ -1,5 +1,5 @@
-import { JsonField, JsonOptions, NestedObject } from './types.js'
-import { parseValue, unescapeValue } from './value.js'
+import { JsonField, JsonOptions, NestedObject, ValueParser } from './types.js'
+import { parseValue } from './value.js'
 import { mapFields, toFields } from './fields.js'
 import { isCRLF, isEol, isLF, validateDelimiter } from './validate.js'
 
@@ -27,8 +27,8 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     const item: NestedObject = {}
 
     parseRecord((value, index) => {
-      fields[index]?.setValue(item, parse(value))
-    })
+      fields[index]?.setValue(item, value)
+    }, parse)
 
     items.push(item as T)
   }
@@ -38,9 +38,12 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
   function parseHeader(): string[] {
     const names: string[] = []
 
-    parseRecord((fieldName, index) => {
-      names.push(withHeader ? unescapeValue(fieldName) : `Field ${index}`)
-    })
+    parseRecord(
+      (fieldName, index) => {
+        names.push(withHeader ? String(fieldName) : `Field ${index}`)
+      },
+      (value) => value
+    )
 
     if (!withHeader) {
       i = 0 // reset the pointer again: the first line contains data, not a header
@@ -49,11 +52,14 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     return names
   }
 
-  function parseRecord(onField: (field: string, fieldIndex: number) => void) {
+  function parseRecord(
+    onField: (field: unknown, fieldIndex: number) => void,
+    parseValue: ValueParser
+  ) {
     let index = 0
 
     while (i < csv.length && !isEol(csv, i)) {
-      onField(parseField(), index)
+      onField(parseField(parseValue), index)
 
       index++
 
@@ -65,7 +71,7 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     eatEol()
   }
 
-  function parseField(): string {
+  function parseField(parseValue: ValueParser): unknown {
     const start = i
 
     if (csv.charCodeAt(i) === quote) {
@@ -84,15 +90,16 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
         throw new Error('Unexpected end: end quote " missing')
       }
       i++
+
+      return parseValue(csv.substring(start + 1, i - 1).replaceAll(escapedQuoteRegex, '"'), true)
     } else {
       // parse an unquoted value
       while (i < csv.length && csv.charCodeAt(i) !== delimiter && !isEol(csv, i)) {
         i++
       }
-    }
 
-    // note that it is possible that a field is empty
-    return csv.substring(start, i)
+      return parseValue(csv.substring(start, i), false)
+    }
   }
 
   function eatEol() {
@@ -103,3 +110,5 @@ export function csv2json<T>(csv: string, options?: JsonOptions): T[] {
     }
   }
 }
+
+const escapedQuoteRegex = /""/g

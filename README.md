@@ -154,11 +154,12 @@ Where `options` is an object with the following properties:
 | `fields`     | `JsonField[]` or `JsonFieldsParser` | A list with fields to be extracted from the CSV file into JSON. This allows specifying which fields are include/excluded, and how they will be put into the JSON object. A field can be specified either by name, like `{ name, setValue }`, or by the index of the columns in the CSV file, like `{ index, setValue }`. |
 | `parseValue` | `ValueParser`                       | Used to parse a stringified value into a value again (number, boolean, string, ...). The build in parser will parse numbers and booleans, and will parse stringified JSON objects.                                                                                                                                       |
 
-A simple value parser can look as follows. This will keep all values as string:
+A simple value parser can look as follows, parsing numeric values into numbers. This will keep all values as string:
 
 ```ts
-function parseValue(value: string): unknown {
-  return value.startsWith('"') ? value.substring(1, value.length - 1).replaceAll('""', '"') : value
+function parseValue(value: string, quoted: boolean): unknown {
+  const num = Number(value)
+  return isNaN(num) ? value : num
 }
 ```
 
@@ -170,7 +171,6 @@ The library exports a number of utility functions:
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `createFormatValue(delimiter: string): (value: unknown) => string`      | Create a function that can format (stringify) a value into a valid CSV value, escaping the value when needed. This function is used as default for the option `formatValue`.    |
 | `parseValue(value: string): unknown`                                    | Parse a string into a value, parse numbers into a number, etc. This is the function used by default for the option `parseValue`.                                                |
-| `unescapeValue(value: string) : string`                                 | Unescape an escaped value like `"hello ""Joe"""` into the string `hello "Joe"`.                                                                                                 |
 | `collectNestedPaths(records: NestedObject[], recurse: boolean): Path[]` | Loop over the data and collect all nested paths. This can be used to generate a list with fields.                                                                               |
 | `parsePath(pathStr: string): Path`                                      | Parse a path like `'items[3].name'`                                                                                                                                             |
 | `stringifyPath(path: Path): string`                                     | Stringify a path into a string like `'items[3].name'`                                                                                                                           |
