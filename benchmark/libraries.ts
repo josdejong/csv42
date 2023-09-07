@@ -6,6 +6,7 @@ import flat from 'flat'
 import Converter from 'json-2-csv'
 import Papa from 'papaparse'
 import { format, parse } from 'fast-csv'
+import { inferSchema, initParser } from 'udsv'
 
 export interface CsvLibrary {
   id: number
@@ -73,6 +74,22 @@ export const libraries: CsvLibrary[] = [
     flatFromCsv: Converter.csv2json,
     nestedToCsv: Converter.json2csv,
     nestedFromCsv: Converter.csv2json
+  },
+  {
+    id: 7,
+    name: 'udsv',
+    flatToCsv: null,
+    flatFromCsv: (csv) => {
+      const schema = inferSchema(csv)
+      const parser = initParser(schema)
+      return parser.typedObjs(csv)
+    },
+    nestedToCsv: null,
+    nestedFromCsv: (csv) => {
+      const schema = inferSchema(csv)
+      const parser = initParser(schema)
+      return parser.typedDeep(csv)
+    }
   }
 ]
 
