@@ -1,5 +1,4 @@
-import { json2csv } from '../src/json2csv.js'
-import { isObjectOrArray } from '../src/object.js'
+import { isObjectOrArray, json2csv } from '../src/index.js'
 
 // note that `csv42` and `flat` supports nested arrays, but for example json-2-csv
 // does not. Therefor we will not use nested arrays in the benchmark.

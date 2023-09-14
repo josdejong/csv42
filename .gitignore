@@ -12,6 +12,7 @@ lib
 dist
 dist-ssr
 coverage
+benchmark/build
 *.local
 
 # Editor directories and files

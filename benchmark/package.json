@@ -2,8 +2,8 @@
   "name": "csv42-benchmark",
   "type": "module",
   "scripts": {
-    "benchmark": "ts-node-esm benchmark.ts",
-    "benchmark:collectNestedPaths": "ts-node-esm benchmarkCollectNestedPaths.ts"
+    "benchmark": "tsc && node build/benchmark/benchmark.js",
+    "benchmark:collectNestedPaths": "tsc && node build/benchmark/benchmarkCollectNestedPaths.js"
   },
   "dependencies": {
     "@types/benchmark": "2.1.2",
@@ -21,7 +21,6 @@
     "json2csv": "5.0.7",
     "lodash-es": "4.17.21",
     "papaparse": "5.4.1",
-    "ts-node": "10.9.1",
     "typescript": "5.2.2"
   }
 }

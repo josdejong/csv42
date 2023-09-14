@@ -1,5 +1,5 @@
-import { NestedObject } from '../src'
-import { CsvLibrary } from './libraries'
+import { NestedObject } from '../src/index.js'
+import { CsvLibrary } from './libraries.js'
 import { isEqual } from 'lodash-es'
 
 export async function validateAll(libraries: CsvLibrary[]): Promise<number> {

@@ -1,5 +1,5 @@
 // @ts-ignore
-import { csv2json, CsvField, json2csv, NestedObject, isObjectOrArray } from '../lib/esm/index.js'
+import { csv2json, CsvField, json2csv, NestedObject, isObjectOrArray } from '../src/index.js'
 import { Parser } from 'json2csv'
 import { parse as csvParse, stringify as csvStringify } from 'csv/browser/esm/sync'
 import flat from 'flat'
@@ -70,9 +70,9 @@ export const libraries: CsvLibrary[] = [
     id: 6,
     name: 'json-2-csv',
     flatToCsv: Converter.json2csv,
-    flatFromCsv: Converter.csv2json,
+    flatFromCsv: (csv) => Converter.csv2json(csv) as unknown as NestedObject[],
     nestedToCsv: Converter.json2csv,
-    nestedFromCsv: Converter.csv2json
+    nestedFromCsv: (csv) => Converter.csv2json(csv) as unknown as NestedObject[]
   }
 ]
 
@@ -153,7 +153,7 @@ export const flatOptions = {
   fields: getFlatFields
 }
 
-function getFlatFields(json: NestedObject[]): CsvField[] {
+function getFlatFields(json: NestedObject[]): CsvField<Record<string, unknown>>[] {
   const names = new Set<string>()
 
   for (let i = 0; i < json.length; i++) {
