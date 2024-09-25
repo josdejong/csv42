@@ -5,10 +5,10 @@ A small and fast CSV parser with support for nested JSON.
 [![Version](https://img.shields.io/npm/v/csv42.svg)](https://www.npmjs.com/package/csv42)
 [![Downloads](https://img.shields.io/npm/dm/csv42.svg)](https://www.npmjs.com/package/csv42)
 [![Build Status](https://github.com/josdejong/csv42/workflows/Node.js%20CI/badge.svg)](https://github.com/josdejong/csv42/actions)
-[![Maintenance](https://img.shields.io/maintenance/yes/2023.svg)](https://github.com/josdejong/csv42/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/maintenance/yes/2024.svg)](https://github.com/josdejong/csv42/graphs/commit-activity)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://github.com/josdejong/csv42/blob/main/LICENSE.md)
 [![Codecov](https://codecov.io/gh/josdejong/csv42/branch/main/graph/badge.svg)](https://codecov.io/gh/josdejong/csv42)
-[![Github Sponsor](https://camo.githubusercontent.com/7d9333b097b2f54a8957d126ab82937811489c9b75c3850f609985cf94cd29fe/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2532302d53706f6e736f722532306d652532306f6e2532304769744875622d6f72616e6765)](https://github.com/sponsors/josdejong)
+[![Github Sponsor](https://img.shields.io/github/sponsors/josdejong)](https://github.com/sponsors/josdejong)
 
 ## Features
 
