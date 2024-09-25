@@ -14,8 +14,8 @@ export function stringifyPath(path: Path): string {
       return typeof p === 'number'
         ? '[' + p + ']'
         : /[.\[\]]/.test(p) || p === '' // match any character . or [ or ] and handle an empty string
-        ? '["' + escapeQuotes(p) + '"]'
-        : (index > 0 ? '.' : '') + p
+          ? '["' + escapeQuotes(p) + '"]'
+          : (index > 0 ? '.' : '') + p
     })
     .join('')
 }

@@ -326,14 +326,14 @@ describe('spectrum-test-suite', () => {
         reject(err)
       }
 
-      data.forEach(({ name, json, csv }) => {
+      for (const { name, json, csv } of data) {
         test(name, () => {
           const parsedJson = JSON.parse(String(json))
           const csvString = String(csv).trim()
           const eol = name.includes('crlf') ? '\r\n' : '\n'
           expect(json2csv(parsedJson, { eol }).trim()).toEqual(csvString)
         })
-      })
+      }
 
       resolve()
     })

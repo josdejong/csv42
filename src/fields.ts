@@ -20,8 +20,8 @@ export function toFields(names: string[], nested: boolean): JsonField[] {
         path.length === 0 || !nested
           ? (record, value) => (record[name] = value)
           : path.length === 1
-          ? (record, value) => (record[first] = value)
-          : (record, value) => setIn(record, path, value)
+            ? (record, value) => (record[first] = value)
+            : (record, value) => setIn(record, path, value)
     }
   })
 }

@@ -12,8 +12,8 @@ export function json2csv<T>(json: T[], options?: CsvOptions<T>): string {
     typeof options?.flatten === 'function'
       ? options?.flatten
       : options?.flatten === false
-      ? () => false
-      : isObject // options?.flatten is true or undefined
+        ? () => false
+        : isObject // options?.flatten is true or undefined
   const fields = options?.fields
     ? Array.isArray(options?.fields)
       ? options?.fields
