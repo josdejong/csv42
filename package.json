@@ -67,6 +67,7 @@
     "@babel/preset-typescript": "7.24.7",
     "@commitlint/cli": "19.5.0",
     "@commitlint/config-conventional": "19.5.0",
+    "@vitest/coverage-v8": "2.1.1",
     "cpy-cli": "5.0.0",
     "csv-spectrum": "1.0.0",
     "del-cli": "5.1.0",
