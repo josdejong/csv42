@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/josdejong/csv42/compare/v5.0.0...v5.0.1) (2024-11-05)
+
 ## [5.0.0](https://github.com/josdejong/csv42/compare/v4.0.0...v5.0.0) (2023-09-07)
 
 
