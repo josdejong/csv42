@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.2](https://github.com/josdejong/csv42/compare/v5.0.1...v5.0.2) (2024-11-05)
+
+
+### Bug Fixes
+
+* publish on npm again since npm doesn't show a readme ([15b4882](https://github.com/josdejong/csv42/commit/15b48828c08fc5e6008a45dfd2fb3c45e2ef6292))
+
 ### [5.0.1](https://github.com/josdejong/csv42/compare/v5.0.0...v5.0.1) (2024-11-05)
 
 - Update information badges in the readme 
