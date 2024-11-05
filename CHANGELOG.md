@@ -4,13 +4,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [5.0.1](https://github.com/josdejong/csv42/compare/v5.0.0...v5.0.1) (2024-11-05)
 
+- Update information badges in the readme 
+
 ## [5.0.0](https://github.com/josdejong/csv42/compare/v4.0.0...v5.0.0) (2023-09-07)
 
 
 ### ⚠ BREAKING CHANGES
 
-* - `parseValue` now receives the escaped value and an additional argument `quoted`
-- utility function `unescapeValue` is removed
+* `parseValue` now receives the escaped value and an additional argument `quoted`
+* utility function `unescapeValue` is removed
 
 ### Features
 
