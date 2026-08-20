@@ -135,11 +135,11 @@ Where `options` is an object with the following properties:
 | `fields`      | `CsvField<T>[]` or `CsvFieldsParser<T>`    | A list with fields to be put into the CSV file. This allows specifying the order of the fields and which fields to include/excluded.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `formatValue` | `ValueFormatter`                           | Function used to change any type of value into a serialized string for the CSV. The build in formatter will only enclose values in quotes when necessary, and will stringify nested JSON objects.                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
-A simple example of a `ValueFormatter` is the following. This formatter will enclose every value in quotes:
+A simple example of a `ValueFormatter` is the following. This formatter will enclose every value in quotes. Note that any double quote in the original string needs to be escaped with another double quote.
 
 ```ts
 function formatValue(value: unknown): string {
-  return '"' + String(value) + '"'
+  return '"' + String(value).replaceAll('"', '""') + '"'
 }
 ```
 
