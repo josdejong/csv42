@@ -32,6 +32,9 @@
 <script type="module">
   import { json2csv, csv2json } from '../lib/esm/index.js'
 
+  window.json2csv = json2csv
+  window.csv2json = csv2json
+
   const jsonTextArea = document.getElementById('json')
   const csvTextArea = document.getElementById('csv')
 
