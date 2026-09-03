@@ -27,6 +27,21 @@ describe('object', () => {
     test('set a nested property with numeric index', () => {
       expect(setIn({}, ['values', 0], 42)).toEqual({ values: [42] })
     })
+
+    test('should not allow polluting the object prototype via __proto__', () => {
+      expect(() => setIn({}, ['__proto__', 'polluted'], 'yes')).toThrow()
+      expect(({} as any).polluted).toEqual(undefined)
+    })
+
+    test('should not allow polluting the object prototype via constructor.prototype', () => {
+      expect(() => setIn({}, ['constructor', 'prototype', 'polluted'], 'yes')).toThrow()
+      expect(({} as any).polluted).toEqual(undefined)
+    })
+
+    test('should not allow __proto__ as the final path segment', () => {
+      expect(() => setIn({}, ['a', '__proto__'], { polluted: 'yes' })).toThrow()
+      expect(({} as any).polluted).toEqual(undefined)
+    })
   })
 
   class CustomClass {

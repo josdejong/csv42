@@ -12,6 +12,12 @@ export function getIn(object: NestedObject, path: Path): unknown {
   return value
 }
 
+// Path segments that would let setIn write through the prototype chain
+// instead of onto the plain object it was given (path comes straight from
+// CSV column names when nested field parsing is enabled, so it can't be
+// trusted).
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype'])
+
 export function setIn(object: NestedObject, path: Path, value: unknown): NestedObject {
   let nested = object
   const iLast = path.length - 1
@@ -19,6 +25,10 @@ export function setIn(object: NestedObject, path: Path, value: unknown): NestedO
 
   while (i < iLast) {
     const part = path[i]
+
+    if (UNSAFE_KEYS.has(part as string)) {
+      throw new Error(`Cannot set property "${part}": not allowed to change the object prototype`)
+    }
 
     if (nested[part] === undefined) {
       if (typeof path[i + 1] === 'number') {
@@ -30,6 +40,12 @@ export function setIn(object: NestedObject, path: Path, value: unknown): NestedO
 
     nested = nested[part] as NestedObject
     i++
+  }
+
+  if (UNSAFE_KEYS.has(path[iLast] as string)) {
+    throw new Error(
+      `Cannot set property "${path[iLast]}": not allowed to change the object prototype`
+    )
   }
 
   nested[path[iLast]] = value
