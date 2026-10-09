@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { json2csv } from './json2csv'
+import { csv2json } from './csv2json'
 // @ts-ignore
 import spectrum from 'csv-spectrum'
 import { isObject, isObjectOrArray } from './object'
@@ -52,6 +53,39 @@ describe('json2csv', () => {
     expect(json2csv([{ a: 'containing;delimiter', b: 'text' }], { delimiter: ';' })).toEqual(
       'a;b\r\n"containing;delimiter";text\r\n'
     )
+  })
+
+  test.each([']', '\\', '^', '-', '['])(
+    'should quote values containing delimiter %j',
+    (delimiter) => {
+      const json = [{ a: `left${delimiter}right`, b: 'ok' }]
+      const csv = json2csv(json, { delimiter })
+
+      expect(csv).toEqual(`a${delimiter}b\r\n"left${delimiter}right"${delimiter}ok\r\n`)
+      expect(csv2json(csv, { delimiter })).toEqual(json)
+    }
+  )
+
+  test.each([']', '\\', '^', '-', '['])(
+    'should escape quotes and line breaks with delimiter %j',
+    (delimiter) => {
+      const json = [{ a: '"' }, { a: '\r' }, { a: '\n' }, { a: '' }, { a: 'plain' }]
+      const csv = json2csv(json, { delimiter })
+
+      expect(csv).toEqual('a\r\n""""\r\n"\r"\r\n"\n"\r\n""\r\nplain\r\n')
+      expect(csv2json(csv, { delimiter })).toEqual(json)
+    }
+  )
+
+  test.each([']', '\\', '^', '-'])('should quote headers containing delimiter %j', (delimiter) => {
+    const name = `left${delimiter}right`
+    const csv = json2csv([{ value: 'ok' }], {
+      delimiter,
+      fields: [{ name, getValue: (item) => item.value }]
+    })
+
+    expect(csv).toEqual(`"left${delimiter}right"\r\nok\r\n`)
+    expect(csv2json(csv, { delimiter, nested: false })).toEqual([{ [name]: 'ok' }])
   })
 
   test('should use a custom eol', () => {

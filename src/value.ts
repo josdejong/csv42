@@ -1,13 +1,12 @@
 import { ValueFormatter } from './types'
 
 export function createFormatValue(delimiter: string): ValueFormatter {
-  // match at least one occurrence of a control character in a string:
-  // a delimiter (comma by default), double quote, return, or newline
-  const controlCharactersRegex = new RegExp('[' + delimiter + '"\r\n]')
+  const controlCharactersRegex = /["\r\n]/
   const quoteRegex = /"/g
 
   function formatString(value: string): string {
-    const needToEscape = controlCharactersRegex.test(value) || value.length === 0
+    const needToEscape =
+      value.includes(delimiter) || controlCharactersRegex.test(value) || value.length === 0
 
     return needToEscape ? `"${value.replaceAll(quoteRegex, '""')}"` : value
   }
